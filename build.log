@@ -2,14 +2,14 @@
 > trainarduino@0.1.0 build
 > next build
 
-   Ôû▓ Next.js 15.5.20
+   Ôû▓ Next.js 15.5.21
    - Environments: .env.local
 
    Creating an optimized production build ...
    Using tsconfig file: ./tsconfig.json
    Using tsconfig file: ./tsconfig.json
    Using tsconfig file: ./tsconfig.json
- Ô£ô Compiled successfully in 11.1s
+ Ô£ô Compiled successfully in 23.8s
    Linting and checking validity of types ...
 node.exe : Failed to compile.
 Au caractère Ligne:1 : 1
@@ -20,18 +20,17 @@ Au caractère Ligne:1 : 1
     + FullyQualifiedErrorId : NativeCommandError
  
 
-./lib/db.ts:387:7
-Type error: Argument of type 'PostgrestSingleResponse<{ id: any; }[]>' is not 
-assignable to parameter of type 'readonly any[]'.
-  Type 'PostgrestResponseFailure' is missing the following properties from 
-type 'readonly any[]': length, concat, join, slice, and 20 more.
+./lib/repos/experienceRepo.ts:2:15
+Type error: Module '"@/lib/types"' has no exported member 'Experience'.
 
-[0m [90m 385 |[39m     [33m.[39m[36min[39m(
- [90m 386 |[39m       [32m'exercise_id'[39m[33m,[39m
-[31m[1m>[22m[39m[90m 387 |[39m       [36mawait[39m supabase
- [90m     |[39m       [31m[1m^[22m[39m
- [90m 388 |[39m         [33m.[39m[36mfrom[39m([32m'exercises'[39m)
- [90m 389 |[39m         [33m.[39mselect([32m'id'[39m)
- [90m 390 |[39m         [33m.[39meq([32m'module_id'[39m[33m,[39m 
-moduleId)[0m
+[0m [90m 1 |[39m [36mimport[39m { createServerSupabaseClient } 
+[36mfrom[39m [32m'@/lib/supabase'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m type { 
+[33mExperience[39m } [36mfrom[39m [32m'@/lib/types'[39m[33m;[39m
+ [90m   |[39m               [31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [36mexport[39m [36masync[39m [36mfunction[39m 
+getExperienceById(id[33m:[39m string) {
+ [90m 5 |[39m   [36mconst[39m supabase [33m=[39m [36mawait[39m 
+createServerSupabaseClient()[33m;[39m[0m
 Next.js build worker exited with code: 1 and signal: null

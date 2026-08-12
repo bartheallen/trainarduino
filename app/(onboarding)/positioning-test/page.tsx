@@ -14,31 +14,31 @@ interface Question {
 const questions: Question[] = [
   {
     id: 1,
-    text: 'What does "Arduino" primarily refer to?',
+    text: 'À quoi correspond principalement "Arduino" ?',
     difficulty: 1,
     options: [
-      'An open-source electronics platform',
-      'A programming language',
-      'A robot toy',
-      'A 3D printer',
+      'Une plateforme électronique open source',
+      'Un langage de programmation',
+      'Un jouet robotique',
+      'Une imprimante 3D',
     ],
     correctAnswer: 0,
   },
   {
     id: 2,
-    text: 'What is the purpose of the setup() function in Arduino?',
+    text: 'À quoi sert la fonction setup() dans Arduino ?',
     difficulty: 1,
     options: [
-      'To configure pins and initialize settings',
-      'To loop continuously',
-      'To delay program execution',
-      'To turn off the Arduino',
+      'Configurer les broches et initialiser les réglages',
+      'Se répéter en boucle',
+      'Retarder l’exécution du programme',
+      'Éteindre l’Arduino',
     ],
     correctAnswer: 0,
   },
   {
     id: 3,
-    text: 'Which function runs continuously in Arduino?',
+    text: 'Quelle fonction s’exécute en continu dans Arduino ?',
     difficulty: 1,
     options: [
       'void setup()',
@@ -50,7 +50,7 @@ const questions: Question[] = [
   },
   {
     id: 4,
-    text: 'What is the correct syntax for setting a digital pin as output?',
+    text: 'Quelle est la syntaxe correcte pour configurer une broche numérique en sortie ?',
     difficulty: 2,
     options: [
       'pinMode(pin, OUTPUT)',
@@ -62,7 +62,7 @@ const questions: Question[] = [
   },
   {
     id: 5,
-    text: 'How do you read a digital input in Arduino?',
+    text: 'Comment lit-on une entrée numérique dans Arduino ?',
     difficulty: 2,
     options: [
       'digitalRead(pin)',
@@ -125,29 +125,29 @@ export default function PositioningTestPage() {
   if (testComplete) {
     const level = calculateLevel();
     const levelName = {
-      beginner: 'Beginner',
-      intermediate: 'Intermediate',
-      advanced: 'Advanced',
+      beginner: 'Débutant',
+      intermediate: 'Intermédiaire',
+      advanced: 'Avancé',
     }[level];
 
     return (
       <div className="bg-white rounded-lg shadow-lg p-8 text-center">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">Test Complete! 🎉</h1>
+        <h1 className="text-4xl font-bold text-gray-800 mb-4">Test terminé ! 🎉</h1>
         <p className="text-xl text-gray-600 mb-6">
-          You scored <span className="font-bold text-blue-600">{score}/{questions.length}</span>
+          Vous avez obtenu <span className="font-bold text-blue-600">{score}/{questions.length}</span>
         </p>
         <div className="bg-blue-50 rounded-lg p-6 mb-8">
-          <p className="text-gray-600 mb-2">Your Level:</p>
+          <p className="text-gray-600 mb-2">Votre niveau :</p>
           <p className="text-3xl font-bold text-blue-600">{levelName}</p>
         </div>
         <p className="text-gray-600 mb-8">
-          We've set up your profile based on your results. Let's start learning! 🚀
+          Votre profil a été préparé selon vos résultats. Commençons l’apprentissage ! 🚀
         </p>
         <button
           onClick={handleCompleteTest}
           className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700"
         >
-          Go to Dashboard
+          Aller au tableau de bord
         </button>
       </div>
     );
@@ -157,7 +157,7 @@ export default function PositioningTestPage() {
     <div className="bg-white rounded-lg shadow-lg p-8">
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-3xl font-bold text-gray-800">Positioning Test</h1>
+          <h1 className="text-3xl font-bold text-gray-800">Test de positionnement</h1>
           <span className="text-lg font-semibold text-blue-600">
             {currentIndex + 1}/{questions.length}
           </span>

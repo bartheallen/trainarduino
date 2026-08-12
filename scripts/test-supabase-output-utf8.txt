@@ -1,0 +1,69 @@
+﻿Attempting signUp with debug+1783261733758@example.com
+signUp result: {
+  data: {
+    user: {
+      id: '63d7ff78-8b8b-4e3d-9245-1ba9cc6834f3',
+      aud: 'authenticated',
+      role: 'authenticated',
+      email: 'debug+1783261733758@example.com',
+      email_confirmed_at: '2026-07-05T14:28:54.897429733Z',
+      phone: '',
+      last_sign_in_at: '2026-07-05T14:28:54.905290809Z',
+      app_metadata: [Object],
+      user_metadata: [Object],
+      identities: [Array],
+      created_at: '2026-07-05T14:28:54.873367Z',
+      updated_at: '2026-07-05T14:28:54.908066Z',
+      is_anonymous: false
+    },
+    session: {
+      access_token: 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjE4MGExOTNjLTdhYzktNDEwMS1hMTZiLWU2YWJjODZkMTU1YSIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2V4aGJubXJ6emR2enRua3l1bm14LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI2M2Q3ZmY3OC04YjhiLTRlM2QtOTI0NS0xYmE5Y2M2ODM0ZjMiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzgzMjY1MzM0LCJpYXQiOjE3ODMyNjE3MzQsImVtYWlsIjoiZGVidWcrMTc4MzI2MTczMzc1OEBleGFtcGxlLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWwiOiJkZWJ1ZysxNzgzMjYxNzMzNzU4QGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBob25lX3ZlcmlmaWVkIjpmYWxzZSwic3ViIjoiNjNkN2ZmNzgtOGI4Yi00ZTNkLTkyNDUtMWJhOWNjNjgzNGYzIn0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3ODMyNjE3MzR9XSwic2Vzc2lvbl9pZCI6ImI1YTM5NDU2LWQ5OTMtNDA0YS1hMWJhLTM5YThjNWRhMDIyMSIsImlzX2Fub255bW91cyI6ZmFsc2V9.4zYEeGOxuR4XXdDpl9tqtnXVafUmPz0TWvsmUYXVulSxv82ERLcZFBF5I7sWeTUPSkjZ-Tw8f2F8dNoQEmmWZw',
+      token_type: 'bearer',
+      expires_in: 3600,
+      expires_at: 1783265334,
+      refresh_token: 'uv2b4aksea5f',
+      user: [Object]
+    }
+  },
+  error: null
+}
+Attempting signInWithPassword
+signIn result: {
+  data: {
+    user: {
+      id: '63d7ff78-8b8b-4e3d-9245-1ba9cc6834f3',
+      aud: 'authenticated',
+      role: 'authenticated',
+      email: 'debug+1783261733758@example.com',
+      email_confirmed_at: '2026-07-05T14:28:54.897429Z',
+      phone: '',
+      confirmed_at: '2026-07-05T14:28:54.897429Z',
+      last_sign_in_at: '2026-07-05T14:28:55.145498625Z',
+      app_metadata: [Object],
+      user_metadata: [Object],
+      identities: [Array],
+      created_at: '2026-07-05T14:28:54.873367Z',
+      updated_at: '2026-07-05T14:28:55.148243Z',
+      is_anonymous: false
+    },
+    session: {
+      access_token: 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjE4MGExOTNjLTdhYzktNDEwMS1hMTZiLWU2YWJjODZkMTU1YSIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2V4aGJubXJ6emR2enRua3l1bm14LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI2M2Q3ZmY3OC04YjhiLTRlM2QtOTI0NS0xYmE5Y2M2ODM0ZjMiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzgzMjY1MzM1LCJpYXQiOjE3ODMyNjE3MzUsImVtYWlsIjoiZGVidWcrMTc4MzI2MTczMzc1OEBleGFtcGxlLmNvbSIsInBob25lIjoiIiwiYXBwX21ldGFkYXRhIjp7InByb3ZpZGVyIjoiZW1haWwiLCJwcm92aWRlcnMiOlsiZW1haWwiXX0sInVzZXJfbWV0YWRhdGEiOnsiZW1haWwiOiJkZWJ1ZysxNzgzMjYxNzMzNzU4QGV4YW1wbGUuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInBob25lX3ZlcmlmaWVkIjpmYWxzZSwic3ViIjoiNjNkN2ZmNzgtOGI4Yi00ZTNkLTkyNDUtMWJhOWNjNjgzNGYzIn0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3ODMyNjE3MzV9XSwic2Vzc2lvbl9pZCI6IjA3YjczZWY3LTAwZDYtNGU1Ny1iYzc4LWU0ZDdhZDk2ZjM2YyIsImlzX2Fub255bW91cyI6ZmFsc2V9.fDt6R0aNSJFVfs41M7crbJ8LvHysQrI_RpS-8mntuASgZ7tQQVuT-v2EJ3WVxqhcz7g8OUNLSF6SeYc3NVCC2Q',
+      token_type: 'bearer',
+      expires_in: 3600,
+      expires_at: 1783265335,
+      refresh_token: 'idscwg2n64kf',
+      user: [Object],
+      weak_password: null
+    }
+  },
+  error: null
+}
+Querying profiles for user id 63d7ff78-8b8b-4e3d-9245-1ba9cc6834f3
+profiles select result: {
+  profileData: null,
+  profileError: {
+    message: 'Cannot coerce the result to a single JSON object',
+    code: 'PGRST116'
+  }
+}
+profiles raw rows: { rawRows: [], rawError: null }

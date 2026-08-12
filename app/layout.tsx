@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { DesignSystemProvider } from '@/components/design/DesignSystemProvider';
+import { PageTransition } from '@/components/design/PageTransition';
+import { CursorGlow } from '@/components/design/CursorGlow';
 
 export const metadata: Metadata = {
   title: 'TrainArduino - Learn Arduino Like Duolingo',
@@ -13,8 +16,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="min-h-screen bg-pcb-dark text-slate-100 transition-colors duration-400">
-        {children}
+      <body className="min-h-screen bg-[#07111b] text-slate-100 transition-colors duration-400">
+        <DesignSystemProvider>
+          <CursorGlow />
+          <PageTransition>{children}</PageTransition>
+        </DesignSystemProvider>
       </body>
     </html>
   );

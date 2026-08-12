@@ -1,0 +1,98 @@
+export const designTokens = {
+  colors: {
+    background: '#07111b',
+    surface: '#0d1722',
+    surfaceElevated: '#101b2b',
+    surfaceMuted: '#182534',
+    surfaceGlass: 'rgba(15, 23, 42, 0.72)',
+    border: 'rgba(148, 163, 184, 0.16)',
+    borderStrong: 'rgba(148, 163, 184, 0.24)',
+    text: '#f8fafc',
+    textMuted: '#94a3b8',
+    accent: '#32E7FF',
+    accentSecondary: '#4F8CFF',
+    success: '#34D399',
+    warning: '#F8B84E',
+    danger: '#F16D6D',
+    engineering: '#6EA8FF',
+    ember: '#C6793F',
+    midnight: '#07111b',
+    graphite: '#101725',
+  },
+  radius: {
+    xs: '0.5rem',
+    sm: '0.75rem',
+    md: '1rem',
+    lg: '1.25rem',
+    xl: '1.5rem',
+    pill: '999px',
+  },
+  shadows: {
+    flat: '0 1px 0 rgba(255,255,255,0.03) inset',
+    raised: '0 16px 40px rgba(2, 6, 23, 0.26)',
+    floating: '0 24px 70px rgba(2, 6, 23, 0.34)',
+    glow: '0 0 0 1px rgba(50,231,255,0.08), 0 14px 40px rgba(50,231,255,0.14)',
+    subtle: '0 10px 28px rgba(2, 6, 23, 0.2)',
+    soft: '0 8px 22px rgba(2, 6, 23, 0.16)',
+  },
+  motion: {
+    fast: { duration: 0.16, ease: [0.22, 1, 0.36, 1] },
+    medium: { duration: 0.22, ease: [0.22, 1, 0.36, 1] },
+    slow: { duration: 0.32, ease: [0.22, 1, 0.36, 1] },
+    entrance: { duration: 0.42, ease: [0.22, 1, 0.36, 1] },
+    hover: { duration: 0.2, ease: [0.22, 1, 0.36, 1] },
+    press: { duration: 0.14, ease: [0.22, 1, 0.36, 1] },
+    reveal: { duration: 0.48, ease: [0.22, 1, 0.36, 1] },
+  },
+  spacing: {
+    xs: '0.375rem',
+    sm: '0.5rem',
+    md: '0.75rem',
+    lg: '1rem',
+    xl: '1.5rem',
+    xxl: '2rem',
+    xxxl: '2.5rem',
+  },
+  blur: {
+    panel: '18px',
+    strong: '24px',
+  },
+  gradients: {
+    panel: 'linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.01))',
+    accent: 'linear-gradient(135deg, #32E7FF 0%, #4F8CFF 100%)',
+    surface: 'linear-gradient(135deg, #0d1722 0%, #101725 100%)',
+  },
+  typography: {
+    display: 'Space Grotesk, Inter, ui-sans-serif, system-ui, sans-serif',
+    body: 'Inter, ui-sans-serif, system-ui, sans-serif',
+    mono: 'IBM Plex Mono, ui-monospace, monospace',
+  },
+  sizes: {
+    iconSm: '1rem',
+    iconMd: '1.25rem',
+    iconLg: '1.5rem',
+    container: '72rem',
+  },
+  grid: {
+    gap: '1rem',
+  },
+};
+
+export const surfaceLevels = {
+  flat: 'border border-white/10 bg-[#0d1722] shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]',
+  raised: 'border border-white/10 bg-[#101b2b]/90 shadow-[0_16px_40px_rgba(2,6,23,0.26)]',
+  floating: 'border border-white/10 bg-[#101b2b]/90 shadow-[0_24px_70px_rgba(2,6,23,0.34)] backdrop-blur-xl',
+  glass: 'border border-white/10 bg-white/5 shadow-[0_12px_36px_rgba(2,6,23,0.24)] backdrop-blur-xl',
+  interactive: 'border border-cyan-400/20 bg-slate-900/80 shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_12px_36px_rgba(50,231,255,0.12)]',
+};
+
+export const motionPresets = {
+  fast: 'transition-all duration-200 ease-out',
+  medium: 'transition-all duration-300 ease-out',
+  slow: 'transition-all duration-450 ease-out',
+  entrance: 'motion-safe:animate-[fadeIn_0.45s_ease-out]',
+  exit: 'motion-safe:animate-[fadeOut_0.24s_ease-out]',
+  hover: 'motion-safe:hover:-translate-y-0.5 motion-safe:hover:scale-[1.01]',
+  press: 'active:scale-[0.98]',
+  reveal: 'motion-safe:animate-[fadeIn_0.6s_ease-out]',
+};

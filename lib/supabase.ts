@@ -14,7 +14,7 @@ const resolvedSupabaseUrl = supabaseUrl;
 const resolvedSupabaseAnonKey = supabaseAnonKey;
 
 export function createClient() {
-  return createBrowserClient(resolvedSupabaseUrl, resolvedSupabaseAnonKey);
+  return createBrowserClient(resolvedSupabaseUrl!, resolvedSupabaseAnonKey!);
 }
 
 export async function createServerSupabaseClient() {

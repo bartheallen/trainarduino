@@ -8,8 +8,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: '#3B82F6',
-        secondary: '#8B5CF6',
+        primary: '#4F8CFF',
+        secondary: '#7C5CFF',
+        electric: '#32E7FF',
+        royal: '#6D5CFF',
         copper: {
           50: '#fff4ea',
           100: '#fce1c8',
@@ -26,6 +28,8 @@ const config: Config = {
       },
       boxShadow: {
         pcb: '0 20px 60px rgba(0,0,0,0.24)',
+        premium: '0 20px 60px rgba(0, 0, 0, 0.28)',
+        glow: '0 0 0 1px rgba(255,255,255,0.06), 0 20px 60px rgba(50,231,255,0.12)',
       },
     },
   },

@@ -2,137 +2,118 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-
-const highlights = [
-  'Leçons courtes et progressives',
-  'Exercices codés + simulation',
-  'Feedback IA pédagogique',
-  'Parcours gamifié et motivant',
-];
+import { AnimatedNav } from '@/components/landing/AnimatedNav';
+import { LandingPageSections } from '@/components/landing/LandingPageSections';
+import { EngineeringBackground } from '@/components/design/EngineeringBackground';
+import { PrimitiveBadge } from '@/components/design/PrimitiveBadge';
+import { PrimitiveCard } from '@/components/design/PrimitiveCard';
 
 const stats = [
   { label: 'Modules', value: '12+' },
   { label: 'XP', value: '320' },
-  { label: 'Streak', value: '7 jours' },
+  { label: 'Signal score', value: '9.2/10' },
 ];
+
+const codeSample = ['void setup() {', 'pinMode(LED_BUILTIN, OUTPUT);', '}', 'void loop() {', 'digitalWrite(LED_BUILTIN, HIGH);', '}'];
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(198,121,63,0.24),_transparent_32%),linear-gradient(135deg,_#06120d_0%,_#0d1b15_45%,_#111c18_100%)] text-slate-100">
-      <div className="pointer-events-none absolute inset-0 opacity-30 [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:36px_36px] [mask-image:linear-gradient(to_bottom,rgba(0,0,0,0.95),transparent)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle,_rgba(198,121,63,0.14),_transparent_45%)]" />
+    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
+      <EngineeringBackground />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(50,231,255,0.10),_transparent_24%),radial-gradient(circle_at_bottom_right,_rgba(79,140,255,0.12),_transparent_28%)]" />
+      <motion.div className="pointer-events-none absolute left-[-8rem] top-[-8rem] h-72 w-72 rounded-full bg-cyan-400/20 blur-3xl" animate={{ x: [0, 24, 0], y: [0, 18, 0], scale: [1, 1.05, 1] }} transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }} />
+      <motion.div className="pointer-events-none absolute bottom-[-8rem] right-[-8rem] h-80 w-80 rounded-full bg-blue-500/20 blur-3xl" animate={{ x: [0, -20, 0], y: [0, -16, 0], scale: [1, 1.08, 1] }} transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }} />
 
-      <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col justify-center px-6 py-16 lg:px-8">
+      <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-4 pb-16 pt-6 sm:px-6 lg:px-8">
+        <AnimatedNav />
+
         <motion.header
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="rounded-[2rem] border border-copper-500/20 bg-slate-900/70 p-8 shadow-[0_25px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl xl:p-10"
+          transition={{ duration: 0.7, ease: 'easeOut' }}
+          className="relative z-10 mt-4 overflow-hidden rounded-[2.25rem] border border-white/10 bg-slate-900/60 p-8 shadow-[0_25px_90px_rgba(0,0,0,0.4)] backdrop-blur-2xl xl:p-10"
         >
-          <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          <div className="grid gap-10 lg:grid-cols-[1.03fr_0.97fr] lg:items-center">
             <div>
-              <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1, duration: 0.5 }}
-                className="text-sm font-semibold uppercase tracking-[0.35em] text-copper-400"
-              >
-                TrainArduino • Formation Arduino immersive
-              </motion.p>
-
-              <motion.h1
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.15, duration: 0.6 }}
-                className="mt-4 text-4xl font-semibold leading-tight sm:text-5xl lg:text-6xl"
-              >
-                Passez du rêve au circuit réel avec une formation futuriste et ludique.
-              </motion.h1>
-
-              <motion.p
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.6 }}
-                className="mt-5 max-w-2xl text-lg text-slate-300"
-              >
-                Apprenez l’Arduino comme un véritable parcours de prototypage : leçons courtes,
-                exercices interactifs, feedback IA et progression motivante à chaque étape.
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.25, duration: 0.6 }}
-                className="mt-8 flex flex-wrap gap-3"
-              >
-                <Link
-                  href="/signup"
-                  className="rounded-2xl bg-copper-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-copper-400"
-                >
-                  Commencer l’aventure
-                </Link>
-                <Link
-                  href="/login"
-                  className="rounded-2xl border border-slate-700 bg-slate-950/70 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:border-copper-500"
-                >
-                  Se connecter
-                </Link>
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }}>
+                <PrimitiveBadge tone="accent">Apprentissage électronique de nouvelle génération</PrimitiveBadge>
               </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.6 }}
-                className="mt-8 flex flex-wrap gap-3"
-              >
+              <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.6 }} className="mt-5 text-4xl font-semibold leading-[0.95] tracking-[-0.03em] text-white sm:text-5xl lg:text-7xl">
+                Comprenez l’électronique en construisant une intuition solide.
+              </motion.h1>
+
+              <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="mt-6 max-w-2xl text-lg text-slate-300">
+                TrainArduino transforme chaque leçon en expérience précise et calme, avec un accompagnement visuel, des retours instantanés et une progression qui donne envie de continuer.
+              </motion.p>
+
+              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.6 }} className="mt-8 flex flex-wrap gap-3">
+                <motion.div whileHover={{ y: -3, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <Link href="/signup" className="inline-flex rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_14px_40px_rgba(50,231,255,0.2)] transition">
+                    Commencer le parcours
+                  </Link>
+                </motion.div>
+                <motion.div whileHover={{ y: -3, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <Link href="/login" className="inline-flex rounded-full border border-white/15 bg-slate-950/70 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:border-cyan-400/40">
+                    Se connecter
+                  </Link>
+                </motion.div>
+              </motion.div>
+
+              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.6 }} className="mt-8 flex flex-wrap gap-3">
                 {stats.map((item) => (
-                  <div
-                    key={item.label}
-                    className="rounded-2xl border border-copper-500/20 bg-copper-500/10 px-4 py-3 text-sm text-copper-100"
-                  >
-                    <p className="text-xs uppercase tracking-[0.25em] text-copper-300">{item.label}</p>
-                    <p className="mt-1 text-xl font-semibold">{item.value}</p>
+                  <div key={item.label} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200 shadow-[0_10px_40px_rgba(0,0,0,0.16)] backdrop-blur">
+                    <p className="text-[11px] uppercase tracking-[0.3em] text-cyan-300">{item.label}</p>
+                    <p className="mt-1 text-xl font-semibold text-white">{item.value}</p>
                   </div>
                 ))}
               </motion.div>
             </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 24 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.18, duration: 0.65, ease: 'easeOut' }}
-              className="rounded-[2rem] border border-slate-700 bg-slate-950/70 p-6 shadow-inner"
-            >
-              <div className="rounded-2xl border border-copper-500/20 bg-copper-500/10 p-4">
-                <p className="text-sm font-semibold uppercase tracking-[0.25em] text-copper-300">
-                  Pourquoi TrainArduino
-                </p>
-                <h2 className="mt-3 text-2xl font-semibold text-white">
-                  Un parcours d’apprentissage qui se branche à chaque étape.
-                </h2>
-                <ul className="mt-4 space-y-3 text-sm text-slate-300">
-                  {highlights.map((item) => (
-                    <li key={item} className="flex items-center gap-2">
-                      <span className="h-2.5 w-2.5 rounded-full bg-copper-400" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            <motion.div initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.18, duration: 0.65, ease: 'easeOut' }} className="relative">
+              <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-cyan-500/20 via-transparent to-blue-500/20 blur-2xl" />
+              <PrimitiveCard tone="floating" className="relative overflow-hidden p-6">
+                <div className="rounded-[1.3rem] border border-cyan-400/20 bg-cyan-500/10 p-4">
+                  <div className="flex items-center justify-between text-sm text-cyan-300">
+                    <span>Live studio</span>
+                    <span>01 / 03</span>
+                  </div>
+                  <div className="mt-4 rounded-[1.2rem] border border-white/10 bg-slate-950/80 p-4">
+                    <div className="mb-3 flex items-center gap-2 text-[11px] uppercase tracking-[0.3em] text-slate-400">
+                      <span className="h-2.5 w-2.5 rounded-full bg-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.8)]" />
+                      <span>Embedded circuit loop</span>
+                    </div>
+                    <motion.div animate={{ y: [0, -4, 0] }} transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }} className="rounded-[1.2rem] border border-white/10 bg-gradient-to-br from-slate-900 to-slate-800 p-4">
+                      <div className="grid grid-cols-3 gap-2">
+                        {Array.from({ length: 9 }).map((_, index) => (
+                          <div key={index} className="h-3 rounded-full bg-white/10" />
+                        ))}
+                      </div>
+                      <div className="mt-4 rounded-xl border border-cyan-400/20 bg-cyan-500/10 p-3 text-sm text-slate-300">
+                        <p className="font-semibold text-white">Signal path</p>
+                        <p className="mt-1 text-slate-400">Prototype, test and refine inside a workspace that feels precise from the first blink.</p>
+                      </div>
+                    </motion.div>
+                  </div>
+                </div>
 
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
-                  <p className="text-sm font-semibold text-white">Modules guidés</p>
-                  <p className="mt-2 text-sm text-slate-400">Des étapes claires pour progresser sans vous perdre.</p>
+                <div className="mt-5 rounded-[1.3rem] border border-white/10 bg-slate-900/80 p-4">
+                  <div className="flex items-center justify-between text-sm text-slate-400">
+                    <span>Live code preview</span>
+                    <span className="text-cyan-300">running</span>
+                  </div>
+                  <pre className="mt-3 overflow-hidden rounded-xl border border-white/10 bg-black/40 p-4 text-sm text-slate-300">
+                    {codeSample.map((line, index) => (
+                      <div key={`${line}-${index}`} className={index === 0 ? 'text-cyan-300' : ''}>{line}</div>
+                    ))}
+                  </pre>
                 </div>
-                <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
-                  <p className="text-sm font-semibold text-white">Éditeur intégré</p>
-                  <p className="mt-2 text-sm text-slate-400">Codez, testez et apprenez dans un espace unique.</p>
-                </div>
-              </div>
+              </PrimitiveCard>
             </motion.div>
           </div>
         </motion.header>
+
+        <LandingPageSections />
       </div>
     </div>
   );

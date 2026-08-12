@@ -1,19 +1,17 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useState, type FormEvent } from 'react';
+import { useState } from 'react';
+import Link from 'next/link';
 import { signin } from '@/lib/auth';
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function handleSubmit(formData: FormData) {
     setIsLoading(true);
     setError(null);
 
-    const formData = new FormData(event.currentTarget);
     const result = await signin(formData);
     if (result?.error) {
       setError(result.error);
@@ -22,65 +20,52 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top_left,_rgba(198,121,63,0.16),_transparent_28%),linear-gradient(135deg,_#0A1410_0%,_#111c18_100%)] px-4 py-10 text-slate-100">
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md rounded-[2rem] border border-copper-500/20 bg-slate-900/70 p-8 shadow-[0_20px_60px_rgba(0,0,0,0.28)] backdrop-blur"
-      >
-        <div className="mb-8">
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-copper-400">Connexion</p>
-          <h1 className="mt-2 text-3xl font-semibold text-white">Reprenez votre circuit</h1>
-          <p className="mt-2 text-sm text-slate-400">Accédez à votre parcours et continuez à progresser.</p>
+    <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">Connexion</h1>
+      <form action={handleSubmit} className="space-y-4">
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+            <p className="text-red-600 text-sm">{error}</p>
+          </div>
+        )}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            E-mail
+          </label>
+          <input
+            type="email"
+            name="email"
+            required
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Saisissez votre e-mail"
+          />
         </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {error && (
-            <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
-              <p>{error}</p>
-            </div>
-          )}
-
-          <div>
-            <label className="mb-2 block text-sm font-medium text-slate-300">Email</label>
-            <input
-              type="email"
-              name="email"
-              required
-              className="w-full rounded-2xl border border-slate-700 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none transition duration-300 focus:border-copper-500 focus:ring-2 focus:ring-copper-500/20"
-              placeholder="Entrez votre email"
-            />
-          </div>
-
-          <div>
-            <label className="mb-2 block text-sm font-medium text-slate-300">Mot de passe</label>
-            <input
-              type="password"
-              name="password"
-              required
-              className="w-full rounded-2xl border border-slate-700 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none transition duration-300 focus:border-copper-500 focus:ring-2 focus:ring-copper-500/20"
-              placeholder="Entrez votre mot de passe"
-            />
-          </div>
-
-          <motion.button
-            whileTap={{ scale: 0.98 }}
-            whileHover={{ scale: 1.01 }}
-            type="submit"
-            disabled={isLoading}
-            className="w-full rounded-2xl bg-copper-500 px-4 py-3 text-sm font-semibold text-slate-950 transition hover:bg-copper-400 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {isLoading ? 'Connexion…' : 'Se connecter'}
-          </motion.button>
-        </form>
-
-        <p className="mt-6 text-center text-sm text-slate-400">
-          Pas encore de compte ?{' '}
-          <a href="/signup" className="font-semibold text-copper-300 transition hover:text-copper-200">
-            Créer un compte
-          </a>
-        </p>
-      </motion.div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Mot de passe
+          </label>
+          <input
+            type="password"
+            name="password"
+            required
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Saisissez votre mot de passe"
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isLoading ? 'Connexion…' : 'Se connecter'}
+        </button>
+      </form>
+      <p className="text-center mt-4 text-gray-600">
+        Vous n&apos;avez pas de compte ?{' '}
+        <Link href="/signup" className="text-blue-600 hover:underline">
+          Créer un compte
+        </Link>
+      </p>
     </div>
   );
 }

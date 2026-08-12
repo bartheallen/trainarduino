@@ -25,6 +25,9 @@ yarn-error.log*
 # Local env files
 .env*.local
 
+# E2E artifacts
+/tests/e2e/.sessions/
+
 # Vercel
 .vercel
 
