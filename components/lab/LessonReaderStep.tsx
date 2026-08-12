@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState, type ReactElement } from 'react';
 import { PrimitiveBadge } from '@/components/design/PrimitiveBadge';
 import { PrimitiveCard } from '@/components/design/PrimitiveCard';
@@ -88,9 +89,11 @@ export function LessonReaderStep({ lessons, onComplete }: LessonReaderStepProps)
 
         {currentLesson.image_url ? (
           <div className="mx-auto mt-4 mb-4 max-w-md overflow-hidden rounded-[1rem] border border-white/10 bg-slate-950/60">
-            <img
+            <Image
               src={currentLesson.image_url}
               alt={currentLesson.titre}
+              width={800}
+              height={450}
               className="h-auto w-full object-contain"
             />
           </div>

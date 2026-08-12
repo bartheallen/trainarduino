@@ -15,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="fr" suppressHydrationWarning>
       <body className="min-h-screen bg-[#07111b] text-slate-100 transition-colors duration-400">
         <DesignSystemProvider>
           <CursorGlow />
