@@ -24,14 +24,14 @@ export default function Home() {
       <motion.div className="pointer-events-none absolute left-[-8rem] top-[-8rem] h-72 w-72 rounded-full bg-cyan-400/20 blur-3xl" animate={{ x: [0, 24, 0], y: [0, 18, 0], scale: [1, 1.05, 1] }} transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }} />
       <motion.div className="pointer-events-none absolute bottom-[-8rem] right-[-8rem] h-80 w-80 rounded-full bg-blue-500/20 blur-3xl" animate={{ x: [0, -20, 0], y: [0, -16, 0], scale: [1, 1.08, 1] }} transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }} />
 
-      <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-4 pb-16 pt-6 sm:px-6 lg:px-8">
+      <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col overflow-x-hidden px-4 pb-16 pt-6 sm:px-6 lg:px-8">
         <AnimatedNav />
 
         <motion.header
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: 'easeOut' }}
-          className="relative z-10 mt-4 overflow-hidden rounded-[2.25rem] border border-white/10 bg-slate-900/60 p-8 shadow-[0_25px_90px_rgba(0,0,0,0.4)] backdrop-blur-2xl xl:p-10"
+          className="relative z-10 mt-4 overflow-hidden rounded-[2.25rem] border border-white/10 bg-slate-900/60 p-6 shadow-[0_25px_90px_rgba(0,0,0,0.4)] backdrop-blur-2xl sm:p-8 xl:p-10"
         >
           <div className="grid gap-10 lg:grid-cols-[1.03fr_0.97fr] lg:items-center">
             <div>
@@ -39,30 +39,30 @@ export default function Home() {
                 <PrimitiveBadge tone="accent">Apprentissage électronique de nouvelle génération</PrimitiveBadge>
               </motion.div>
 
-              <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.6 }} className="mt-5 text-4xl font-semibold leading-[0.95] tracking-[-0.03em] text-white sm:text-5xl lg:text-7xl">
+              <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.6 }} className="mt-5 text-3xl font-semibold leading-[0.95] tracking-[-0.03em] text-white sm:text-4xl md:text-5xl lg:text-7xl">
                 Comprenez l’électronique en construisant une intuition solide.
               </motion.h1>
 
-              <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="mt-6 max-w-2xl text-lg text-slate-300">
+              <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="mt-6 max-w-2xl text-base text-slate-300 sm:text-lg">
                 TrainArduino transforme chaque leçon en expérience précise et calme, avec un accompagnement visuel, des retours instantanés et une progression qui donne envie de continuer.
               </motion.p>
 
-              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.6 }} className="mt-8 flex flex-wrap gap-3">
-                <motion.div whileHover={{ y: -3, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                  <Link href="/signup" className="inline-flex rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_14px_40px_rgba(50,231,255,0.2)] transition">
+              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.6 }} className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <motion.div whileHover={{ y: -3, scale: 1.02 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto">
+                  <Link href="/signup" className="inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_14px_40px_rgba(50,231,255,0.2)] transition sm:w-auto">
                     Commencer le parcours
                   </Link>
                 </motion.div>
-                <motion.div whileHover={{ y: -3, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                  <Link href="/login" className="inline-flex rounded-full border border-white/15 bg-slate-950/70 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:border-cyan-400/40">
+                <motion.div whileHover={{ y: -3, scale: 1.02 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto">
+                  <Link href="/login" className="inline-flex w-full items-center justify-center rounded-full border border-white/15 bg-slate-950/70 px-5 py-3 text-sm font-semibold text-slate-100 transition hover:border-cyan-400/40 sm:w-auto">
                     Se connecter
                   </Link>
                 </motion.div>
               </motion.div>
 
-              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.6 }} className="mt-8 flex flex-wrap gap-3">
+              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.6 }} className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
                 {stats.map((item) => (
-                  <div key={item.label} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200 shadow-[0_10px_40px_rgba(0,0,0,0.16)] backdrop-blur">
+                  <div key={item.label} className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200 shadow-[0_10px_40px_rgba(0,0,0,0.16)] backdrop-blur">
                     <p className="text-[11px] uppercase tracking-[0.3em] text-cyan-300">{item.label}</p>
                     <p className="mt-1 text-xl font-semibold text-white">{item.value}</p>
                   </div>

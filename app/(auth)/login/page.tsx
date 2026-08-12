@@ -20,49 +20,49 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Connexion</h1>
+    <div className="w-full max-w-md rounded-2xl border border-white/10 bg-slate-900/80 p-6 shadow-[0_24px_70px_rgba(2,6,23,0.45)] backdrop-blur-xl sm:p-8">
+      <h1 className="mb-6 text-3xl font-bold text-slate-100">Connexion</h1>
       <form action={handleSubmit} className="space-y-4">
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-            <p className="text-red-600 text-sm">{error}</p>
+          <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-3">
+            <p className="text-sm text-red-200">{error}</p>
           </div>
         )}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="mb-2 block text-sm font-medium text-slate-200">
             E-mail
           </label>
           <input
             type="email"
             name="email"
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-white/10 bg-slate-950/60 px-4 py-2.5 text-slate-100 placeholder:text-slate-400 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30"
             placeholder="Saisissez votre e-mail"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="mb-2 block text-sm font-medium text-slate-200">
             Mot de passe
           </label>
           <input
             type="password"
             name="password"
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-white/10 bg-slate-950/60 px-4 py-2.5 text-slate-100 placeholder:text-slate-400 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400/30"
             placeholder="Saisissez votre mot de passe"
           />
         </div>
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full rounded-lg bg-gradient-to-r from-cyan-400 to-blue-500 py-2.5 font-semibold text-slate-950 shadow-[0_14px_40px_rgba(50,231,255,0.2)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isLoading ? 'Connexion…' : 'Se connecter'}
         </button>
       </form>
-      <p className="text-center mt-4 text-gray-600">
+      <p className="mt-4 text-center text-sm text-slate-300">
         Vous n&apos;avez pas de compte ?{' '}
-        <Link href="/signup" className="text-blue-600 hover:underline">
+        <Link href="/signup" className="font-medium text-cyan-300 hover:underline">
           Créer un compte
         </Link>
       </p>
