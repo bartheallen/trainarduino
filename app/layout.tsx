@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import './globals.css';
 import { DesignSystemProvider } from '@/components/design/DesignSystemProvider';
 import { PageTransition } from '@/components/design/PageTransition';
@@ -20,6 +22,8 @@ export default function RootLayout({
         <DesignSystemProvider>
           <CursorGlow />
           <PageTransition>{children}</PageTransition>
+          <Analytics />
+          <SpeedInsights />
         </DesignSystemProvider>
       </body>
     </html>
