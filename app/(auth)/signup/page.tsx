@@ -19,8 +19,8 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="w-full max-w-md rounded-2xl border border-white/10 bg-slate-900/80 p-6 shadow-[0_24px_70px_rgba(2,6,23,0.45)] backdrop-blur-xl sm:p-8">
-      <h1 className="mb-6 text-3xl font-bold text-slate-100">Créer un compte</h1>
+    <div className="w-full min-w-0 max-w-md rounded-2xl border border-white/10 bg-slate-900/80 p-6 shadow-[0_24px_70px_rgba(2,6,23,0.45)] backdrop-blur-xl sm:p-8">
+      <h1 className="mb-6 break-words text-3xl font-bold text-slate-100">Créer un compte</h1>
       <form action={handleSubmit} className="space-y-4">
         {error && (
           <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-3">

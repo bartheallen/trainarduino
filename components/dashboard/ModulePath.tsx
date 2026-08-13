@@ -33,7 +33,7 @@ export function ModulePath({ modules }: ModulePathProps) {
   }, [modules]);
 
   return (
-    <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950/90 p-6 text-slate-100 shadow-[0_24px_70px_rgba(0,0,0,0.35)]">
+    <div className="relative min-w-0 overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950/90 p-6 text-slate-100 shadow-[0_24px_70px_rgba(0,0,0,0.35)]">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.10),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(59,130,246,0.12),_transparent_26%)]" />
       <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-80" viewBox="0 0 100 100" preserveAspectRatio="none">
         <path d="M10 20 C30 20, 30 40, 50 40 S70 60, 90 60" stroke="rgba(34,211,238,0.24)" strokeWidth="1.1" fill="none" strokeLinecap="round" />
@@ -43,18 +43,18 @@ export function ModulePath({ modules }: ModulePathProps) {
 
       <div className="relative z-10 space-y-8">
         {pathways.map((module, index) => (
-          <motion.div key={module.id} className={`flex ${module.align}`} initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }} animate={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.04 * index }}>
-            <div className="flex items-center gap-4 rounded-[1.25rem] border border-white/10 bg-slate-900/60 px-4 py-3 backdrop-blur-xl">
+          <motion.div key={module.id} className={`flex min-w-0 ${module.align}`} initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }} animate={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.04 * index }}>
+            <div className="flex min-w-0 items-center gap-4 rounded-[1.25rem] border border-white/10 bg-slate-900/60 px-4 py-3 backdrop-blur-xl">
               <ModuleNode
                 title={module.titre}
                 state={module.state as 'locked' | 'available' | 'completed'}
                 active={module.active}
                 onClick={() => setSelectedModule(module.id)}
               />
-              <div className="flex-1">
+              <div className="min-w-0 flex-1">
                 <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-400">Module {module.ordre}</p>
-                <p className="text-lg font-semibold text-white">{module.titre}</p>
-                <p className="mt-1 text-sm leading-6 text-slate-400">
+                <p className="break-words text-lg font-semibold text-white">{module.titre}</p>
+                <p className="mt-1 break-words text-sm leading-6 text-slate-400">
                   {module.state === 'locked' ? '🔒 À débloquer' : module.description}
                 </p>
                 {module.state !== 'locked' && (

@@ -115,29 +115,29 @@ export function DashboardExperience({
   }
 
   return (
-    <div className="mx-auto flex max-w-7xl flex-col gap-6">
+    <div className="mx-auto flex min-w-0 max-w-7xl flex-col gap-6">
       <motion.header
         initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
         animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="relative overflow-hidden rounded-[2.2rem] border border-white/10 bg-slate-900/75 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.34)] backdrop-blur-2xl sm:p-8"
+        className="relative min-w-0 overflow-hidden rounded-[2.2rem] border border-white/10 bg-slate-900/75 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.34)] backdrop-blur-2xl sm:p-8"
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.13),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(59,130,246,0.16),_transparent_28%)]" />
-        <div className="relative z-10 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-3xl">
-            <div className="flex items-center gap-3">
+        <div className="relative z-10 flex min-w-0 flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-3xl min-w-0">
+            <div className="flex min-w-0 items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-cyan-400/25 bg-cyan-400/10 text-cyan-200 shadow-[0_0_18px_rgba(34,211,238,0.14)]">
                 <CircuitChipIcon className="h-6 w-6" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <PrimitiveBadge tone="accent">Mission Control</PrimitiveBadge>
-                <h1 className="mt-2 text-4xl font-semibold tracking-[-0.03em] text-white sm:text-5xl">
+                <h1 className="mt-2 break-words text-4xl font-semibold tracking-[-0.03em] text-white sm:text-5xl">
                   Bonjour, <span className="text-cyan-300">{profile.username}</span>
                 </h1>
               </div>
             </div>
 
-            <p className="mt-5 max-w-2xl text-lg text-slate-300">
+            <p className="mt-5 max-w-2xl break-words text-lg text-slate-300">
               Votre parcours Arduino se déroule comme un circuit de précision : chaque module révèle une nouvelle étape, chaque progression éclaire le prochain challenge.
             </p>
 
@@ -156,11 +156,11 @@ export function DashboardExperience({
             </div>
           </div>
 
-          <PrimitiveCard tone="glass" className="w-full max-w-md p-5">
-            <div className="flex items-center justify-between">
-              <div>
+          <PrimitiveCard tone="glass" className="w-full min-w-0 max-w-md p-5">
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
                 <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300">Mission active</p>
-                <h2 className="mt-2 text-2xl font-semibold text-white">Maîtriser la logique du circuit</h2>
+                <h2 className="mt-2 break-words text-2xl font-semibold text-white">Maîtriser la logique du circuit</h2>
               </div>
               <div className="flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-emerald-300">
                 <LedIndicator className="shrink-0" />

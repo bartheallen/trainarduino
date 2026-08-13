@@ -73,7 +73,7 @@ export default async function DashboardPage() {
     const adaptiveRecommendation = await adaptiveEngine.recommendAdaptiveActions(user.id).catch(() => null);
 
     return (
-      <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.12),_transparent_30%),linear-gradient(135deg,_#071016_0%,_#0d1b23_100%)] px-4 py-8 text-slate-100 sm:px-6 lg:px-8">
+      <div className="min-h-screen min-w-0 bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.12),_transparent_30%),linear-gradient(135deg,_#071016_0%,_#0d1b23_100%)] px-4 py-8 text-slate-100 sm:px-6 lg:px-8">
         <DashboardExperience
           profile={profileForDashboard}
           progressPercentage={progressPercentage}

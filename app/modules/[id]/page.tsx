@@ -29,11 +29,11 @@ export default async function ModulePage({
     });
 
     return (
-      <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.12),_transparent_30%),linear-gradient(135deg,_#071016_0%,_#0d1b23_100%)] px-4 py-8 text-slate-100 sm:px-6 lg:px-8">
-        <div className="mx-auto flex max-w-3xl flex-col gap-4 rounded-[1.6rem] border border-white/10 bg-slate-900/75 p-6 shadow-2xl shadow-cyan-950/30">
+      <div className="min-h-screen min-w-0 bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.12),_transparent_30%),linear-gradient(135deg,_#071016_0%,_#0d1b23_100%)] px-4 py-8 text-slate-100 sm:px-6 lg:px-8">
+        <div className="mx-auto flex min-w-0 max-w-3xl flex-col gap-4 rounded-[1.6rem] border border-white/10 bg-slate-900/75 p-6 shadow-2xl shadow-cyan-950/30">
           <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">Module</p>
-          <h1 className="text-2xl font-semibold text-white">{errorState.title}</h1>
-          <p className="text-sm leading-6 text-slate-300">{errorState.detail}</p>
+          <h1 className="break-words text-2xl font-semibold text-white">{errorState.title}</h1>
+          <p className="break-words text-sm leading-6 text-slate-300">{errorState.detail}</p>
           <div className="flex flex-wrap gap-3">
             <Link href="/dashboard" className="rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm text-slate-100 transition hover:border-cyan-400/30 hover:text-cyan-100">
               Retour au dashboard
@@ -66,11 +66,11 @@ export default async function ModulePage({
     });
 
     return (
-      <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.12),_transparent_30%),linear-gradient(135deg,_#071016_0%,_#0d1b23_100%)] px-4 py-8 text-slate-100 sm:px-6 lg:px-8">
-        <div className="mx-auto flex max-w-3xl flex-col gap-4 rounded-[1.6rem] border border-white/10 bg-slate-900/75 p-6 shadow-2xl shadow-cyan-950/30">
+      <div className="min-h-screen min-w-0 bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.12),_transparent_30%),linear-gradient(135deg,_#071016_0%,_#0d1b23_100%)] px-4 py-8 text-slate-100 sm:px-6 lg:px-8">
+        <div className="mx-auto flex min-w-0 max-w-3xl flex-col gap-4 rounded-[1.6rem] border border-white/10 bg-slate-900/75 p-6 shadow-2xl shadow-cyan-950/30">
           <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">Module</p>
-          <h1 className="text-2xl font-semibold text-white">Impossible d’ouvrir ce module</h1>
-          <p className="text-sm leading-6 text-slate-300">
+          <h1 className="break-words text-2xl font-semibold text-white">Impossible d’ouvrir ce module</h1>
+          <p className="break-words text-sm leading-6 text-slate-300">
             Le contenu du module {moduleId} n’a pas pu être chargé. {loadError.message}
           </p>
           <div className="flex flex-wrap gap-3">
@@ -87,12 +87,12 @@ export default async function ModulePage({
   const moduleStatus = moduleProgress?.statut ?? 'locked';
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.12),_transparent_30%),linear-gradient(135deg,_#071016_0%,_#0d1b23_100%)] px-4 py-8 text-slate-100 sm:px-6 lg:px-8">
-      <div className="mx-auto flex max-w-7xl flex-col gap-4">
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-[1.4rem] border border-white/10 bg-slate-900/70 p-4">
-          <div>
+    <div className="min-h-screen min-w-0 bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.12),_transparent_30%),linear-gradient(135deg,_#071016_0%,_#0d1b23_100%)] px-4 py-8 text-slate-100 sm:px-6 lg:px-8">
+      <div className="mx-auto flex min-w-0 max-w-7xl flex-col gap-4">
+        <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 rounded-[1.4rem] border border-white/10 bg-slate-900/70 p-4">
+          <div className="min-w-0">
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">Module</p>
-            <h1 className="text-2xl font-semibold text-white">{content.module.titre}</h1>
+            <h1 className="break-words text-2xl font-semibold text-white">{content.module.titre}</h1>
           </div>
           <Link href="/dashboard" className="rounded-full border border-white/10 bg-white/8 px-3 py-2 text-sm text-slate-200 transition hover:border-cyan-400/25 hover:text-cyan-100">Retour au dashboard</Link>
         </div>

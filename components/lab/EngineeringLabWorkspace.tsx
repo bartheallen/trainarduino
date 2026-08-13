@@ -160,15 +160,15 @@ export function EngineeringLabWorkspace({ module, lessons, exercises, socraticQu
   }
 
   return (
-    <div className="mx-auto flex max-w-7xl flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
+    <div className="mx-auto flex min-w-0 max-w-7xl flex-col gap-4">
+      <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-cyan-400/25 bg-cyan-400/10 text-cyan-200 shadow-[0_0_20px_rgba(34,211,238,0.12)]">
             <CircuitChipIcon className="h-5 w-5" />
           </div>
-          <div>
+          <div className="min-w-0">
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">Engineering Lab</p>
-            <h1 className="text-xl font-semibold text-white">{module.titre}</h1>
+            <h1 className="break-words text-xl font-semibold text-white">{module.titre}</h1>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -179,8 +179,8 @@ export function EngineeringLabWorkspace({ module, lessons, exercises, socraticQu
         </div>
       </div>
 
-      <PrimitiveCard tone="glass" className="p-4">
-        <div className="mt-4">
+      <PrimitiveCard tone="glass" className="min-w-0 p-4">
+        <div className="mt-4 min-w-0">
           {!lessonsRead ? (
             <LessonReaderStep lessons={lessons} onComplete={() => setLessonsRead(true)} />
           ) : (
@@ -195,8 +195,8 @@ export function EngineeringLabWorkspace({ module, lessons, exercises, socraticQu
       </PrimitiveCard>
 
       {exerciseEnonce ? (
-        <PrimitiveCard tone="glass" className="p-4">
-          <div className="flex items-center justify-between gap-3">
+        <PrimitiveCard tone="glass" className="min-w-0 p-4">
+          <div className="flex min-w-0 items-center justify-between gap-3">
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300">📝 Ce que vous devez coder</p>
             {exerciseEnonceLong ? (
               <button
@@ -208,7 +208,7 @@ export function EngineeringLabWorkspace({ module, lessons, exercises, socraticQu
               </button>
             ) : null}
           </div>
-          <div className={`mt-3 whitespace-pre-line break-words text-sm leading-7 text-slate-200 ${exerciseEnonceLong && !exerciseEnonceExpanded ? 'max-h-64 overflow-hidden' : ''}`}>
+          <div className={`mt-3 min-w-0 whitespace-pre-line break-words text-sm leading-7 text-slate-200 ${exerciseEnonceLong && !exerciseEnonceExpanded ? 'max-h-64 overflow-hidden' : ''}`}>
             {exerciseEnonceLong && !exerciseEnonceExpanded ? `${exerciseEnonce.slice(0, 900)}...` : exerciseEnonce}
           </div>
         </PrimitiveCard>

@@ -29,6 +29,10 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+img, svg, video, canvas, iframe {
+  max-width: 100%;
+}
+
 body {
   font-family: 'Inter', 'IBM Plex Sans', 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;

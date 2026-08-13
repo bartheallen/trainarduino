@@ -59,12 +59,12 @@ export function LessonReader({ module, lesson, lessons, currentUserId }: LessonR
   const nextLesson = lessons[currentIndex + 1];
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.12),_transparent_30%),linear-gradient(135deg,_#071016_0%,_#0d1b23_100%)] px-4 py-8 text-slate-100 sm:px-6 lg:px-8">
-      <div className="mx-auto flex max-w-6xl flex-col gap-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
+    <div className="min-h-screen min-w-0 bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.12),_transparent_30%),linear-gradient(135deg,_#071016_0%,_#0d1b23_100%)] px-4 py-8 text-slate-100 sm:px-6 lg:px-8">
+      <div className="mx-auto flex min-w-0 max-w-6xl flex-col gap-4">
+        <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
+          <div className="min-w-0">
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">Lesson reader</p>
-            <h1 className="text-2xl font-semibold text-white">{lesson.titre}</h1>
+            <h1 className="break-words text-2xl font-semibold text-white">{lesson.titre}</h1>
           </div>
           <PrimitiveBadge tone="accent">{module.titre}</PrimitiveBadge>
         </div>
@@ -79,13 +79,13 @@ export function LessonReader({ module, lesson, lessons, currentUserId }: LessonR
           </div>
         </PrimitiveCard>
 
-        <div className="grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-          <motion.article initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }} animate={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="space-y-4">
-            <PrimitiveCard tone="raised" className="p-5">
+        <div className="grid min-w-0 gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+          <motion.article initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }} animate={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="min-w-0 space-y-4">
+            <PrimitiveCard tone="raised" className="min-w-0 p-5">
               <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300">Contenu</p>
               <div className="mt-4 space-y-4 text-sm leading-8 text-slate-300">
                 {paragraphs.map((paragraph, index) => (
-                  <p key={`${paragraph}-${index}`}>{paragraph}</p>
+                  <p key={`${paragraph}-${index}`} className="break-words">{paragraph}</p>
                 ))}
               </div>
             </PrimitiveCard>
@@ -101,14 +101,14 @@ export function LessonReader({ module, lesson, lessons, currentUserId }: LessonR
             </PrimitiveCard>
           </motion.article>
 
-          <aside className="space-y-4">
-            <PrimitiveCard tone="glass" className="p-4">
+          <aside className="min-w-0 space-y-4">
+            <PrimitiveCard tone="glass" className="min-w-0 p-4">
               <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300">Plan du module</p>
               <div className="mt-4 space-y-2">
                 {lessons.map((entry, index) => (
-                  <Link key={entry.id} href={`/modules/${module.id}/lesson/${entry.id}`} className={`block rounded-[1rem] border px-3 py-2 text-sm transition ${entry.id === lesson.id ? 'border-cyan-400/30 bg-cyan-400/10 text-cyan-100' : 'border-white/10 bg-slate-950/70 text-slate-300 hover:border-cyan-400/20 hover:text-white'}`}>
+                  <Link key={entry.id} href={`/modules/${module.id}/lesson/${entry.id}`} className={`block min-w-0 rounded-[1rem] border px-3 py-2 text-sm transition ${entry.id === lesson.id ? 'border-cyan-400/30 bg-cyan-400/10 text-cyan-100' : 'border-white/10 bg-slate-950/70 text-slate-300 hover:border-cyan-400/20 hover:text-white'}`}>
                     <span className="block text-[11px] uppercase tracking-[0.24em] text-slate-500">0{index + 1}</span>
-                    <span className="mt-1 block font-medium">{entry.titre}</span>
+                    <span className="mt-1 block break-words font-medium">{entry.titre}</span>
                   </Link>
                 ))}
               </div>
