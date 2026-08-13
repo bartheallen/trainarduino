@@ -11,6 +11,11 @@ export const metadata: Metadata = {
   description: 'Interactive Arduino learning platform with gamification',
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
+
 export default function RootLayout({
   children,
 }: {
