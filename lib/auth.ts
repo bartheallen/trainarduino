@@ -294,3 +294,56 @@ export async function updatePassword(newPassword: string) {
 
   return { success: true };
 }
+
+/**
+ * Sign in with Google OAuth
+ * 
+ * Initiates the OAuth flow with Google provider.
+ * User is redirected to Google login, then to /api/auth/callback.
+ */
+export async function signInWithGoogle() {
+  const supabase = await createServerSupabaseClient();
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+
+  try {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${siteUrl}/api/auth/callback`,
+      },
+    });
+
+    if (error) {
+      return { error: normalizeErrorMessage(error.message) };
+    }
+
+    if (data?.url) {
+      redirect(data.url);
+    }
+
+    return { error: 'Impossible de se connecter avec Google.' };
+  } catch (err: unknown) {
+    if (isRedirectError(err)) {
+      throw err;
+    }
+
+    console.error('signInWithGoogle error:', err);
+    const message = (err as { message?: string })?.message ?? String(err);
+    return { error: normalizeErrorMessage(message) };
+  }
+}
+
+/**
+ * Sign up with Google OAuth
+ * 
+ * Initiates the OAuth flow with Google provider for new users.
+ * User is redirected to Google login, then to /api/auth/callback.
+ * 
+ * Note: signInWithOAuth handles both signup and signin with Google.
+ * If the user doesn't exist, Supabase creates them automatically.
+ */
+export async function signUpWithGoogle() {
+  // Use the same OAuth flow as signIn
+  // Supabase automatically creates new users during OAuth if they don't exist
+  return signInWithGoogle();
+}

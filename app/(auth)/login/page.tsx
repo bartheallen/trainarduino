@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { signin } from '@/lib/auth';
+import { GoogleAuthButton } from '@/components/auth/GoogleAuthButton';
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
@@ -22,6 +23,8 @@ export default function LoginPage() {
   return (
     <div className="w-full min-w-0 max-w-md rounded-2xl border border-white/10 bg-slate-900/80 p-6 shadow-[0_24px_70px_rgba(2,6,23,0.45)] backdrop-blur-xl sm:p-8">
       <h1 className="mb-6 break-words text-3xl font-bold text-slate-100">Connexion</h1>
+      
+      {/* Email/Password Form */}
       <form action={handleSubmit} className="space-y-4">
         {error && (
           <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-3">
@@ -60,12 +63,31 @@ export default function LoginPage() {
           {isLoading ? 'Connexion…' : 'Se connecter'}
         </button>
       </form>
-      <p className="mt-4 text-center text-sm text-slate-300">
-        Vous n&apos;avez pas de compte ?{' '}
-        <Link href="/signup" className="font-medium text-cyan-300 hover:underline">
-          Créer un compte
-        </Link>
-      </p>
+
+      {/* Divider */}
+      <div className="my-5 flex items-center gap-3">
+        <div className="h-px flex-1 bg-white/10" />
+        <span className="text-xs text-slate-400">ou</span>
+        <div className="h-px flex-1 bg-white/10" />
+      </div>
+
+      {/* Google OAuth Button */}
+      <GoogleAuthButton mode="signin" />
+
+      {/* Links */}
+      <div className="mt-6 space-y-3">
+        <p className="text-center text-sm text-slate-300">
+          Vous n&apos;avez pas de compte ?{' '}
+          <Link href="/signup" className="font-medium text-cyan-300 hover:underline">
+            Créer un compte
+          </Link>
+        </p>
+        <p className="text-center text-sm text-slate-300">
+          <Link href="/forgot-password" className="font-medium text-cyan-300 hover:underline">
+            Mot de passe oublié ?
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

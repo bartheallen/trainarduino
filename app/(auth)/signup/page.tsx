@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { signup } from '@/lib/auth';
+import { GoogleAuthButton } from '@/components/auth/GoogleAuthButton';
 
 export default function SignupPage() {
   const [error, setError] = useState<string | null>(null);
@@ -71,7 +72,19 @@ export default function SignupPage() {
           {isLoading ? 'Création du compte…' : 'S’inscrire'}
         </button>
       </form>
-      <p className="mt-4 text-center text-sm text-slate-300">
+
+      {/* Divider */}
+      <div className="my-5 flex items-center gap-3">
+        <div className="h-px flex-1 bg-white/10" />
+        <span className="text-xs text-slate-400">ou</span>
+        <div className="h-px flex-1 bg-white/10" />
+      </div>
+
+      {/* Google OAuth Button */}
+      <GoogleAuthButton mode="signup" />
+
+      {/* Links */}
+      <p className="mt-6 text-center text-sm text-slate-300">
         Vous avez déjà un compte ?{' '}
         <a href="/login" className="font-medium text-cyan-300 hover:underline">
           Se connecter
