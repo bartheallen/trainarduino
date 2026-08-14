@@ -180,7 +180,7 @@ export async function signin(formData: FormData) {
     }
 
     revalidatePath('/');
-    redirect(profile?.niveau_actuel == null ? '/onboarding/positioning-test' : '/dashboard');
+    redirect(profile?.niveau_actuel == null ? '/positioning-test' : '/dashboard');
   } catch (err: unknown) {
     if (isRedirectError(err)) {
       throw err;

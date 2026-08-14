@@ -73,7 +73,7 @@ export async function middleware(request: NextRequest) {
     pathname === '/dashboard' ||
     pathname.startsWith('/dashboard') ||
     pathname.startsWith('/modules') ||
-    pathname.startsWith('/onboarding/positioning-test');
+    pathname.startsWith('/positioning-test');
 
   // Public auth routes that should be hidden once signed in
   const isAuthRoute =

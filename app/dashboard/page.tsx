@@ -60,7 +60,7 @@ export default async function DashboardPage() {
       .filter((module) => completedModuleIds.has(module.id) || inProgressModuleIds.has(module.id) || module.status === 'available');
 
     if (profile.niveau_actuel == null) {
-      redirect('/onboarding/positioning-test');
+      redirect('/positioning-test');
     }
 
     const { currentLevel, currentThreshold, nextThreshold } = getLevelThresholds(profile.xp_total ?? 0);

@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
           if (!profileError && profile) {
             // User has profile, redirect based on current level
             const redirectTo = profile.niveau_actuel == null 
-              ? '/onboarding/positioning-test' 
+              ? '/positioning-test' 
               : '/dashboard';
             return NextResponse.redirect(new URL(redirectTo, request.url));
           }
