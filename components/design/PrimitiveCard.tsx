@@ -35,10 +35,10 @@ export function PrimitiveCard({ children, tone = 'raised', className = '', hover
       onKeyDown={onKeyDown}
       role={isInteractive ? 'button' : undefined}
       tabIndex={isInteractive ? 0 : undefined}
-      className={`relative overflow-hidden rounded-[1.25rem] border border-white/10 p-5 sm:p-6 ${tones[tone]} ${className}`}
+      className={`relative w-full max-w-full rounded-[1.25rem] border border-white/10 p-5 sm:p-6 ${tones[tone]} ${className}`}
     >
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(125deg,transparent_0%,rgba(255,255,255,0.035)_40%,transparent_100%)]" />
-      <div className="relative z-10">{children}</div>
+      <div className="relative z-10 min-w-0">{children}</div>
     </motion.div>
   );
 }

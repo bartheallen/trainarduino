@@ -23,7 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <body className="min-h-screen overflow-x-hidden bg-[#07111b] text-slate-100 transition-colors duration-400">
+      <body className="min-h-screen bg-[#07111b] text-slate-100 transition-colors duration-400">
         <DesignSystemProvider>
           <CursorGlow />
           <PageTransition>{children}</PageTransition>

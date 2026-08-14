@@ -19,5 +19,9 @@ const tones = {
 };
 
 export function PrimitiveBadge({ children, tone = 'neutral', className = '' }: PrimitiveBadgeProps) {
-  return <span className={`inline-flex items-center rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] ${tones[tone]} ${className}`}>{children}</span>;
+  return (
+    <span className={`inline-flex max-w-full items-center rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] ${tones[tone]} ${className}`} style={{ minWidth: 0 }}>
+      <span className="truncate">{children}</span>
+    </span>
+  );
 }

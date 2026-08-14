@@ -171,7 +171,7 @@ export function LessonExperience({ module, lessons, exercises }: LessonExperienc
                         <button type="button" className="rounded-full bg-cyan-400/10 px-3 py-1 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-400/20">Exécuter</button>
                       </div>
                     </div>
-                    <pre className="mt-4 overflow-hidden rounded-[1rem] border border-white/10 bg-black/50 p-4 text-sm leading-7 text-slate-300">
+                    <pre className="mt-4 overflow-x-auto rounded-[1rem] border border-white/10 bg-black/50 p-4 text-sm leading-7 text-slate-300">
                       <code>{`void setup() {\n  pinMode(LED_BUILTIN, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(LED_BUILTIN, HIGH);\n}`}</code>
                     </pre>
                   </div>

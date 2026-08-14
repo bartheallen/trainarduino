@@ -23,7 +23,7 @@ export function PrimitiveProgress({ value, max = 100, className = '' }: Primitiv
       />
       <motion.div
         className="pointer-events-none absolute inset-y-0 left-0 w-20 rounded-full bg-white/30 blur-sm"
-        animate={{ x: ['-120%', '220%'] }}
+        animate={{ x: ['-80%', '180%'] }}
         transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
       />
     </div>

@@ -13,7 +13,7 @@ describe('SubscriberRegistration', () => {
       import('@/lib/events/eventBus'),
     ]);
 
-    initializeEventSystem();
+    await initializeEventSystem();
 
     expect(defaultEventBus.listSubscribers('KnowledgeUpdated').length).toBeGreaterThan(0);
     expect(defaultEventBus.listSubscribers('ExerciseSubmitted').length).toBeGreaterThan(0);

@@ -92,6 +92,11 @@ class EventBus {
     return all;
   }
 
+  clearSubscribers() {
+    this.subscribers.clear();
+    return true;
+  }
+
   getStore() {
     return this.store;
   }

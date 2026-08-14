@@ -16,9 +16,9 @@ import { initializeEventSystem } from '@/lib/events/bootstrap';
 import '@/lib/events/subscribers/gamificationSubscriber';
 
 describe('gamificationSubscriber', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.resetAllMocks();
-    initializeEventSystem();
+    await initializeEventSystem();
   });
 
   it('publishes XpAwarded when ProgressUpdated contains xp > 0', async () => {

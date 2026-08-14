@@ -21,7 +21,7 @@ export function SignalLoader({ label = 'Synchronizing signals' }: { label?: stri
       <div className="relative overflow-hidden rounded-full border border-cyan-400/20 bg-slate-900/80 px-4 py-2">
         <motion.span
           className="absolute inset-y-0 left-0 w-20 rounded-full bg-gradient-to-r from-transparent via-cyan-300/40 to-transparent"
-          animate={{ x: ['-120%', '120%'] }}
+          animate={{ x: ['-80%', '80%'] }}
           transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
         />
         <span className="relative text-[11px] uppercase tracking-[0.3em] text-cyan-200">{label}</span>

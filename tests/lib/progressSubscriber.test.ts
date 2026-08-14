@@ -10,6 +10,7 @@ vi.mock('@/lib/db', () => {
     updateModuleProgress: vi.fn().mockResolvedValue(null),
     updateCurrentModule: vi.fn().mockResolvedValue(null),
     unlockNextModule: vi.fn().mockResolvedValue(null),
+    updateUserStreak: vi.fn().mockResolvedValue({ streak: 1 }),
   };
 });
 
@@ -23,9 +24,9 @@ import * as db from '@/lib/db';
 import '@/lib/events/subscribers/progressSubscriber';
 
 describe('progressSubscriber', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.resetAllMocks();
-    initializeEventSystem();
+    await initializeEventSystem();
     (db.getModuleProgress as any).mockResolvedValue(null);
   });
 
@@ -42,12 +43,11 @@ describe('progressSubscriber', () => {
     const ev = makeEvent({ name: eventName, version: 1, source: 'exercise', userId: 'u1', payload: { exerciseId, type: 'practical', passed: true } });
     await defaultPublisher.publish(ev as any);
 
-    // updateModuleProgress should be called with completed
     expect((db.updateModuleProgress as any).mock.calls.length).toBeGreaterThan(0);
     const args = (db.updateModuleProgress as any).mock.calls[0];
     expect(args[2]).toBe('completed');
-    // unlockNextModule should be called
     expect((db.unlockNextModule as any).mock.calls.length).toBeGreaterThan(0);
+    expect((db.updateUserStreak as any).mock.calls.length).toBeGreaterThan(0);
   });
 
   it('reste in_progress si simulation non confirmée', async () => {

@@ -5,6 +5,15 @@ import { makeEvent } from '@/lib/events/utils';
 import * as db from '@/lib/db';
 import { evaluatePracticalModuleCompletion } from '@/lib/services/practicalModuleCompletion';
 
+async function triggerStreakForSuccessfulActivity(userId: string, activityAt?: string) {
+  if (!userId) return;
+
+  const timestamp = activityAt || new Date().toISOString();
+  await db.updateUserStreak(userId, timestamp).catch((err) => {
+    console.error('[ProgressSubscriber] updateUserStreak failed', err);
+  });
+}
+
 async function publishProgressUpdated(userId: string, payload: any, causationEvent?: EventEnvelope<any>) {
   const event = makeEvent({
     name: 'ProgressUpdated',
@@ -107,6 +116,11 @@ async function handleExerciseValidated(event: EventEnvelope<any>) {
     xp: payload.xp ?? 0,
   }, event);
 
+  const successPayload = payload.passed === true || payload.status === 'approved';
+  if (successPayload) {
+    await triggerStreakForSuccessfulActivity(userId, payload.completedAt || payload.awardedAt || event.timestamp);
+  }
+
   if (status === 'completed' && previousProgress?.statut !== 'completed') {
     await publishModuleCompleted(userId, moduleId, { score, completedExercises: progressMetrics.completedExercises, completedLessons: lessonMetrics.completedLessons, practicalTestPassed }, event);
     const nextModule = await db.unlockNextModule(userId).catch(() => null);
@@ -121,12 +135,16 @@ async function handleLessonCompleted(event: EventEnvelope<any>) {
   const payload = event.payload ?? {};
   if (!userId) return;
 
+  const completedAt = payload.completedAt ?? new Date().toISOString();
+
   await publishProgressUpdated(userId, {
     sessionId: payload.sessionId,
     lessonCompleted: true,
     goal: payload.goal,
-    completedAt: payload.completedAt ?? new Date().toISOString(),
+    completedAt,
   }, event);
+
+  await triggerStreakForSuccessfulActivity(userId, completedAt);
 }
 
 async function handleProjectCompleted(event: EventEnvelope<any>) {
