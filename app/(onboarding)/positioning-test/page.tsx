@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { savePositioningTestResultAction } from '@/lib/positioningServerActions';
 
 interface Question {
   id: number;
@@ -81,6 +82,8 @@ export default function PositioningTestPage() {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [testComplete, setTestComplete] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const currentQuestion = questions[currentIndex];
 
@@ -118,8 +121,22 @@ export default function PositioningTestPage() {
   };
 
   const handleCompleteTest = async () => {
-    // TODO: Save positioning test results to database
-    router.push('/');
+    const correctAnswers = score;
+    const totalQuestions = questions.length;
+
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      await savePositioningTestResultAction(correctAnswers, totalQuestions);
+      router.push('/');
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Une erreur est survenue lors de l’enregistrement du test.';
+      setSubmitError(message);
+      console.error('Failed to save positioning test result:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (testComplete) {
@@ -143,11 +160,19 @@ export default function PositioningTestPage() {
         <p className="text-gray-600 mb-8">
           Votre profil a été préparé selon vos résultats. Commençons l’apprentissage ! 🚀
         </p>
+        {submitError && (
+          <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-left text-sm text-red-700">
+            <p className="font-semibold">Enregistrement du test impossible</p>
+            <p className="mt-1 break-words">{submitError}</p>
+          </div>
+        )}
+
         <button
           onClick={handleCompleteTest}
-          className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700"
+          disabled={isSubmitting}
+          className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          Aller au tableau de bord
+          {isSubmitting ? 'Enregistrement...' : 'Aller au tableau de bord'}
         </button>
       </div>
     );

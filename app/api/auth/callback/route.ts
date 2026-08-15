@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
+import { ensureProfileForUser } from '@/lib/auth';
 
 /**
  * OAuth Callback Handler
@@ -60,25 +61,20 @@ export async function GET(request: NextRequest) {
         const { data: { user } } = await supabase.auth.getUser();
 
         if (user) {
-          const { data: profile, error: profileError } = await supabase
-            .from('profiles')
-            .select('niveau_actuel')
-            .eq('id', user.id)
-            .single();
+          const profile = await ensureProfileForUser(supabase, user);
 
-          if (!profileError && profile) {
-            // User has profile, redirect based on current level
-            const redirectTo = profile.niveau_actuel == null 
-              ? '/positioning-test' 
+          if (profile) {
+            const redirectTo = profile.niveau_actuel == null
+              ? '/positioning-test'
               : '/dashboard';
             return NextResponse.redirect(new URL(redirectTo, request.url));
           }
         }
       } catch (e) {
-        console.error('Error checking profile after OAuth:', e);
+        console.error('Error ensuring profile after OAuth:', e);
       }
 
-      // Default to dashboard if no profile found
+      // Fallback if profile creation still fails
       return NextResponse.redirect(new URL('/dashboard', request.url));
     }
 

@@ -206,6 +206,84 @@ export async function signout() {
   redirect('/login');
 }
 
+export async function ensureProfileForUser(
+  supabase: Awaited<ReturnType<typeof createServerSupabaseClient>>,
+  user: { id: string; email?: string | null; user_metadata?: Record<string, any> | null }
+) {
+  const { data: existingProfile, error: existingProfileError } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  if (!existingProfileError && existingProfile) {
+    return existingProfile;
+  }
+
+  const usernameSource =
+    user.user_metadata?.username ||
+    user.user_metadata?.full_name ||
+    user.user_metadata?.name ||
+    user.email ||
+    `user_${user.id.slice(0, 8)}`;
+
+  const normalizedUsername = String(usernameSource)
+    .trim()
+    .replace(/\s+/g, '_')
+    .replace(/[^a-zA-Z0-9._-]/g, '_')
+    .slice(0, 30);
+
+  const username = normalizedUsername || `user_${user.id.slice(0, 8)}`;
+  const displayName =
+    user.user_metadata?.full_name ||
+    user.user_metadata?.name ||
+    user.user_metadata?.username ||
+    user.email?.split('@')[0] ||
+    'Utilisateur';
+
+  const payload = {
+    id: user.id,
+    username,
+    display_name: displayName,
+    avatar_url: user.user_metadata?.avatar_url || user.user_metadata?.picture || null,
+    biography: null,
+    country: user.user_metadata?.country || null,
+    preferred_language: user.user_metadata?.preferred_language || 'fr',
+    theme_preference: 'system',
+    timezone: user.user_metadata?.timezone || null,
+    public_profile: true,
+    privacy_settings: {},
+    learning_preferences: {},
+    notification_preferences: {},
+    xp_total: 0,
+    niveau_actuel: null,
+    module_actuel_id: null,
+    streak: 0,
+    achievements: [],
+    modules_unlocked: [],
+    statistics: {},
+    is_admin: false,
+  };
+
+  const { data: createdProfile, error: createError } = await supabase
+    .from('profiles')
+    .upsert(payload, { onConflict: 'id' })
+    .select('*')
+    .single();
+
+  if (createError) {
+    console.error('ensureProfileForUser failed', {
+      userId: user.id,
+      email: user.email,
+      message: createError.message,
+      code: createError.code,
+    });
+    return null;
+  }
+
+  return createdProfile;
+}
+
 export async function getCurrentUser(contextName?: string) {
   const supabase = await createServerSupabaseClient();
 
@@ -233,11 +311,7 @@ export async function getCurrentUser(contextName?: string) {
       return null;
     }
 
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single();
+    const profile = await ensureProfileForUser(supabase, user);
 
     return {
       id: user.id,
