@@ -1,27 +1,23 @@
 export async function registerAllSubscribers() {
-  // Dynamically import subscriber modules so they register handlers when called.
-  // Using `import()` works with Vitest's ESM/TS transforms and avoids top-level
-  // server-only code executing during module load. We keep initialization
-  // resilient by catching and logging individual import failures.
-  const subs = [
-    '@/lib/events/subscribers/learningSubscriber',
-    '@/lib/events/subscribers/progressSubscriber',
-    '@/lib/events/subscribers/memorySubscriber',
-    '@/lib/events/subscribers/recommendationSubscriber',
-    '@/lib/events/subscribers/gamificationSubscriber',
-    '@/lib/events/subscribers/profileSubscriber',
-    '@/lib/events/subscribers/dashboardSubscriber',
-    '@/lib/events/subscribers/analyticsSubscriber',
-    '@/lib/events/subscribers/aiSubscriber',
-    '@/lib/events/subscribers/socraticTutorSubscriber',
+  const importers: Array<[string, () => Promise<unknown>]> = [
+    ['learningSubscriber', () => import('@/lib/events/subscribers/learningSubscriber')],
+    ['progressSubscriber', () => import('@/lib/events/subscribers/progressSubscriber')],
+    ['memorySubscriber', () => import('@/lib/events/subscribers/memorySubscriber')],
+    ['recommendationSubscriber', () => import('@/lib/events/subscribers/recommendationSubscriber')],
+    ['gamificationSubscriber', () => import('@/lib/events/subscribers/gamificationSubscriber')],
+    ['profileSubscriber', () => import('@/lib/events/subscribers/profileSubscriber')],
+    ['dashboardSubscriber', () => import('@/lib/events/subscribers/dashboardSubscriber')],
+    ['analyticsSubscriber', () => import('@/lib/events/subscribers/analyticsSubscriber')],
+    ['aiSubscriber', () => import('@/lib/events/subscribers/aiSubscriber')],
+    ['socraticTutorSubscriber', () => import('@/lib/events/subscribers/socraticTutorSubscriber')],
   ];
 
-  for (const p of subs) {
+  for (const [name, imp] of importers) {
     try {
-      await import(p);
+      await imp();
     } catch (err) {
       // eslint-disable-next-line no-console
-      console.warn('[registerAllSubscribers] failed to import', p, err && (err as Error).message);
+      console.warn('[registerAllSubscribers] failed to import', name, err && (err as Error).message);
     }
   }
 }

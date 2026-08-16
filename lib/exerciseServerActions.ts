@@ -34,7 +34,7 @@ export async function validatePracticalTestAction(
   userId: string,
   codeReview?: { correct?: boolean; issues?: string[]; feedback?: string } | null
 ): Promise<ExerciseSubmissionResult> {
-  initializeEventSystem();
+  await initializeEventSystem();
   const supabase = await createServerSupabaseClient();
   const {
     data: { user },
@@ -281,7 +281,7 @@ export async function confirmPracticalCompletionAction(
   exerciseId: number,
   userId: string
 ): Promise<ExerciseSubmissionResult> {
-  initializeEventSystem();
+  await initializeEventSystem();
   const supabase = await createServerSupabaseClient();
   const {
     data: { user },
