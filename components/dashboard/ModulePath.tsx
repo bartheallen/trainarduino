@@ -54,9 +54,9 @@ export function ModulePath({ modules }: ModulePathProps) {
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-400">Module {module.ordre}</p>
                 <p className="break-words text-lg font-semibold text-white">{module.titre}</p>
-                <p className="mt-1 break-words text-sm leading-6 text-slate-400">
-                  {module.state === 'locked' ? '🔒 À débloquer' : module.description}
-                </p>
+                {module.state === 'locked' && (
+                  <p className="mt-1 break-words text-sm leading-6 text-slate-400">🔒 À débloquer</p>
+                )}
                 {module.state !== 'locked' && (
                   <Link href={`/modules/${module.id}`} className="mt-3 inline-flex items-center rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1.5 text-sm font-medium text-cyan-100 transition hover:border-cyan-400/40 hover:bg-cyan-400/20">
                     {module.state === 'completed' ? 'Revoir le cours' : 'Ouvrir le cours'}
@@ -89,7 +89,7 @@ export function ModulePath({ modules }: ModulePathProps) {
                   </button>
                 </div>
                 <p className="mt-5 text-sm leading-7 text-slate-400">
-                  {modules.find((item) => item.id === selectedModule)?.description}
+                  Ce module est accessible depuis votre parcours actuel. Vous pouvez le reprendre quand vous êtes prêt.
                 </p>
                 <div className="mt-6 grid gap-3 md:grid-cols-2">
                   <div className="rounded-[1.1rem] border border-white/10 bg-slate-950/70 p-4">

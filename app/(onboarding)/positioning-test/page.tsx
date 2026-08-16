@@ -129,7 +129,7 @@ export default function PositioningTestPage() {
 
     try {
       await savePositioningTestResultAction(correctAnswers, totalQuestions);
-      router.push('/');
+      router.push('/dashboard');
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Une erreur est survenue lors de l’enregistrement du test.';
       setSubmitError(message);

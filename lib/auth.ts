@@ -206,6 +206,59 @@ export async function signout() {
   redirect('/login');
 }
 
+export async function buildGoogleProfileIdentity(
+  user: { id: string; email?: string | null; user_metadata?: Record<string, any> | null },
+  existingUsernames: string[] = []
+) {
+  const rawName =
+    user.user_metadata?.full_name ||
+    user.user_metadata?.name ||
+    user.user_metadata?.username ||
+    user.email?.split('@')[0] ||
+    'Utilisateur';
+
+  const baseName = String(rawName)
+    .trim()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+    .slice(0, 24);
+
+  const fallbackBase = `user_${user.id.slice(0, 8)}`;
+  const seedBase = baseName || fallbackBase;
+
+  const seen = new Set(existingUsernames.map((value) => String(value).trim()).filter(Boolean));
+  let username = seedBase;
+  let suffix = 2;
+
+  while (seen.has(username)) {
+    username = `${seedBase}_${suffix}`;
+    suffix += 1;
+  }
+
+  const displayName =
+    user.user_metadata?.full_name ||
+    user.user_metadata?.name ||
+    user.user_metadata?.username ||
+    String(rawName).trim() ||
+    'Utilisateur';
+
+  return {
+    username,
+    display_name: displayName,
+    avatar_url: user.user_metadata?.avatar_url || user.user_metadata?.picture || null,
+  };
+}
+
+export async function getGoogleAuthRedirectUrl(flow: 'signin' | 'signup' = 'signin') {
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000').replace(/\/$/, '');
+  const url = new URL(`${siteUrl}/api/auth/callback`);
+  url.searchParams.set('flow', flow);
+  return url.toString();
+}
+
 export async function ensureProfileForUser(
   supabase: Awaited<ReturnType<typeof createServerSupabaseClient>>,
   user: { id: string; email?: string | null; user_metadata?: Record<string, any> | null }
@@ -220,32 +273,21 @@ export async function ensureProfileForUser(
     return existingProfile;
   }
 
-  const usernameSource =
-    user.user_metadata?.username ||
-    user.user_metadata?.full_name ||
-    user.user_metadata?.name ||
-    user.email ||
-    `user_${user.id.slice(0, 8)}`;
+  const { data: existingUsernamesData } = await supabase
+    .from('profiles')
+    .select('username');
 
-  const normalizedUsername = String(usernameSource)
-    .trim()
-    .replace(/\s+/g, '_')
-    .replace(/[^a-zA-Z0-9._-]/g, '_')
-    .slice(0, 30);
+  const existingUsernames = (existingUsernamesData ?? [])
+    .map((entry) => entry.username)
+    .filter((value): value is string => typeof value === 'string' && value.length > 0);
 
-  const username = normalizedUsername || `user_${user.id.slice(0, 8)}`;
-  const displayName =
-    user.user_metadata?.full_name ||
-    user.user_metadata?.name ||
-    user.user_metadata?.username ||
-    user.email?.split('@')[0] ||
-    'Utilisateur';
+  const identity = await buildGoogleProfileIdentity(user, existingUsernames);
 
   const payload = {
     id: user.id,
-    username,
-    display_name: displayName,
-    avatar_url: user.user_metadata?.avatar_url || user.user_metadata?.picture || null,
+    username: identity.username,
+    display_name: identity.display_name,
+    avatar_url: identity.avatar_url,
     biography: null,
     country: user.user_metadata?.country || null,
     preferred_language: user.user_metadata?.preferred_language || 'fr',
@@ -375,15 +417,15 @@ export async function updatePassword(newPassword: string) {
  * Initiates the OAuth flow with Google provider.
  * User is redirected to Google login, then to /api/auth/callback.
  */
-export async function signInWithGoogle() {
+export async function signInWithGoogle(mode: 'signin' | 'signup' = 'signin') {
   const supabase = await createServerSupabaseClient();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
   try {
+    const redirectTo = await getGoogleAuthRedirectUrl(mode);
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${siteUrl}/api/auth/callback`,
+        redirectTo,
       },
     });
 
@@ -417,7 +459,5 @@ export async function signInWithGoogle() {
  * If the user doesn't exist, Supabase creates them automatically.
  */
 export async function signUpWithGoogle() {
-  // Use the same OAuth flow as signIn
-  // Supabase automatically creates new users during OAuth if they don't exist
-  return signInWithGoogle();
+  return signInWithGoogle('signup');
 }
