@@ -115,7 +115,7 @@ export function DashboardExperience({
   }
 
   return (
-    <div className="mx-auto flex min-w-0 max-w-7xl flex-col gap-6">
+    <div className="mx-auto flex w-full max-w-7xl min-w-0 max-w-full flex-col gap-6 overflow-hidden px-0 sm:px-1">
       <motion.header
         initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
         animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
@@ -196,7 +196,7 @@ export function DashboardExperience({
 
       {showOnboarding && <OnboardingTour open={showOnboarding} onClose={() => setShowOnboarding(false)} />}
 
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((stat, index) => (
           <motion.div key={stat.label} initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }} animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: 0.05 * index }} whileHover={{ y: -4, scale: 1.01 }}>
             <PrimitiveCard tone="glass" className="p-5">

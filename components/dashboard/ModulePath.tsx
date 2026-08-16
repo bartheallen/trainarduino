@@ -33,7 +33,7 @@ export function ModulePath({ modules }: ModulePathProps) {
   }, [modules]);
 
   return (
-    <div className="relative min-w-0 overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950/90 p-6 text-slate-100 shadow-[0_24px_70px_rgba(0,0,0,0.35)]">
+    <div className="relative w-full min-w-0 overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950/90 p-4 text-slate-100 shadow-[0_24px_70px_rgba(0,0,0,0.35)] sm:p-6">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.10),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(59,130,246,0.12),_transparent_26%)]" />
       <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-80" viewBox="0 0 100 100" preserveAspectRatio="none">
         <path d="M10 20 C30 20, 30 40, 50 40 S70 60, 90 60" stroke="rgba(34,211,238,0.24)" strokeWidth="1.1" fill="none" strokeLinecap="round" />
@@ -41,24 +41,24 @@ export function ModulePath({ modules }: ModulePathProps) {
         <path d="M10 78 C24 78, 36 64, 48 64 S66 52, 90 52" stroke="rgba(16,185,129,0.22)" strokeWidth="0.9" fill="none" strokeLinecap="round" strokeDasharray="1.2 2" />
       </svg>
 
-      <div className="relative z-10 space-y-8">
+      <div className="relative z-10 space-y-4 sm:space-y-6">
         {pathways.map((module, index) => (
-          <motion.div key={module.id} className={`flex min-w-0 ${module.align}`} initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }} animate={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.04 * index }}>
-            <div className="flex min-w-0 items-center gap-4 rounded-[1.25rem] border border-white/10 bg-slate-900/60 px-4 py-3 backdrop-blur-xl">
+          <motion.div key={module.id} className="flex min-w-0 w-full justify-start" initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }} animate={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.04 * index }}>
+            <div className="flex w-full min-w-0 max-w-full items-start gap-3 rounded-[1.25rem] border border-white/10 bg-slate-900/60 p-3 backdrop-blur-xl sm:gap-4 sm:p-4">
               <ModuleNode
                 title={module.titre}
                 state={module.state as 'locked' | 'available' | 'completed'}
                 active={module.active}
                 onClick={() => setSelectedModule(module.id)}
               />
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-400">Module {module.ordre}</p>
-                <p className="break-words text-lg font-semibold text-white">{module.titre}</p>
+              <div className="min-w-0 flex-1 overflow-hidden">
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400 sm:text-sm">Module {module.ordre}</p>
+                <p className="mt-1 break-words text-base font-semibold text-white sm:text-lg">{module.titre}</p>
                 {module.state === 'locked' && (
                   <p className="mt-1 break-words text-sm leading-6 text-slate-400">🔒 À débloquer</p>
                 )}
                 {module.state !== 'locked' && (
-                  <Link href={`/modules/${module.id}`} className="mt-3 inline-flex items-center rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1.5 text-sm font-medium text-cyan-100 transition hover:border-cyan-400/40 hover:bg-cyan-400/20">
+                  <Link href={`/modules/${module.id}`} className="mt-3 inline-flex max-w-full items-center rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1.5 text-sm font-medium text-cyan-100 transition hover:border-cyan-400/40 hover:bg-cyan-400/20">
                     {module.state === 'completed' ? 'Revoir le cours' : 'Ouvrir le cours'}
                   </Link>
                 )}

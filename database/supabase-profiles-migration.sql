@@ -16,7 +16,15 @@ begin
   insert into public.profiles (id, username, xp_total, niveau_actuel, module_actuel_id)
   values (
     new.id,
-    coalesce(new.raw_user_meta_data->>'username', new.email),
+    coalesce(
+      nullif(new.raw_user_meta_data->>'preferred_username', ''),
+      nullif(new.raw_user_meta_data->>'username', ''),
+      nullif(new.raw_user_meta_data->>'display_name', ''),
+      nullif(new.raw_user_meta_data->>'full_name', ''),
+      nullif(new.raw_user_meta_data->>'name', ''),
+      nullif(new.email, ''),
+      concat('user_', substring(new.id::text, 1, 8))
+    ),
     0,
     null,
     null

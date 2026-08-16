@@ -87,8 +87,8 @@ export default async function ModulePage({
   const moduleStatus = moduleProgress?.statut ?? 'locked';
 
   return (
-    <div className="min-h-screen min-w-0 bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.12),_transparent_30%),linear-gradient(135deg,_#071016_0%,_#0d1b23_100%)] px-4 py-8 text-slate-100 sm:px-6 lg:px-8">
-      <div className="mx-auto flex min-w-0 max-w-7xl flex-col gap-4">
+    <div className="min-h-screen w-full min-w-0 overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.12),_transparent_30%),linear-gradient(135deg,_#071016_0%,_#0d1b23_100%)] px-3 py-6 text-slate-100 sm:px-6 lg:px-8">
+      <div className="mx-auto flex w-full max-w-7xl min-w-0 flex-col gap-4 overflow-hidden">
         <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 rounded-[1.4rem] border border-white/10 bg-slate-900/70 p-4">
           <div className="min-w-0">
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">Module</p>

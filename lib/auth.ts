@@ -210,25 +210,40 @@ export async function buildGoogleProfileIdentity(
   user: { id: string; email?: string | null; user_metadata?: Record<string, any> | null },
   existingUsernames: string[] = []
 ) {
-  const rawName =
-    user.user_metadata?.full_name ||
-    user.user_metadata?.name ||
-    user.user_metadata?.username ||
-    user.email?.split('@')[0] ||
+  const meta = user.user_metadata ?? {};
+  const preferredUsername = typeof meta.preferred_username === 'string' ? meta.preferred_username : null;
+  const givenName = typeof meta.given_name === 'string' ? meta.given_name : null;
+  const familyName = typeof meta.family_name === 'string' ? meta.family_name : null;
+  const fullName = typeof meta.full_name === 'string' ? meta.full_name : (typeof meta.name === 'string' ? meta.name : null);
+  const fallbackLocalPart = typeof user.email === 'string' && user.email.includes('@') ? user.email.split('@')[0] : null;
+
+  const rawDisplayName =
+    meta.full_name ||
+    meta.name ||
+    meta.username ||
+    (givenName && familyName ? `${givenName} ${familyName}` : (givenName || familyName || '')) ||
+    fullName ||
+    preferredUsername ||
+    fallbackLocalPart ||
     'Utilisateur';
 
-  const baseName = String(rawName)
+  const candidateBase =
+    (preferredUsername && String(preferredUsername).trim()) ||
+    (givenName && familyName ? `${givenName} ${familyName}` : (givenName || familyName || fullName || meta.name || rawDisplayName || fallbackLocalPart || 'Utilisateur')) ||
+    fallbackLocalPart ||
+    'Utilisateur';
+
+  const baseName = String(candidateBase)
     .trim()
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '_')
     .replace(/^_+|_+$/g, '')
+    .replace(/_+/g, '_')
     .slice(0, 24);
 
-  const fallbackBase = `user_${user.id.slice(0, 8)}`;
-  const seedBase = baseName || fallbackBase;
-
+  const seedBase = baseName || `user_${user.id.slice(0, 8)}`;
   const seen = new Set(existingUsernames.map((value) => String(value).trim()).filter(Boolean));
   let username = seedBase;
   let suffix = 2;
@@ -238,12 +253,7 @@ export async function buildGoogleProfileIdentity(
     suffix += 1;
   }
 
-  const displayName =
-    user.user_metadata?.full_name ||
-    user.user_metadata?.name ||
-    user.user_metadata?.username ||
-    String(rawName).trim() ||
-    'Utilisateur';
+  const displayName = String(rawDisplayName).trim() || 'Utilisateur';
 
   return {
     username,

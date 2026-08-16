@@ -73,8 +73,22 @@ BEGIN
   )
   VALUES (
     NEW.id,
-    COALESCE(NEW.raw_user_meta_data->>'username', NEW.email),
-    COALESCE(NEW.raw_user_meta_data->>'display_name', NULL),
+    COALESCE(
+      NULLIF(NEW.raw_user_meta_data->>'preferred_username', ''),
+      NULLIF(NEW.raw_user_meta_data->>'username', ''),
+      NULLIF(NEW.raw_user_meta_data->>'display_name', ''),
+      NULLIF(NEW.raw_user_meta_data->>'full_name', ''),
+      NULLIF(NEW.raw_user_meta_data->>'name', ''),
+      NULLIF(NEW.email, ''),
+      CONCAT('user_', SUBSTRING(NEW.id::text, 1, 8))
+    ),
+    COALESCE(
+      NULLIF(NEW.raw_user_meta_data->>'display_name', ''),
+      NULLIF(NEW.raw_user_meta_data->>'full_name', ''),
+      NULLIF(NEW.raw_user_meta_data->>'name', ''),
+      NULLIF(NEW.raw_user_meta_data->>'username', ''),
+      NULLIF(NEW.email, '')
+    ),
     COALESCE(NEW.raw_user_meta_data->>'avatar_url', NULL),
     NULL,
     COALESCE(NEW.raw_user_meta_data->>'country', NULL),

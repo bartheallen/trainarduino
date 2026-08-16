@@ -5,6 +5,12 @@ import { makeEvent } from '@/lib/events/utils';
 import * as profileRepo from '@/lib/repos/profileRepo';
 import * as db from '@/lib/db';
 
+const processedXpEventKeys = new Set<string>();
+
+function getEventDeduplicationKey(event: EventEnvelope<any>) {
+  return event.id;
+}
+
 async function handleUserRegistered(event: EventEnvelope<any>) {
   const userId = event.userId;
   if (!userId) return;
@@ -59,6 +65,12 @@ async function handleXpAwarded(event: EventEnvelope<any>) {
 
   const xp = Number(payload.xp ?? 0);
   if (xp === 0) return;
+
+  const dedupeKey = getEventDeduplicationKey(event);
+  if (processedXpEventKeys.has(dedupeKey)) {
+    return;
+  }
+  processedXpEventKeys.add(dedupeKey);
 
   // read previous profile
   const prev = await db.getUserProfile(userId).catch(() => null);

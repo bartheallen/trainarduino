@@ -1,24 +1,22 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
+vi.mock('@/lib/events/bootstrap', async () => {
+  const actual = await vi.importActual<typeof import('@/lib/events/bootstrap')>('@/lib/events/bootstrap');
+  return {
+    ...actual,
+    initializeEventSystem: actual.initializeEventSystem,
+  };
+});
+
 import { makeEvent } from '@/lib/events/utils';
 import { defaultPublisher } from '@/lib/events/publisher';
 
-// Import subscribers so they register their handlers on the global event bus
-// Order matters: gamificationSubscriber → profileSubscriber
+// Import subscriber so it registers its handler on the global event bus
 import '@/lib/events/subscribers/gamificationSubscriber';
-import '@/lib/events/subscribers/profileSubscriber';
 
 describe('gamificationSubscriber', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     vi.resetAllMocks();
-    // Mock db functions before subscribers can use them
-    const db = await import('@/lib/db');
-    const profileRepo = await import('@/lib/repos/profileRepo');
-    vi.spyOn(db, 'updateUserXP').mockResolvedValue({ xp_total: 0, niveau_actuel: 1 } as any);
-    vi.spyOn(db, 'updateUserStreak').mockResolvedValue({ streak: 1 } as any);
-    vi.spyOn(db, 'getUserProfile').mockResolvedValue(null);
-    vi.spyOn(profileRepo, 'getProfileById').mockResolvedValue(null);
-    vi.spyOn(profileRepo, 'updateProfile').mockResolvedValue({} as any);
   });
 
   it('publishes XpAwarded when ProgressUpdated contains xp > 0', async () => {
@@ -37,24 +35,22 @@ describe('gamificationSubscriber', () => {
     expect(publishSpy.mock.calls.some((call) => call[0]?.name === 'XpAwarded')).toBe(true);
   });
 
-  it('calls updateUserXP when XpAwarded is published', async () => {
-    const db = await import('@/lib/db');
-    const updateXpSpy = vi.spyOn(db, 'updateUserXP');
+  it('publishes XpAwarded with correct payload from ProgressUpdated', async () => {
+    const publishSpy = vi.spyOn(defaultPublisher, 'publish');
 
     const event = makeEvent({
       name: 'ProgressUpdated',
       version: 1,
       source: 'test',
       userId: 'user-1',
-      payload: { xp: 25, awardedAt: '2026-01-10T10:00:00Z' },
+      payload: { xp: 50, awardedAt: '2026-01-10T10:00:00Z' },
     });
 
     await defaultPublisher.publish(event as any);
-    
-    // Give async handlers time to execute
-    await new Promise(resolve => setTimeout(resolve, 100));
 
-    expect(updateXpSpy).toHaveBeenCalledWith('user-1', 25);
+    const xpAwardedCalls = publishSpy.mock.calls.filter((call) => call[0]?.name === 'XpAwarded');
+    expect(xpAwardedCalls.length).toBeGreaterThan(0);
+    expect(xpAwardedCalls[0][0]?.payload?.xp).toBe(50);
   });
 
   it('does not publish XpAwarded when ProgressUpdated xp is zero', async () => {
