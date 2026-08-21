@@ -129,9 +129,21 @@ export async function signup(formData: FormData) {
       throw err;
     }
 
-    console.error('signup error:', err);
+    console.error('=== SIGNUP ERROR DEBUG ===');
+    console.error('typeof err:', typeof err);
+    console.error('err instanceof Error:', err instanceof Error);
+    console.error('err raw:', err);
+    try {
+      console.error(
+        'err JSON:',
+        JSON.stringify(err, Object.getOwnPropertyNames(err instanceof Error ? err : {}))
+      );
+    } catch (jsonErr) {
+      console.error('could not stringify err');
+    }
+    console.error('=== END DEBUG ===');
     const message = (err as { message?: string })?.message ?? String(err);
-    return { error: normalizeErrorMessage(message) };
+    return { error: normalizeErrorMessage(message) || 'Erreur technique: ' + String(err) };
   }
 }
 
