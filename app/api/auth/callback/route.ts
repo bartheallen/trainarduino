@@ -18,7 +18,6 @@ import { ensureProfileForUser } from '@/lib/auth';
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get('code');
-  const flow = (requestUrl.searchParams.get('flow') || 'signin').toLowerCase() === 'signup' ? 'signup' : 'signin';
   const error = requestUrl.searchParams.get('error');
   const errorDescription = requestUrl.searchParams.get('error_description');
 
@@ -65,7 +64,7 @@ export async function GET(request: NextRequest) {
           const profile = await ensureProfileForUser(supabase, user);
 
           if (profile) {
-            const shouldCompleteOnboarding = flow === 'signup' || profile.niveau_actuel == null;
+            const shouldCompleteOnboarding = profile.niveau_actuel == null;
             const redirectTo = shouldCompleteOnboarding
               ? '/positioning-test'
               : '/dashboard';

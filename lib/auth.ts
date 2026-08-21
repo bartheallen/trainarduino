@@ -4,7 +4,6 @@ import { ZodError } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
-import { defaultPublisher, makeEvent } from '@/lib/events';
 import {
   signupSchema,
   signinSchema,
@@ -113,15 +112,6 @@ export async function signup(formData: FormData) {
       return { error: 'Impossible de créer le compte pour le moment.' };
     }
 
-    const event = makeEvent({
-      name: 'UserRegistered',
-      version: 1,
-      source: 'auth',
-      userId: data.user.id,
-      payload: { email, username },
-    });
-    await defaultPublisher.publish(event);
-
     revalidatePath('/');
     redirect('/verify-email');
   } catch (err: unknown) {
@@ -181,13 +171,9 @@ export async function signin(formData: FormData) {
       return { error: 'Veuillez vérifier votre adresse email avant de vous connecter.' };
     }
 
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('niveau_actuel')
-      .eq('id', data.user.id)
-      .single();
+    const profile = await ensureProfileForUser(supabase, data.user);
 
-    if (profileError) {
+    if (!profile) {
       return { error: 'Votre profil n’a pas encore été initialisé.' };
     }
 
