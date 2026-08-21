@@ -62,14 +62,16 @@ export default function ForgotPasswordPage() {
             )}
 
             <div>
-              <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-300">
+              <label htmlFor="forgot-password-email" className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-300">
                 <LedIndicator className="shrink-0" />
                 Email
               </label>
               <input
                 type="email"
+                id="forgot-password-email"
                 name="email"
                 required
+                autoComplete="email"
                 className="w-full rounded-[1rem] border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none transition duration-300 focus:border-cyan-400/30 focus:ring-2 focus:ring-cyan-400/20"
                 placeholder="Entrez votre email"
               />

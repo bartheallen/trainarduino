@@ -62,14 +62,16 @@ export default function ResetPasswordPage() {
             )}
 
             <div>
-              <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-300">
+              <label htmlFor="reset-password-input" className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-300">
                 <LedIndicator className="shrink-0" />
                 Nouveau mot de passe
               </label>
               <input
                 type="password"
+                id="reset-password-input"
                 name="password"
                 required
+                autoComplete="new-password"
                 className="w-full rounded-[1rem] border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none transition duration-300 focus:border-cyan-400/30 focus:ring-2 focus:ring-cyan-400/20"
                 placeholder="Entrez un nouveau mot de passe"
               />
