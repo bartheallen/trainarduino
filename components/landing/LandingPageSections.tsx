@@ -107,14 +107,14 @@ export function LandingPageSections() {
                         <span>Clarté du flux</span>
                         <span>82%</span>
                       </div>
-                      <PrimitiveProgress value={82} />
+                      <PrimitiveProgress value={82} animated={false} />
                     </div>
                     <div>
                       <div className="mb-2 flex items-center justify-between text-sm text-slate-300">
                         <span>Stabilité du signal</span>
                         <span>91%</span>
                       </div>
-                      <PrimitiveProgress value={91} />
+                      <PrimitiveProgress value={91} animated={false} />
                     </div>
                   </div>
                 </div>

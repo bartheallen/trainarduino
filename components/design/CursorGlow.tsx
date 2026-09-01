@@ -1,33 +1,44 @@
 'use client';
 
-import { motion, useReducedMotion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 export function CursorGlow() {
-  const shouldReduceMotion = useReducedMotion();
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const glowRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<number | null>(null);
+  const positionRef = useRef({ x: -360, y: -360 });
 
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
     const onPointerMove = (event: PointerEvent) => {
-      setPosition({ x: event.clientX, y: event.clientY });
+      positionRef.current = { x: event.clientX - 180, y: event.clientY - 180 };
+      if (frameRef.current !== null) return;
+
+      frameRef.current = window.requestAnimationFrame(() => {
+        const glow = glowRef.current;
+        if (glow) {
+          const { x, y } = positionRef.current;
+          glow.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+        }
+        frameRef.current = null;
+      });
     };
 
     window.addEventListener('pointermove', onPointerMove);
-    return () => window.removeEventListener('pointermove', onPointerMove);
+    return () => {
+      window.removeEventListener('pointermove', onPointerMove);
+      if (frameRef.current !== null) window.cancelAnimationFrame(frameRef.current);
+    };
   }, []);
 
-  if (shouldReduceMotion) {
-    return null;
-  }
-
   return (
-    <motion.div
+    <div
+      ref={glowRef}
       className="pointer-events-none fixed inset-0 z-[60] opacity-70"
-      animate={{ x: position.x - 180, y: position.y - 180 }}
-      transition={{ type: 'spring', stiffness: 90, damping: 24, mass: 0.3 }}
       style={{
         background: 'radial-gradient(circle, rgba(50,231,255,0.16) 0%, rgba(50,231,255,0.06) 24%, transparent 56%)',
         maskImage: 'radial-gradient(circle at center, black 20%, transparent 72%)',
+        transform: 'translate3d(-360px, -360px, 0)',
       }}
     />
   );

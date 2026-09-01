@@ -21,8 +21,8 @@ export default function Home() {
     <div className="relative min-h-screen w-full bg-slate-950 text-slate-100">
       <EngineeringBackground />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(50,231,255,0.10),_transparent_24%),radial-gradient(circle_at_bottom_right,_rgba(79,140,255,0.12),_transparent_28%)]" />
-      <motion.div className="pointer-events-none absolute -left-10 -top-10 h-40 w-40 rounded-full bg-cyan-400/20 blur-3xl sm:-left-32 sm:-top-32 sm:h-72 sm:w-72" animate={{ x: [0, 12, 0], y: [0, 8, 0], scale: [1, 1.03, 1] }} transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }} />
-      <motion.div className="pointer-events-none absolute -right-12 -bottom-12 h-48 w-48 rounded-full bg-blue-500/20 blur-3xl sm:-right-32 sm:-bottom-32 sm:h-80 sm:w-80" animate={{ x: [0, -12, 0], y: [0, -8, 0], scale: [1, 1.04, 1] }} transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }} />
+      <div className="pointer-events-none absolute -left-10 -top-10 h-40 w-40 rounded-full bg-cyan-400/10 blur-2xl sm:-left-32 sm:-top-32 sm:h-72 sm:w-72" />
+      <div className="pointer-events-none absolute -right-12 -bottom-12 h-48 w-48 rounded-full bg-blue-500/10 blur-2xl sm:-right-32 sm:-bottom-32 sm:h-80 sm:w-80" />
 
       <div className="relative mx-auto flex min-h-screen w-full max-w-7xl flex-col px-3 pb-16 pt-4 sm:px-6 lg:px-8">
         <AnimatedNav />
@@ -31,7 +31,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: 'easeOut' }}
-          className="relative z-10 mt-4 w-full overflow-hidden rounded-[2.25rem] border border-white/10 bg-slate-900/60 p-4 shadow-[0_25px_90px_rgba(0,0,0,0.4)] backdrop-blur-2xl sm:p-8 xl:p-10"
+          className="relative z-10 mt-4 w-full overflow-hidden rounded-[2.25rem] border border-white/10 bg-slate-900/95 p-4 shadow-[0_25px_90px_rgba(0,0,0,0.4)] sm:p-8 xl:p-10"
         >
           <div className="grid w-full gap-6 sm:gap-8 lg:grid-cols-[1.03fr_0.97fr] lg:items-center">
             <div className="w-full min-w-0 max-w-full">
@@ -62,7 +62,7 @@ export default function Home() {
 
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.6 }} className="mt-8 grid w-full min-w-0 grid-cols-1 gap-3 sm:grid-cols-3">
                 {stats.map((item) => (
-                  <div key={item.label} className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200 shadow-[0_10px_40px_rgba(0,0,0,0.16)] backdrop-blur">
+                  <div key={item.label} className="w-full rounded-2xl border border-white/10 bg-slate-800/80 px-4 py-3 text-sm text-slate-200 shadow-[0_10px_40px_rgba(0,0,0,0.16)]">
                     <p className="text-[11px] uppercase tracking-[0.3em] text-cyan-300">{item.label}</p>
                     <p className="mt-1 text-xl font-semibold text-white">{item.value}</p>
                   </div>
