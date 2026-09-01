@@ -1,3 +1,5 @@
+import { callMistralJson } from '@/lib/ai/mistral';
+
 export type PracticalAiCriteria = {
   pin_used?: boolean;
   pin_mode_configured?: boolean;
@@ -8,30 +10,6 @@ export type PracticalAiCriteria = {
 export type PracticalAiAnalysis = {
   criteria: PracticalAiCriteria;
 };
-
-const GROQ_MODEL = 'llama-3.3-70b-versatile';
-const GROQ_ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions';
-
-function createGroqPayload(prompt: string) {
-  return {
-    model: GROQ_MODEL,
-    messages: [{ role: 'user', content: prompt }],
-    temperature: 0.2,
-    response_format: { type: 'json_object' },
-  };
-}
-
-function extractTextFromGroqResponse(body: unknown): string | null {
-  if (!body || typeof body !== 'object') return null;
-  const choices = (body as { choices?: unknown }).choices;
-  if (!Array.isArray(choices)) return null;
-  const message = choices[0] && typeof choices[0] === 'object'
-    ? (choices[0] as { message?: unknown }).message
-    : null;
-  if (!message || typeof message !== 'object') return null;
-  const content = (message as { content?: unknown }).content;
-  return typeof content === 'string' ? content : null;
-}
 
 function extractJson(text: string): string | null {
   const firstBrace = text.indexOf('{');
@@ -64,10 +42,10 @@ export async function analyzePracticalCodeWithAi(
   code: string,
   exercise: { titre?: string | null; enonce?: string | null; critere_correction?: string | null },
 ): Promise<PracticalAiAnalysis | null> {
-  const apiKey = process.env.GROQ_API_KEY;
+  const apiKey = process.env.MISTRAL_API_KEY;
   const debug = process.env.DEBUG_PRACTICAL_AI === 'true';
   if (!apiKey) {
-    if (debug) console.debug('[practical-ai] missing GROQ_API_KEY');
+    if (debug) console.debug('[practical-ai] missing MISTRAL_API_KEY');
     return null;
   }
 
@@ -79,30 +57,10 @@ Code:
 ${code}`;
 
   try {
-    const payload = createGroqPayload(prompt);
-    if (debug) console.debug('[practical-ai] Groq request', { model: GROQ_MODEL, endpoint: GROQ_ENDPOINT, keyPresent: true });
-
-    const response = await fetch(GROQ_ENDPOINT, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify(payload),
-    });
-    if (!response.ok) {
-      const errorText = (await response.text()).slice(0, 500);
-      if (debug) console.debug('[practical-ai] Groq HTTP error', { status: response.status, error: errorText });
-      return null;
-    }
-    if (debug) console.debug('[practical-ai] Groq HTTP success', { status: response.status });
-    const body: unknown = await response.json();
-    const text = extractTextFromGroqResponse(body);
-    const analysis = text ? parseAnalysis(text) : null;
-
-    if (debug) {
-      console.debug('[practical-ai] parsed response', { hasText: Boolean(text), analysis });
-    }
+    const { text } = await callMistralJson(prompt);
+    if (debug) console.debug('[practical-ai] Mistral response received', { length: text.length });
+    const analysis = parseAnalysis(text);
+    if (debug) console.debug('[practical-ai] parsed response', { analysis });
     return analysis;
   } catch (error) {
     if (debug) console.debug('[practical-ai] request or parsing failure', { error: error instanceof Error ? error.message : 'unknown error' });
