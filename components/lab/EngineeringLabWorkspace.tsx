@@ -160,18 +160,18 @@ export function EngineeringLabWorkspace({ module, lessons, exercises, socraticQu
   }
 
   return (
-    <div className="mx-auto flex min-w-0 max-w-7xl flex-col gap-4">
-      <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
-        <div className="flex min-w-0 items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-cyan-400/25 bg-cyan-400/10 text-cyan-200 shadow-[0_0_20px_rgba(34,211,238,0.12)]">
-            <CircuitChipIcon className="h-5 w-5" />
+    <div className="mx-auto flex min-w-0 max-w-7xl flex-col gap-3">
+      <div className="flex min-w-0 flex-wrap items-center justify-between gap-2">
+        <div className="flex min-w-0 items-start gap-2">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-cyan-400/25 bg-cyan-400/10 text-cyan-200 shadow-[0_0_20px_rgba(34,211,238,0.12)]">
+            <CircuitChipIcon className="h-4 w-4" />
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">Engineering Lab</p>
-            <h1 className="break-words text-xl font-semibold text-white">{module.titre}</h1>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-300">Engineering Lab</p>
+            <h1 className="break-words text-lg font-semibold text-white">{module.titre}</h1>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex min-w-0 flex-wrap items-center gap-1.5">
           <PrimitiveBadge tone={module.is_capstone ? 'success' : 'accent'}>
             {module.is_capstone ? '🏆 Projet final — Niveau 1' : 'Version 1.0'}
           </PrimitiveBadge>
@@ -180,7 +180,7 @@ export function EngineeringLabWorkspace({ module, lessons, exercises, socraticQu
       </div>
 
       <PrimitiveCard tone="glass" className="min-w-0 p-4">
-        <div className="mt-4 min-w-0">
+        <div className="mt-3 min-w-0">
           {!lessonsRead ? (
             <LessonReaderStep lessons={lessons} onComplete={() => setLessonsRead(true)} />
           ) : (
@@ -188,7 +188,7 @@ export function EngineeringLabWorkspace({ module, lessons, exercises, socraticQu
           )}
         </div>
         {progressMessage && (
-          <div className="mt-3 rounded-[1rem] border border-cyan-400/20 bg-cyan-400/10 px-3 py-2 text-sm text-cyan-100">
+          <div className="mt-2 rounded-[1rem] border border-cyan-400/20 bg-cyan-400/10 px-2.5 py-1.5 text-xs text-cyan-100">
             {progressMessage}
           </div>
         )}
@@ -196,78 +196,78 @@ export function EngineeringLabWorkspace({ module, lessons, exercises, socraticQu
 
       {exerciseEnonce ? (
         <PrimitiveCard tone="glass" className="min-w-0 p-4">
-          <div className="flex min-w-0 items-center justify-between gap-3">
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300">📝 Ce que vous devez coder</p>
+          <div className="flex min-w-0 flex-wrap items-center justify-between gap-2">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">📝 Ce que vous devez coder</p>
             {exerciseEnonceLong ? (
               <button
                 type="button"
                 onClick={() => setExerciseEnonceExpanded((value) => !value)}
-                className="rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-1.5 text-xs font-semibold text-cyan-100 transition hover:border-cyan-400/40 hover:bg-cyan-400/20"
+                className="rounded-full border border-cyan-400/25 bg-cyan-400/10 px-2.5 py-1 text-xs font-semibold text-cyan-100 transition hover:border-cyan-400/40 hover:bg-cyan-400/20"
               >
                 {exerciseEnonceExpanded ? 'Réduire' : 'Voir tout'}
               </button>
             ) : null}
           </div>
-          <div className={`mt-3 min-w-0 whitespace-pre-line break-words text-sm leading-7 text-slate-200 ${exerciseEnonceLong && !exerciseEnonceExpanded ? 'max-h-64 overflow-hidden' : ''}`}>
+          <div className={`mt-2.5 min-w-0 whitespace-pre-line break-words text-xs leading-6 text-slate-200 ${exerciseEnonceLong && !exerciseEnonceExpanded ? 'max-h-48 overflow-hidden' : ''}`}>
             {exerciseEnonceLong && !exerciseEnonceExpanded ? `${exerciseEnonce.slice(0, 900)}...` : exerciseEnonce}
           </div>
         </PrimitiveCard>
       ) : null}
 
       <PrimitiveCard tone="raised" className="p-4">
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center justify-between gap-2">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300">Éditeur de code</p>
-            <p className="mt-2 text-sm text-slate-400">Le starter est vide : votre code démarre à partir de zéro.</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">Éditeur de code</p>
+            <p className="mt-1.5 text-xs text-slate-400">Le starter est vide : votre code démarre à partir de zéro.</p>
           </div>
           <PrimitiveBadge tone="neutral">Vide</PrimitiveBadge>
         </div>
-        <div className="mt-4 overflow-hidden rounded-[1.15rem] border border-white/10 bg-slate-950/80 p-3">
+        <div className="mt-3 overflow-hidden rounded-[1.15rem] border border-white/10 bg-slate-950/80 p-3">
           <CodeEditor value={code} onChange={setCode} />
         </div>
         {code.trim().length > 0 ? (
-          <div className="mt-3 rounded-[1rem] border border-emerald-400/20 bg-emerald-400/10 px-3 py-2 text-sm text-emerald-100">
+          <div className="mt-2 rounded-[1rem] border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1.5 text-xs text-emerald-100">
             Votre solution est en cours de rédaction.
           </div>
         ) : (
-          <div className="mt-3 rounded-[1rem] border border-white/10 bg-slate-900/70 px-3 py-2 text-sm text-slate-400">
+          <div className="mt-2 rounded-[1rem] border border-white/10 bg-slate-900/70 px-2.5 py-1.5 text-xs text-slate-400">
             Commencez par ajouter vos propres instructions et fonctions Arduino.
           </div>
         )}
       </PrimitiveCard>
 
-      <div className="mt-4">
+      <div className="mt-3">
         <CodeReviewPanel code={code} exerciseTitre={firstExercise?.titre ?? ''} exerciseEnonce={firstExercise?.enonce ?? ''} onResult={setCodeReviewResult} />
       </div>
 
-      <div className="mt-4">
+      <div className="mt-3">
         <PrimitiveCard tone="glass" className="p-4">
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex min-w-0 flex-wrap items-center justify-between gap-2">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300">Circuit & Simulation</p>
-              <p className="mt-2 text-sm text-slate-400">La simulation devient disponible une fois la phase guidée terminée.</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">Circuit & Simulation</p>
+              <p className="mt-1.5 text-xs text-slate-400">La simulation devient disponible une fois la phase guidée terminée.</p>
             </div>
             <PrimitiveBadge tone={socraticCompleted ? 'success' : 'neutral'}>{socraticCompleted ? 'Débloqué' : 'Verrouillé'}</PrimitiveBadge>
           </div>
 
           {socraticCompleted ? (
-            <div className="mt-4 space-y-4">
+            <div className="mt-3 space-y-3">
               {exercises[0]?.circuit_instructions ? (
-                <PrimitiveCard tone="glass" className="rounded-[1rem] border border-white/10 bg-slate-950/70 p-4 text-sm text-slate-200">
+                <PrimitiveCard tone="glass" className="rounded-[1rem] border border-white/10 bg-slate-950/70 p-3 text-xs text-slate-200">
                   <p className="font-semibold text-white">🔧 Circuit à construire</p>
-                  <div className="mt-2 whitespace-pre-line text-slate-300">
+                  <div className="mt-1.5 whitespace-pre-line text-slate-300">
                     {exercises[0].circuit_instructions}
                   </div>
                 </PrimitiveCard>
               ) : null}
               <WokwiHelpPanel />
               <WokwiEmbed wokwiUrl={simulationUrl} />
-              <div className="rounded-[1.15rem] border border-white/10 bg-slate-950/70 p-4 text-sm text-slate-400">
+              <div className="rounded-[1.15rem] border border-white/10 bg-slate-950/70 p-3 text-xs text-slate-400">
                 La simulation est prête à être utilisée pour valider votre solution.
               </div>
 
               <div className="rounded-[1.15rem] border border-cyan-400/20 bg-slate-950/70 p-4">
-                <div className="flex items-center justify-between gap-3">
+                <div className="flex min-w-0 flex-wrap items-start justify-between gap-3">
                   <div>
                     <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300">Test pratique final</p>
                     <p className="mt-2 text-sm text-slate-300">Construis le circuit demandé dans Wokwi, lance la simulation puis vérifie ton projet.</p>
@@ -375,52 +375,52 @@ export function EngineeringLabWorkspace({ module, lessons, exercises, socraticQu
               </div>
             </div>
           ) : (
-            <div className="mt-4 rounded-[1.15rem] border border-dashed border-white/10 bg-slate-950/70 p-4 text-sm text-slate-400">
+            <div className="mt-3 rounded-[1.15rem] border border-dashed border-white/10 bg-slate-950/70 p-3 text-xs text-slate-400">
               Complétez la phase guidée pour débloquer la simulation et la suite du parcours.
             </div>
           )}
         </PrimitiveCard>
       </div>
 
-      <div className="mt-4">
+      <div className="mt-3">
         {isModuleCompleted ? (
           nextModuleId ? (
-            <Link href={`/modules/${nextModuleId}`} className="inline-flex items-center justify-center rounded-full border border-cyan-400/25 bg-cyan-400/15 px-4 py-2 text-sm font-semibold text-cyan-100 transition hover:border-cyan-400/40 hover:bg-cyan-400/20">
+            <Link href={`/modules/${nextModuleId}`} className="inline-flex items-center justify-center rounded-full border border-cyan-400/25 bg-cyan-400/15 px-3.5 py-1.5 text-xs font-semibold text-cyan-100 transition hover:border-cyan-400/40 hover:bg-cyan-400/20">
               Module suivant →
             </Link>
           ) : module.is_capstone ? (
-            <div className="rounded-[1.15rem] border border-emerald-400/20 bg-emerald-400/10 p-4 text-sm text-emerald-100">
+            <div className="rounded-[1.15rem] border border-emerald-400/20 bg-emerald-400/10 p-3 text-xs text-emerald-100">
               <p className="font-semibold">🏁 Félicitations, vous avez terminé le projet final !</p>
-              <p className="mt-2 text-slate-200">Votre parcours est maintenant complet — revenez au dashboard pour consulter vos badges et votre niveau.</p>
-              <Link href="/dashboard" className="mt-3 inline-flex text-cyan-100 underline-offset-2 hover:underline">
+              <p className="mt-1.5 text-slate-200">Votre parcours est maintenant complet — revenez au dashboard pour consulter vos badges et votre niveau.</p>
+              <Link href="/dashboard" className="mt-2 inline-flex text-cyan-100 underline-offset-2 hover:underline">
                 Retour au dashboard
               </Link>
             </div>
           ) : (
-            <div className="rounded-[1.15rem] border border-emerald-400/20 bg-emerald-400/10 p-4 text-sm text-emerald-100">
+            <div className="rounded-[1.15rem] border border-emerald-400/20 bg-emerald-400/10 p-3 text-xs text-emerald-100">
               <p className="font-semibold">🎉 Vous avez terminé tous les modules disponibles !</p>
-              <Link href="/dashboard" className="mt-2 inline-flex text-cyan-100 underline-offset-2 hover:underline">
+              <Link href="/dashboard" className="mt-1.5 inline-flex text-cyan-100 underline-offset-2 hover:underline">
                 Retour au dashboard
               </Link>
             </div>
           )
         ) : (
-          <div className="rounded-[1.15rem] border border-amber-400/20 bg-slate-900/70 p-4 text-sm text-amber-100">
+          <div className="rounded-[1.15rem] border border-amber-400/20 bg-slate-900/70 p-3 text-xs text-amber-100">
             <p className="font-semibold">🔒 Module suivant verrouillé</p>
-            <div className="mt-2 text-slate-300">Terminez ce module pour débloquer la prochaine étape du parcours.</div>
+            <div className="mt-1.5 text-slate-300">Terminez ce module pour débloquer la prochaine étape du parcours.</div>
           </div>
         )}
       </div>
 
-      <div className="mt-4 rounded-[1.35rem] border border-white/10 bg-slate-950/70 p-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="mt-3 rounded-[1.35rem] border border-white/10 bg-slate-950/70 p-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300">Parcours du module</p>
-            <p className="mt-2 max-w-2xl text-sm leading-7 text-slate-400">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">Parcours du module</p>
+            <p className="mt-1.5 max-w-2xl text-xs leading-6 text-slate-400">
               {module.description ?? 'Suivez le tutorat, rédigez votre solution puis débloquez la simulation et la suite du parcours.'}
             </p>
           </div>
-          <div className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-sm text-cyan-100">
+          <div className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-2.5 py-0.5 text-xs text-cyan-100">
             {lessons.length} leçons • {exercises.length} exercices
           </div>
         </div>

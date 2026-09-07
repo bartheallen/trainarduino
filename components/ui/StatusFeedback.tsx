@@ -32,7 +32,7 @@ export function StatusFeedback({ kind, title, description }: StatusFeedbackProps
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.28, ease: 'easeOut' }}
-      className={`rounded-[1.4rem] border p-6 text-center shadow-[0_16px_40px_rgba(0,0,0,0.18)] ${styles[kind]}`}
+      className={`rounded-[1.4rem] border p-4 text-center shadow-[0_16px_40px_rgba(0,0,0,0.18)] sm:p-6 ${styles[kind]}`}
     >
       {kind === 'loading' ? (
         <SignalLoader label="Loading workspace" />

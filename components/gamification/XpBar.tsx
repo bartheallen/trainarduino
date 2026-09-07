@@ -31,13 +31,13 @@ export function XpBar({ currentXp, currentThreshold, nextThreshold, currentLevel
   }, [count, progress, motionValue, xpInLevel]);
 
   return (
-    <div className="rounded-[1.25rem] border border-white/10 bg-slate-900/80 p-5 shadow-[0_16px_40px_rgba(2,6,23,0.24)] backdrop-blur-xl">
-      <div className="mb-3 flex items-center justify-between gap-4">
-        <div>
+    <div className="min-w-0 rounded-[1.25rem] border border-white/10 bg-slate-900/80 p-4 shadow-[0_16px_40px_rgba(2,6,23,0.24)] backdrop-blur-xl sm:p-5">
+      <div className="mb-3 flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+        <div className="min-w-0">
           <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-cyan-300">XP actuel</p>
           <p className="mt-1 text-2xl font-semibold text-white">Niveau {currentLevel}</p>
         </div>
-        <div className="text-right">
+        <div className="text-left sm:text-right">
           <p className="text-2xl font-semibold text-cyan-300">{count}</p>
           <p className="text-sm text-slate-400">/ {xpRange} XP</p>
         </div>
@@ -48,9 +48,9 @@ export function XpBar({ currentXp, currentThreshold, nextThreshold, currentLevel
           className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-emerald-400"
         />
       </div>
-      <div className="mt-3 flex items-center justify-between text-sm text-slate-400">
-        <span>Progression de niveau</span>
-        <span>{Math.min(100, Math.round(progress))}%</span>
+      <div className="mt-3 flex min-w-0 items-center justify-between gap-3 text-sm text-slate-400">
+        <span className="min-w-0 break-words">Progression de niveau</span>
+        <span className="shrink-0">{Math.min(100, Math.round(progress))}%</span>
       </div>
     </div>
   );

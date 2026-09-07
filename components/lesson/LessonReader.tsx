@@ -59,54 +59,54 @@ export function LessonReader({ module, lesson, lessons, currentUserId }: LessonR
   const nextLesson = lessons[currentIndex + 1];
 
   return (
-    <div className="min-h-screen w-full min-w-0 overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.12),_transparent_30%),linear-gradient(135deg,_#071016_0%,_#0d1b23_100%)] px-3 py-6 text-slate-100 sm:px-6 lg:px-8">
-      <div className="mx-auto flex w-full max-w-6xl min-w-0 flex-col gap-4 overflow-hidden">
-        <div className="flex min-w-0 flex-wrap items-center justify-between gap-3">
+    <div className="min-h-screen w-full min-w-0 overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.12),_transparent_30%),linear-gradient(135deg,_#071016_0%,_#0d1b23_100%)] px-2.5 py-5 text-slate-100 sm:px-5 lg:px-6">
+      <div className="mx-auto flex w-full max-w-6xl min-w-0 flex-col gap-3 overflow-hidden">
+        <div className="flex min-w-0 flex-wrap items-center justify-between gap-2">
           <div className="min-w-0">
-            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">Lesson reader</p>
-            <h1 className="break-words text-2xl font-semibold text-white">{lesson.titre}</h1>
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-300">Lesson reader</p>
+            <h1 className="break-words text-xl font-semibold text-white">{lesson.titre}</h1>
           </div>
           <PrimitiveBadge tone="accent">{module.titre}</PrimitiveBadge>
         </div>
 
-        <PrimitiveCard tone="glass" className="p-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
+        <PrimitiveCard tone="glass" className="p-3">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <p className="text-sm text-slate-400">Progression de la leçon</p>
-              <p className="text-sm font-semibold text-white">{progressPercent}%</p>
+              <p className="text-xs text-slate-400">Progression de la leçon</p>
+              <p className="text-xs font-semibold text-white">{progressPercent}%</p>
             </div>
-            <div className="text-sm text-slate-400">{completed ? 'Sauvegardé' : 'En cours de lecture'}</div>
+            <div className="text-xs text-slate-400">{completed ? 'Sauvegardé' : 'En cours de lecture'}</div>
           </div>
         </PrimitiveCard>
 
-        <div className="grid w-full min-w-0 gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-          <motion.article initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }} animate={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="min-w-0 w-full space-y-4">
-            <PrimitiveCard tone="raised" className="min-w-0 p-5">
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300">Contenu</p>
-              <div className="mt-4 space-y-4 text-sm leading-8 text-slate-300">
+        <div className="grid w-full min-w-0 gap-3 lg:grid-cols-[1.2fr_0.8fr]">
+          <motion.article initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }} animate={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="min-w-0 w-full space-y-3">
+            <PrimitiveCard tone="raised" className="min-w-0 p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">Contenu</p>
+              <div className="mt-3 space-y-3 text-xs leading-7 text-slate-300">
                 {paragraphs.map((paragraph, index) => (
                   <p key={`${paragraph}-${index}`} className="break-words">{paragraph}</p>
                 ))}
               </div>
             </PrimitiveCard>
 
-            <PrimitiveCard tone="glass" className="p-5">
-              <div className="flex flex-wrap items-center justify-between gap-3">
+            <PrimitiveCard tone="glass" className="p-4">
+              <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
-                  <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300">Conseils</p>
-                  <p className="mt-2 text-sm leading-7 text-slate-400">Révisez le concept principal, puis tentez l’exercice associé pour consolider votre compréhension.</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">Conseils</p>
+                  <p className="mt-1.5 text-xs leading-6 text-slate-400">Révisez le concept principal, puis tentez l&apos;exercice associé pour consolider votre compréhension.</p>
                 </div>
                 <PrimitiveBadge tone="neutral">Auto-save actif</PrimitiveBadge>
               </div>
             </PrimitiveCard>
           </motion.article>
 
-          <aside className="min-w-0 w-full space-y-4">
+          <aside className="min-w-0 w-full space-y-3">
             <PrimitiveCard tone="glass" className="min-w-0 p-4">
-              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300">Plan du module</p>
-              <div className="mt-4 space-y-2">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">Plan du module</p>
+              <div className="mt-3 space-y-1.5">
                 {lessons.map((entry, index) => (
-                  <Link key={entry.id} href={`/modules/${module.id}/lesson/${entry.id}`} className={`block min-w-0 rounded-[1rem] border px-3 py-2 text-sm transition ${entry.id === lesson.id ? 'border-cyan-400/30 bg-cyan-400/10 text-cyan-100' : 'border-white/10 bg-slate-950/70 text-slate-300 hover:border-cyan-400/20 hover:text-white'}`}>
+                  <Link key={entry.id} href={`/modules/${module.id}/lesson/${entry.id}`} className={`block min-w-0 rounded-[1rem] border px-2.5 py-1.5 text-xs transition ${entry.id === lesson.id ? 'border-cyan-400/30 bg-cyan-400/10 text-cyan-100' : 'border-white/10 bg-slate-950/70 text-slate-300 hover:border-cyan-400/20 hover:text-white'}`}>
                     <span className="block text-[11px] uppercase tracking-[0.24em] text-slate-500">0{index + 1}</span>
                     <span className="mt-1 block break-words font-medium">{entry.titre}</span>
                   </Link>
@@ -116,15 +116,15 @@ export function LessonReader({ module, lesson, lessons, currentUserId }: LessonR
 
             <PrimitiveCard tone="raised" className="p-4">
               <div className="flex items-center justify-between">
-                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300">Navigation</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">Navigation</p>
                 <PrimitiveBadge tone="neutral">{completed ? 'Terminé' : 'À suivre'}</PrimitiveBadge>
               </div>
-              <div className="mt-4 flex flex-wrap gap-3">
+              <div className="mt-3 flex flex-wrap gap-2">
                 {previousLesson ? (
-                  <Link href={`/modules/${module.id}/lesson/${previousLesson.id}`} className="rounded-full border border-white/10 bg-white/8 px-3 py-2 text-sm text-slate-200 transition hover:border-cyan-400/20 hover:text-white">Précédent</Link>
+                  <Link href={`/modules/${module.id}/lesson/${previousLesson.id}`} className="rounded-full border border-white/10 bg-white/8 px-2.5 py-1.5 text-xs text-slate-200 transition hover:border-cyan-400/20 hover:text-white">Précédent</Link>
                 ) : null}
                 {nextLesson ? (
-                  <Link href={`/modules/${module.id}/lesson/${nextLesson.id}`} className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-2 text-sm text-cyan-100 transition hover:border-cyan-300/40">Suivant</Link>
+                  <Link href={`/modules/${module.id}/lesson/${nextLesson.id}`} className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-2.5 py-1.5 text-xs text-cyan-100 transition hover:border-cyan-300/40">Suivant</Link>
                 ) : null}
               </div>
             </PrimitiveCard>

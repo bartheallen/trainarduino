@@ -94,7 +94,7 @@ export function SocraticTutorPanel({ questions = [], onComplete = () => {} }: Pr
 
   return (
     <PrimitiveCard tone="floating" className="p-4">
-      <div className="flex items-center justify-between">
+      <div className="flex min-w-0 flex-wrap items-center justify-between gap-2">
         <h3 className="text-sm font-semibold text-white">Question guidée</h3>
         <PrimitiveBadge tone="accent">Question {currentIndex + 1}/{total}</PrimitiveBadge>
       </div>
@@ -162,7 +162,7 @@ export function SocraticTutorPanel({ questions = [], onComplete = () => {} }: Pr
 
       {reviewResult && (
         <div className={`mt-4 rounded-2xl border p-3 text-sm ${reviewResult.correct ? 'border-emerald-400/20 bg-emerald-500/10 text-emerald-100' : 'border-amber-400/20 bg-amber-500/10 text-amber-100'}`}>
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex min-w-0 flex-wrap items-center justify-between gap-2">
             <p className="font-semibold">{reviewResult.correct ? 'Bonne réponse' : 'Réponse incorrecte'}</p>
             <PrimitiveBadge tone={reviewResult.correct ? 'success' : 'warning'}>
               {reviewResult.correct ? 'Correct' : 'À retravailler'}

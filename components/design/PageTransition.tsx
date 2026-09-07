@@ -19,9 +19,9 @@ export function PageTransition({ children }: { children: ReactNode }) {
     >
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: [0, 0.4, 0.55], scaleX: [0.985, 1.002, 1] }}
+        animate={{ opacity: [0, 0.35, 0.5], scaleX: [0.985, 1.001, 1] }}
         transition={{ duration: 0.62, ease: [0.22, 1, 0.36, 1] }}
-        className="pointer-events-none absolute inset-x-6 top-0 h-24 rounded-full bg-cyan-400/10 blur-3xl"
+        className="pointer-events-none absolute inset-x-2 top-0 h-16 rounded-full bg-cyan-400/10 blur-3xl sm:inset-x-6 sm:h-20"
       />
       {children}
     </motion.div>

@@ -14,7 +14,7 @@ const trustItems = [
 
 const features = [
   {
-    title: 'De la curiosité à l’électronique',
+    title: 'De la curiosité à l&apos;électronique',
     body: 'Chaque leçon est pensée comme une expérience maîtrisée : calme, concentrée et gratifiante.',
     metric: '94 % de complétion',
   },
@@ -44,7 +44,7 @@ export function LandingPageSections() {
         <PrimitiveCard tone="glass" className="min-w-0 p-6 sm:p-8">
           <PrimitiveBadge tone="accent">Langage de l’ingénierie</PrimitiveBadge>
           <h2 className="mt-5 break-words text-2xl font-semibold text-white sm:text-4xl">Chaque interaction est pensée avec précision.</h2>
-          <p className="mt-4 max-w-2xl break-words text-base text-slate-300 sm:text-lg">TrainArduino transforme l’électronique complexe en une expérience calme, guidée et visiblement progressives.</p>
+          <p className="mt-4 max-w-2xl break-words text-base text-slate-300 sm:text-lg">TrainArduino transforme l&apos;électronique complexe en une expérience calme, guidée et visiblement progressives.</p>
         </PrimitiveCard>
         <div className="grid w-full gap-4 sm:grid-cols-3">
           {stats.map((stat, index) => (

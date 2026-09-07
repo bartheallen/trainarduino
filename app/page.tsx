@@ -24,23 +24,23 @@ export default function Home() {
       <div className="pointer-events-none absolute -left-10 -top-10 h-40 w-40 rounded-full bg-cyan-400/10 blur-2xl sm:-left-32 sm:-top-32 sm:h-72 sm:w-72" />
       <div className="pointer-events-none absolute -right-12 -bottom-12 h-48 w-48 rounded-full bg-blue-500/10 blur-2xl sm:-right-32 sm:-bottom-32 sm:h-80 sm:w-80" />
 
-      <div className="relative mx-auto flex min-h-screen w-full max-w-7xl flex-col px-3 pb-16 pt-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto flex min-h-screen w-full max-w-7xl flex-col px-3 pb-12 pt-3 sm:px-6 lg:px-8">
         <AnimatedNav />
 
         <motion.header
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: 'easeOut' }}
-          className="relative z-10 mt-4 w-full overflow-hidden rounded-[2.25rem] border border-white/10 bg-slate-900/95 p-4 shadow-[0_25px_90px_rgba(0,0,0,0.4)] sm:p-8 xl:p-10"
+          className="relative z-10 mt-3 w-full overflow-hidden rounded-[2.25rem] border border-white/10 bg-slate-900/95 p-3 shadow-[0_25px_90px_rgba(0,0,0,0.4)] sm:p-6 lg:p-8"
         >
-          <div className="grid w-full gap-6 sm:gap-8 lg:grid-cols-[1.03fr_0.97fr] lg:items-center">
+          <div className="grid w-full gap-4 sm:gap-6 lg:grid-cols-[1.03fr_0.97fr] lg:items-center">
             <div className="w-full min-w-0 max-w-full">
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }} className="min-w-0 max-w-full">
                 <PrimitiveBadge tone="accent" className="max-w-full flex-wrap">Apprentissage électronique de nouvelle génération</PrimitiveBadge>
               </motion.div>
 
               <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.6 }} className="mt-5 w-full min-w-0 max-w-full break-words font-semibold leading-[0.95] tracking-[-0.03em] text-white text-3xl sm:text-4xl md:text-5xl lg:text-7xl">
-                Comprenez l’électronique en construisant une intuition solide.
+                Comprenez l&apos;électronique en construisant une intuition solide.
               </motion.h1>
 
               <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.6 }} className="mt-6 w-full max-w-2xl min-w-0 break-words text-sm text-slate-300 sm:text-base sm:text-lg">

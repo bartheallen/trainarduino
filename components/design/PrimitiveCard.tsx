@@ -28,14 +28,14 @@ export function PrimitiveCard({ children, tone = 'raised', className = '', hover
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={hoverable ? { y: -4, scale: 1.01, boxShadow: '0 24px 60px rgba(2,6,23,0.28)' } : undefined}
+      whileHover={hoverable ? { y: -3, scale: 1.005, boxShadow: '0 20px 48px rgba(2,6,23,0.24)' } : undefined}
       whileTap={hoverable ? { scale: 0.995 } : undefined}
       transition={motionTokens.normal}
       onClick={onClick}
       onKeyDown={onKeyDown}
       role={isInteractive ? 'button' : undefined}
       tabIndex={isInteractive ? 0 : undefined}
-      className={`relative w-full max-w-full rounded-[1.25rem] border border-white/10 p-5 sm:p-6 ${tones[tone]} ${className}`}
+      className={`relative w-full max-w-full rounded-[1.25rem] border border-white/10 p-3 sm:p-4 ${tones[tone]} ${className}`}
     >
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(125deg,transparent_0%,rgba(255,255,255,0.035)_40%,transparent_100%)]" />
       <div className="relative z-10 min-w-0">{children}</div>

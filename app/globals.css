@@ -27,10 +27,13 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
 }
 
 img, svg, video, canvas, iframe {
+  display: block;
   max-width: 100%;
+  height: auto;
 }
 
 body {
@@ -43,6 +46,8 @@ body {
     linear-gradient(135deg, #07111b 0%, #0b1420 45%, #101927 100%);
   color: var(--text);
   transition: background-color 0.4s ease, color 0.4s ease;
+  overflow-x: clip;
+  max-width: 100%;
 }
 
 ::selection {

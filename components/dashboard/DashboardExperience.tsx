@@ -115,15 +115,15 @@ export function DashboardExperience({
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-7xl min-w-0 max-w-full flex-col gap-6 overflow-hidden px-0 sm:px-1">
+    <div className="mx-auto flex w-full max-w-7xl min-w-0 flex-col gap-6 px-0 sm:px-1">
       <motion.header
         initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
         animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="relative min-w-0 overflow-hidden rounded-[2.2rem] border border-white/10 bg-slate-900/75 p-6 shadow-[0_24px_80px_rgba(0,0,0,0.34)] backdrop-blur-2xl sm:p-8"
+        className="relative min-w-0 overflow-hidden rounded-[2.2rem] border border-white/10 bg-slate-900/75 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.34)] backdrop-blur-2xl sm:p-6"
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.13),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(59,130,246,0.16),_transparent_28%)]" />
-        <div className="relative z-10 flex min-w-0 flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+        <div className="relative z-10 flex min-w-0 flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-3xl min-w-0">
             <div className="flex min-w-0 items-center gap-3">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-cyan-400/25 bg-cyan-400/10 text-cyan-200 shadow-[0_0_18px_rgba(34,211,238,0.14)]">
@@ -131,13 +131,13 @@ export function DashboardExperience({
               </div>
               <div className="min-w-0">
                 <PrimitiveBadge tone="accent">Mission Control</PrimitiveBadge>
-                <h1 className="mt-2 break-words text-4xl font-semibold tracking-[-0.03em] text-white sm:text-5xl">
+                <h1 className="mt-2 break-words text-2xl font-semibold tracking-[-0.03em] text-white sm:text-3xl">
                   Bonjour, <span className="text-cyan-300">{profile.username}</span>
                 </h1>
               </div>
             </div>
 
-            <p className="mt-5 max-w-2xl break-words text-lg text-slate-300">
+            <p className="mt-4 max-w-2xl break-words text-base text-slate-300">
               Votre parcours Arduino se déroule comme un circuit de précision : chaque module révèle une nouvelle étape, chaque progression éclaire le prochain challenge.
             </p>
 
@@ -156,11 +156,11 @@ export function DashboardExperience({
             </div>
           </div>
 
-          <PrimitiveCard tone="glass" className="w-full min-w-0 max-w-md p-5">
+          <PrimitiveCard tone="glass" className="w-full min-w-0 max-w-md p-4">
             <div className="flex items-center justify-between gap-3">
               <div className="min-w-0">
-                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300">Mission active</p>
-                <h2 className="mt-2 break-words text-2xl font-semibold text-white">Maîtriser la logique du circuit</h2>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">Mission active</p>
+                <h2 className="mt-2 break-words text-xl font-semibold text-white">Maîtriser la logique du circuit</h2>
               </div>
               <div className="flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-emerald-300">
                 <LedIndicator className="shrink-0" />
@@ -196,10 +196,10 @@ export function DashboardExperience({
 
       {showOnboarding && <OnboardingTour open={showOnboarding} onClose={() => setShowOnboarding(false)} />}
 
-      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((stat, index) => (
           <motion.div key={stat.label} initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }} animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: 0.05 * index }} whileHover={{ y: -4, scale: 1.01 }}>
-            <PrimitiveCard tone="glass" className="p-5">
+            <PrimitiveCard tone="glass" className="p-4">
               <p className="text-sm uppercase tracking-[0.24em] text-slate-400">{stat.label}</p>
               <p className="mt-3 text-2xl font-semibold text-white">{stat.value}</p>
               <p className="mt-1 text-sm text-slate-400">{stat.hint}</p>
@@ -208,29 +208,29 @@ export function DashboardExperience({
         ))}
       </section>
 
-      <section id="parcours-modules" className="scroll-mt-24 grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
+      <section id="parcours-modules" className="scroll-mt-24 grid gap-5 xl:grid-cols-[1.2fr_0.8fr]">
         <PrimitiveCard tone="floating" className="overflow-hidden p-0">
-          <div className="border-b border-white/10 p-6">
+          <div className="border-b border-white/10 p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">Parcours de progression</p>
-                <h2 className="mt-2 text-2xl font-semibold text-white">Un chemin de modules à la fois lumineux et structuré</h2>
+                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-cyan-300">Parcours de progression</p>
+                <h2 className="mt-2 text-xl font-semibold text-white">Un chemin de modules à la fois lumineux et structuré</h2>
               </div>
               <PrimitiveBadge tone="success">Module courant</PrimitiveBadge>
             </div>
           </div>
-          <div className="p-6">
+          <div className="p-5">
             <ModulePath modules={moduleStatus} />
           </div>
         </PrimitiveCard>
 
-        <div className="space-y-6">
-          <PrimitiveCard tone="glass" className="p-6">
+        <div className="space-y-5">
+          <PrimitiveCard tone="glass" className="p-5">
             <div className="flex items-center gap-2">
               <SignalWaveIcon className="h-4 w-4 text-cyan-300" />
-              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">Récompense à venir</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-cyan-300">Récompense à venir</p>
             </div>
-            <h3 className="mt-4 text-2xl font-semibold text-white">Badge de précision</h3>
+            <h3 className="mt-4 text-xl font-semibold text-white">Badge de précision</h3>
             <p className="mt-3 text-sm leading-6 text-slate-400">
               Les modules complétés allument progressivement les récompenses. Chaque avancée rend cette expérience plus élégante et plus motivante.
             </p>
@@ -239,10 +239,10 @@ export function DashboardExperience({
             </div>
           </PrimitiveCard>
 
-          <PrimitiveCard tone="raised" className="p-6">
+          <PrimitiveCard tone="raised" className="p-5">
             <div className="flex items-center gap-2">
               <CircuitChipIcon className="h-4 w-4 text-cyan-300" />
-              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">Badges</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-cyan-300">Badges</p>
             </div>
             <div className="mt-4 space-y-3">
               {achievements.map((achievement) => (
@@ -261,10 +261,10 @@ export function DashboardExperience({
         </div>
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="space-y-6">
-          <PrimitiveCard tone="glass" className="p-6">
-            <div className="flex items-center gap-2">
+      <section className="grid min-w-0 gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="min-w-0 space-y-6">
+          <PrimitiveCard tone="glass" className="min-w-0 p-4 sm:p-6">
+            <div className="flex min-w-0 flex-wrap items-center gap-2">
               <SignalWaveIcon className="h-4 w-4 text-cyan-300" />
               <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">XP central</p>
             </div>
@@ -274,13 +274,13 @@ export function DashboardExperience({
           </PrimitiveCard>
 
           {adaptiveRecommendation && (
-            <PrimitiveCard tone="glass" className="p-6">
-              <div className="flex items-center gap-2">
+          <PrimitiveCard tone="glass" className="min-w-0 p-4 sm:p-6">
+            <div className="flex min-w-0 flex-wrap items-center gap-2">
                 <SignalWaveIcon className="h-4 w-4 text-cyan-300" />
                 <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">Suggestion adaptative</p>
               </div>
-              <h3 className="mt-4 text-2xl font-semibold text-white">{adaptiveRecommendation.suggestedModuleTitle ?? 'Recommandation personnalisée'}</h3>
-              <p className="mt-3 text-sm leading-6 text-slate-400">{adaptiveRecommendation.explanation}</p>
+              <h3 className="mt-4 break-words text-2xl font-semibold text-white">{adaptiveRecommendation.suggestedModuleTitle ?? 'Recommandation personnalisée'}</h3>
+              <p className="mt-3 break-words text-sm leading-6 text-slate-400">{adaptiveRecommendation.explanation}</p>
               <div className="mt-6 rounded-[1.1rem] border border-cyan-400/20 bg-slate-950/70 p-4 text-sm text-slate-300">
                 <p className="font-semibold text-white">Type</p>
                 <p className="mt-1">{adaptiveRecommendation.recommendedContentType}</p>
@@ -292,7 +292,7 @@ export function DashboardExperience({
                 <p className="font-semibold text-white">Votre avis</p>
                 <p className="text-slate-500">Aidez-nous à améliorer votre prochaine recommandation.</p>
 
-                <div className="grid gap-2 sm:grid-cols-[auto_1fr] sm:items-center">
+                <div className="grid min-w-0 gap-2 sm:grid-cols-[auto_1fr] sm:items-center">
                   <label htmlFor="feedback" className="text-slate-300">Commentaire</label>
                   <textarea
                     id="feedback"
@@ -304,9 +304,9 @@ export function DashboardExperience({
                   />
                 </div>
 
-                <div className="grid gap-2 sm:grid-cols-[auto_1fr] sm:items-center">
+                <div className="grid min-w-0 gap-2 sm:grid-cols-[auto_1fr] sm:items-center">
                   <span className="text-slate-300">Note</span>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     {[1, 2, 3, 4, 5].map((value) => (
                       <button
                         key={value}
@@ -331,23 +331,23 @@ export function DashboardExperience({
           )}
         </div>
 
-        <PrimitiveCard tone="raised" className="p-6">
-          <div className="flex items-center gap-2">
+        <PrimitiveCard tone="raised" className="min-w-0 p-4 sm:p-6">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
             <CircuitChipIcon className="h-4 w-4 text-cyan-300" />
             <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">Activité récente</p>
           </div>
           <div className="mt-5 space-y-4">
             {activityItems.map((item, index) => (
-              <motion.div key={item.title} initial={shouldReduceMotion ? false : { opacity: 0, x: 8 }} animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, x: 0 }} transition={{ duration: 0.3, delay: 0.08 * index }} className="flex gap-3 rounded-[1.05rem] border border-white/10 bg-slate-950/70 p-4">
-                <div className="mt-1 flex h-9 w-9 items-center justify-center rounded-full border border-cyan-400/20 bg-cyan-400/10 text-cyan-200">
+              <motion.div key={item.title} initial={shouldReduceMotion ? false : { opacity: 0, x: 8 }} animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, x: 0 }} transition={{ duration: 0.3, delay: 0.08 * index }} className="flex min-w-0 gap-3 rounded-[1.05rem] border border-white/10 bg-slate-950/70 p-4">
+                <div className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-cyan-400/20 bg-cyan-400/10 text-cyan-200">
                   <LedIndicator className="shrink-0" />
                 </div>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="font-semibold text-white">{item.title}</p>
-                    <span className="text-xs uppercase tracking-[0.24em] text-slate-500">{item.time}</span>
+                <div className="min-w-0 flex-1">
+                  <div className="flex min-w-0 flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+                    <p className="break-words font-semibold text-white">{item.title}</p>
+                    <span className="break-words text-xs uppercase tracking-[0.18em] text-slate-500">{item.time}</span>
                   </div>
-                  <p className="mt-2 text-sm leading-6 text-slate-400">{item.body}</p>
+                  <p className="mt-2 break-words text-sm leading-6 text-slate-400">{item.body}</p>
                 </div>
               </motion.div>
             ))}

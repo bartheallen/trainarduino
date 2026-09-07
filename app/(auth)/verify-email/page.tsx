@@ -44,16 +44,16 @@ export default function VerifyEmailPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-8 text-slate-100">
-      <PrimitiveCard tone="floating" className="w-full max-w-lg p-8">
-        <div className="flex items-center gap-3">
+      <PrimitiveCard tone="floating" className="w-full max-w-lg p-4 sm:p-8">
+        <div className="flex min-w-0 items-start gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-[1rem] border border-cyan-400/20 bg-cyan-400/10 text-cyan-200">
             <CircuitChipIcon className="h-6 w-6" />
           </div>
-          <div>
+          <div className="min-w-0">
             <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-cyan-300">
               {isChecking ? 'Vérification' : hasSession ? 'Confirmation' : 'Vérification'}
             </p>
-            <h1 className="mt-1 text-2xl font-semibold text-white">
+            <h1 className="mt-1 break-words text-xl font-semibold text-white sm:text-2xl">
               {isChecking
                 ? 'Vérification en cours...'
                 : hasSession

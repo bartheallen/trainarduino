@@ -33,7 +33,7 @@ export function ModulePath({ modules }: ModulePathProps) {
   }, [modules]);
 
   return (
-    <div className="relative w-full min-w-0 overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950/90 p-4 text-slate-100 shadow-[0_24px_70px_rgba(0,0,0,0.35)] sm:p-6">
+    <div className="relative w-full min-w-0 overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950/90 p-4 text-slate-100 shadow-[0_24px_70px_rgba(0,0,0,0.35)] sm:p-5">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.10),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(59,130,246,0.12),_transparent_26%)]" />
       <svg className="pointer-events-none absolute inset-0 h-full w-full opacity-80" viewBox="0 0 100 100" preserveAspectRatio="none">
         <path d="M10 20 C30 20, 30 40, 50 40 S70 60, 90 60" stroke="rgba(34,211,238,0.24)" strokeWidth="1.1" fill="none" strokeLinecap="round" />
@@ -41,10 +41,10 @@ export function ModulePath({ modules }: ModulePathProps) {
         <path d="M10 78 C24 78, 36 64, 48 64 S66 52, 90 52" stroke="rgba(16,185,129,0.22)" strokeWidth="0.9" fill="none" strokeLinecap="round" strokeDasharray="1.2 2" />
       </svg>
 
-      <div className="relative z-10 space-y-4 sm:space-y-6">
+      <div className="relative z-10 space-y-3 sm:space-y-4">
         {pathways.map((module, index) => (
           <motion.div key={module.id} className="flex min-w-0 w-full justify-start" initial={shouldReduceMotion ? false : { opacity: 0, y: 10 }} animate={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.04 * index }}>
-            <div className="flex w-full min-w-0 max-w-full items-start gap-3 rounded-[1.25rem] border border-white/10 bg-slate-900/60 p-3 backdrop-blur-xl sm:gap-4 sm:p-4">
+            <div className="flex w-full min-w-0 max-w-full items-start gap-2 rounded-[1.25rem] border border-white/10 bg-slate-900/60 p-3 backdrop-blur-xl sm:gap-3 sm:p-3">
               <ModuleNode
                 title={module.titre}
                 state={module.state as 'locked' | 'available' | 'completed'}
@@ -52,8 +52,8 @@ export function ModulePath({ modules }: ModulePathProps) {
                 onClick={() => setSelectedModule(module.id)}
               />
               <div className="min-w-0 flex-1 overflow-hidden">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400 sm:text-sm">Module {module.ordre}</p>
-                <p className="mt-1 break-words text-base font-semibold text-white sm:text-lg">{module.titre}</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400 sm:text-xs">Module {module.ordre}</p>
+                <p className="mt-1 break-words text-sm font-semibold text-white sm:text-base">{module.titre}</p>
                 {module.state === 'locked' && (
                   <p className="mt-1 break-words text-sm leading-6 text-slate-400">🔒 À débloquer</p>
                 )}
@@ -78,26 +78,26 @@ export function ModulePath({ modules }: ModulePathProps) {
             onClick={() => setSelectedModule(null)}
           >
             <motion.div initial={{ opacity: 0, y: 14, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 14, scale: 0.98 }} transition={{ duration: 0.24 }} onClick={(e) => e.stopPropagation()}>
-              <PrimitiveCard tone="floating" className="w-full max-w-xl p-6">
-                <div className="flex items-start justify-between gap-4">
+              <PrimitiveCard tone="floating" className="w-full max-w-xl p-5">
+                <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300">Module détaillé</p>
-                    <h3 className="mt-2 text-2xl font-semibold text-white">{modules.find((item) => item.id === selectedModule)?.titre}</h3>
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">Module détaillé</p>
+                    <h3 className="mt-2 text-xl font-semibold text-white">{modules.find((item) => item.id === selectedModule)?.titre}</h3>
                   </div>
                   <button className="rounded-full border border-white/10 bg-slate-950/70 px-3 py-1 text-sm text-slate-300 transition hover:bg-white/10" onClick={() => setSelectedModule(null)}>
                     Fermer
                   </button>
                 </div>
-                <p className="mt-5 text-sm leading-7 text-slate-400">
+                <p className="mt-4 text-sm leading-6 text-slate-400">
                   Ce module est accessible depuis votre parcours actuel. Vous pouvez le reprendre quand vous êtes prêt.
                 </p>
-                <div className="mt-6 grid gap-3 md:grid-cols-2">
-                  <div className="rounded-[1.1rem] border border-white/10 bg-slate-950/70 p-4">
-                    <p className="text-sm font-semibold text-white">Compétences</p>
-                    <p className="mt-2 text-sm text-slate-400">Logique de branchement, signal et contrôle.</p>
+                <div className="mt-5 grid gap-2 md:grid-cols-2">
+                  <div className="rounded-[1.1rem] border border-white/10 bg-slate-950/70 p-3">
+                    <p className="text-xs font-semibold text-white">Compétences</p>
+                    <p className="mt-2 text-xs text-slate-400">Logique de branchement, signal et contrôle.</p>
                   </div>
-                  <div className="rounded-[1.1rem] border border-white/10 bg-slate-950/70 p-4">
-                    <p className="text-sm font-semibold text-white">Exercices</p>
+                  <div className="rounded-[1.1rem] border border-white/10 bg-slate-950/70 p-3">
+                    <p className="text-xs font-semibold text-white">Exercices</p>
                     <p className="mt-2 text-sm text-slate-400">1 mini projet · 3 exercices guidés</p>
                   </div>
                 </div>

@@ -148,9 +148,9 @@ export default function PositioningTestPage() {
     }[level];
 
     return (
-      <div className="bg-white rounded-lg shadow-lg p-8 text-center">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">Test terminé ! 🎉</h1>
-        <p className="text-xl text-gray-600 mb-6">
+      <div className="bg-white rounded-lg shadow-lg p-4 text-center sm:p-8">
+        <h1 className="mb-4 text-2xl font-bold text-gray-800 sm:text-4xl">Test terminé ! 🎉</h1>
+        <p className="mb-6 text-lg text-gray-600 sm:text-xl">
           Vous avez obtenu <span className="font-bold text-blue-600">{score}/{questions.length}</span>
         </p>
         <div className="bg-blue-50 rounded-lg p-6 mb-8">
@@ -170,7 +170,7 @@ export default function PositioningTestPage() {
         <button
           onClick={handleCompleteTest}
           disabled={isSubmitting}
-          className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full rounded-lg bg-blue-600 px-5 py-3 font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto sm:px-8"
         >
           {isSubmitting ? 'Enregistrement...' : 'Aller au tableau de bord'}
         </button>
@@ -179,10 +179,10 @@ export default function PositioningTestPage() {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-8">
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-3xl font-bold text-gray-800">Test de positionnement</h1>
+    <div className="bg-white rounded-lg shadow-lg p-4 sm:p-8">
+      <div className="mb-6 sm:mb-8">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+          <h1 className="text-2xl font-bold text-gray-800 sm:text-3xl">Test de positionnement</h1>
           <span className="text-lg font-semibold text-blue-600">
             {currentIndex + 1}/{questions.length}
           </span>
@@ -196,7 +196,7 @@ export default function PositioningTestPage() {
       </div>
 
       <div className="mb-8">
-        <h2 className="text-xl font-semibold text-gray-800 mb-6">
+        <h2 className="mb-6 break-words text-lg font-semibold text-gray-800 sm:text-xl">
           {currentQuestion.text}
         </h2>
 

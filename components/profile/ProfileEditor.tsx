@@ -39,11 +39,11 @@ export function ProfileEditor({ profile, action }: ProfileEditorProps) {
   }
 
   return (
-    <PrimitiveCard tone="floating" className="p-6">
+    <PrimitiveCard tone="floating" className="p-4 sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-300">Profil</p>
-          <h1 className="mt-2 text-3xl font-semibold text-white">Modifier votre profil</h1>
+          <h1 className="mt-2 break-words text-2xl font-semibold text-white sm:text-3xl">Modifier votre profil</h1>
         </div>
         <PrimitiveBadge tone="accent">V1</PrimitiveBadge>
       </div>
