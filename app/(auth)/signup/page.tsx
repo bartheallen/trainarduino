@@ -69,7 +69,7 @@ export default function SignupPage() {
           disabled={isLoading}
           className="w-full rounded-lg bg-gradient-to-r from-cyan-400 to-blue-500 py-2 font-semibold text-slate-950 shadow-[0_14px_40px_rgba(50,231,255,0.2)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {isLoading ? 'Création du compte…' : 'S&apos;inscrire'}
+          {isLoading ? 'Création du compte…' : "S'inscrire"}
         </button>
       </form>
 
