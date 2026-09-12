@@ -14,8 +14,6 @@ export interface Profile {
   xp_total: number;
   niveau_actuel: number | null;
   module_actuel_id: string | null;
-  streak?: number | null;
-  last_active_at?: string | null;
   timezone?: string | null;
   preferred_language?: string | null;
   achievements?: string[] | null;

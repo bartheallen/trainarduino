@@ -6,8 +6,6 @@ interface AppState {
   toggleTheme: () => void;
   xp: number;
   setXp: (xp: number) => void;
-  streak: number;
-  setStreak: (streak: number) => void;
   soundEnabled: boolean;
   toggleSound: () => void;
   toast: { id: number; type: 'success' | 'error' | 'info'; title: string; message: string } | null;
@@ -22,8 +20,6 @@ export const useAppStore = create<AppState>()(
       toggleTheme: () => set((state) => ({ theme: state.theme === 'dark' ? 'light' : 'dark' })),
       xp: 320,
       setXp: (xp) => set({ xp }),
-      streak: 7,
-      setStreak: (streak) => set({ streak }),
       soundEnabled: true,
       toggleSound: () => set((state) => ({ soundEnabled: !state.soundEnabled })),
       toast: null,
@@ -36,7 +32,6 @@ export const useAppStore = create<AppState>()(
         theme: state.theme,
         soundEnabled: state.soundEnabled,
         xp: state.xp,
-        streak: state.streak,
       }),
     }
   )

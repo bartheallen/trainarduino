@@ -15,9 +15,8 @@ describe('gamificationSubscriber', () => {
     const db = await import('@/lib/db');
     const profileRepo = await import('@/lib/repos/profileRepo');
     vi.spyOn(db, 'updateUserXP').mockResolvedValue({ xp_total: 0, niveau_actuel: 1 } as any);
-    vi.spyOn(db, 'updateUserStreak').mockResolvedValue({ streak: 1 } as any);
-    vi.spyOn(db, 'getUserProfile').mockResolvedValue(null);
-    vi.spyOn(profileRepo, 'getProfileById').mockResolvedValue(null);
+    vi.spyOn(db, 'getUserProfile').mockResolvedValue(null as any);
+    vi.spyOn(profileRepo, 'getProfileById').mockResolvedValue(null as any);
     vi.spyOn(profileRepo, 'updateProfile').mockResolvedValue({} as any);
   });
 

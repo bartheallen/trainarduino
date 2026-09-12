@@ -64,8 +64,11 @@ export function SocraticTutorPanel({ questions = [], onComplete = () => {} }: Pr
     setError(null);
     setReviewResult(null);
 
+    let response: Response | null = null;
+    let responseBody: unknown = null;
+
     try {
-      const response = await fetch('/api/socratic-feedback', {
+      response = await fetch('/api/socratic-feedback', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -78,14 +81,26 @@ export function SocraticTutorPanel({ questions = [], onComplete = () => {} }: Pr
         }),
       });
 
-      const payload = await response.json();
+      const rawBody = await response.text();
+      try {
+        responseBody = JSON.parse(rawBody);
+      } catch {
+        responseBody = rawBody;
+      }
+      const payload = responseBody as { error?: unknown; correct?: unknown; feedback?: unknown };
       if (!response.ok) {
+        console.error('[socratic-feedback] frontend request failed', { status: response.status, body: responseBody });
         setError(typeof payload?.error === 'string' ? payload.error : 'Impossible de vérifier pour le moment, réessayez.');
       } else {
         setReviewResult({ correct: payload.correct === true, feedback: typeof payload.feedback === 'string' ? payload.feedback : '' });
         setAllowContinue(payload.correct === true);
       }
-    } catch {
+    } catch (error) {
+      console.error('[socratic-feedback] frontend request error', {
+        status: response?.status ?? null,
+        body: responseBody,
+        error,
+      });
       setError('Impossible de vérifier pour le moment, réessayez.');
     } finally {
       setLoading(false);

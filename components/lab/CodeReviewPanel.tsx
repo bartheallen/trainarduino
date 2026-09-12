@@ -27,8 +27,11 @@ export function CodeReviewPanel({ code, exerciseTitre, exerciseEnonce, onResult 
     setError(null);
     setResult(null);
 
+    let response: Response | null = null;
+    let responseBody: unknown = null;
+
     try {
-      const response = await fetch('/api/code-review', {
+      response = await fetch('/api/code-review', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -36,8 +39,15 @@ export function CodeReviewPanel({ code, exerciseTitre, exerciseEnonce, onResult 
         body: JSON.stringify({ code, exerciseTitre, exerciseEnonce }),
       });
 
-      const payload = await response.json();
+      const rawBody = await response.text();
+      try {
+        responseBody = JSON.parse(rawBody);
+      } catch {
+        responseBody = rawBody;
+      }
+      const payload = responseBody as { error?: unknown; correct?: unknown; issues?: unknown; feedback?: unknown };
       if (!response.ok) {
+        console.error('[code-review] frontend request failed', { status: response.status, body: responseBody });
         setError(typeof payload?.error === 'string' ? payload.error : 'Impossible de corriger le code pour le moment.');
         if (onResult) onResult(null);
       } else {
@@ -49,7 +59,12 @@ export function CodeReviewPanel({ code, exerciseTitre, exerciseEnonce, onResult 
         setResult(mapped);
         if (onResult) onResult(mapped);
       }
-    } catch {
+    } catch (error) {
+      console.error('[code-review] frontend request error', {
+        status: response?.status ?? null,
+        body: responseBody,
+        error,
+      });
       setError('Impossible de vérifier pour le moment, réessayez.');
       if (onResult) onResult(null);
     } finally {

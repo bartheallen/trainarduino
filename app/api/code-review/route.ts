@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { callMistralJson } from '@/lib/ai/mistral';
+import { callMistralJson, getMistralApiKey } from '@/lib/ai/gemini';
 
 function extractJsonString(text: string): string | null {
   const fencedMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
@@ -17,7 +17,8 @@ function extractJsonString(text: string): string | null {
 }
 
 export async function POST(req: Request) {
-  if (!process.env.MISTRAL_API_KEY) {
+  if (!getMistralApiKey()) {
+    console.error('[code-review] GEMINI_API_KEY absente ou vide dans le runtime');
     return NextResponse.json(
       { error: 'La configuration de l’IA est manquante. Impossible de corriger le code pour le moment.' },
       { status: 500 },
@@ -98,7 +99,7 @@ Format exact attendu : {"correct": boolean, "issues": ["problème 1", "problème
     return NextResponse.json({ correct, issues, feedback });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    console.error('[code-review] Mistral request failed:', message);
+    console.error('[code-review] Gemini request failed:', message);
     return NextResponse.json(
       { error: 'Le service d’IA a renvoyé une erreur. Réessayez plus tard.' },
       { status: 502 },

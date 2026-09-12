@@ -1,6 +1,11 @@
 const MISTRAL_API_URL = 'https://api.mistral.ai/v1/chat/completions';
 
-export const MISTRAL_MODEL = (process.env.MISTRAL_MODEL ?? 'mistral-small-latest').trim();
+export function getMistralApiKey() {
+  const apiKey = process.env.MISTRAL_API_KEY?.trim();
+  return apiKey || null;
+}
+
+export const MISTRAL_MODEL = process.env.MISTRAL_MODEL?.trim() || 'mistral-small-latest';
 
 type MistralCompletion = {
   choices?: Array<{ message?: { content?: unknown } }>;
@@ -10,7 +15,7 @@ export async function callMistralJson(
   prompt: string,
   model: string = MISTRAL_MODEL,
 ): Promise<{ text: string; model: string }> {
-  const apiKey = process.env.MISTRAL_API_KEY;
+  const apiKey = getMistralApiKey();
   if (!apiKey) {
     throw new Error('Missing MISTRAL_API_KEY');
   }

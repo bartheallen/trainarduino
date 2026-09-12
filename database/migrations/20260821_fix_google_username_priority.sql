@@ -54,7 +54,7 @@ BEGIN
     v_suffix := v_suffix + 1;
   END LOOP;
 
-  INSERT INTO public.profiles (id, username, display_name, avatar_url, biography, country, preferred_language, theme_preference, timezone, public_profile, privacy_settings, learning_preferences, notification_preferences, xp_total, niveau_actuel, module_actuel_id, streak, achievements, modules_unlocked, statistics, is_admin)
+  INSERT INTO public.profiles (id, username, display_name, avatar_url, biography, country, preferred_language, theme_preference, timezone, public_profile, privacy_settings, learning_preferences, notification_preferences, xp_total, niveau_actuel, module_actuel_id, achievements, modules_unlocked, statistics, is_admin)
   VALUES (
     NEW.id,
     v_final_username,

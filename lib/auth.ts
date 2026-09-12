@@ -310,7 +310,6 @@ export async function ensureProfileForUser(
     xp_total: 0,
     niveau_actuel: null,
     module_actuel_id: null,
-    streak: 0,
     achievements: [],
     modules_unlocked: [],
     statistics: {},

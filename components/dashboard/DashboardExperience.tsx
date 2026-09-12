@@ -7,7 +7,6 @@ import { PrimitiveBadge } from '@/components/design/PrimitiveBadge';
 import { PrimitiveCard } from '@/components/design/PrimitiveCard';
 import { PrimitiveProgress } from '@/components/design/PrimitiveProgress';
 import { XpBar } from '@/components/gamification/XpBar';
-import { StreakFlame } from '@/components/gamification/StreakFlame';
 import { ModulePath } from '@/components/dashboard/ModulePath';
 import { Button } from '@/components/ui/Button';
 import { CircuitChipIcon, LedIndicator, OscilloscopeDivider, SignalWaveIcon } from '@/components/ui/ElectronicsIcons';
@@ -21,7 +20,6 @@ interface DashboardExperienceProps {
     username: string;
     niveau_actuel: number;
     xp_total: number;
-    streak?: number | null;
   };
   progressPercentage: number;
   completedCount: number;
@@ -144,7 +142,6 @@ export function DashboardExperience({
             <OscilloscopeDivider />
 
             <div className="flex flex-wrap items-center gap-3">
-              <StreakFlame streak={profile.streak ?? 0} />
               <Button variant="secondary">Paramètres</Button>
               <button
                 type="button"

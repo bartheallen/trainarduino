@@ -32,24 +32,24 @@ const { upsertPositioningTestResult: mockUpsert, updateUserLevel: mockUpdateLeve
 describe('positioning test service', () => {
   describe('determinePositioningLevel', () => {
     it('returns advanced at 80%', () => {
-      const result = determinePositioningLevel(4, 5);
+      const result = determinePositioningLevel(8, 10);
       expect(result.levelName).toBe('advanced');
       expect(result.palierAtteint).toBe(3);
       expect(result.score).toBe(80);
     });
 
     it('returns intermediate at 60%', () => {
-      const result = determinePositioningLevel(3, 5);
+      const result = determinePositioningLevel(6, 10);
       expect(result.levelName).toBe('intermediate');
       expect(result.palierAtteint).toBe(2);
       expect(result.score).toBe(60);
     });
 
     it('returns beginner below 60%', () => {
-      const result = determinePositioningLevel(2, 5);
+      const result = determinePositioningLevel(2, 10);
       expect(result.levelName).toBe('beginner');
       expect(result.palierAtteint).toBe(1);
-      expect(result.score).toBe(40);
+      expect(result.score).toBe(20);
     });
   });
 
@@ -59,28 +59,28 @@ describe('positioning test service', () => {
       (mockUpdateLevel as Mock).mockClear();
     });
 
-    it('saves a 100% score as level 3 and persists percentage', async () => {
-      const result = await savePositioningTestResultAction(5, 5);
+    it('saves a 100% score as level 4 and persists percentage', async () => {
+      const result = await savePositioningTestResultAction(10, 10);
 
-      expect(result?.palier_atteint).toBe(3);
+      expect(result?.palier_atteint).toBe(4);
       expect(result?.score).toBe(100);
-      expect(result?.reponses_correctes).toBe(5);
-      expect(mockUpsert).toHaveBeenLastCalledWith('user-1', 3, 100, 5, 5);
-      expect(mockUpdateLevel).toHaveBeenCalledWith('user-1', 3);
+      expect(result?.reponses_correctes).toBe(10);
+      expect(mockUpsert).toHaveBeenLastCalledWith('user-1', 4, 100, 10, 10);
+      expect(mockUpdateLevel).toHaveBeenCalledWith('user-1', 4);
     });
 
-    it('saves a 70% score as level 2', async () => {
+    it('saves a 70% score as level 3', async () => {
       const result = await savePositioningTestResultAction(7, 10);
 
-      expect(result?.palier_atteint).toBe(2);
+      expect(result?.palier_atteint).toBe(3);
       expect(result?.score).toBe(70);
       expect(result?.reponses_correctes).toBe(7);
     });
 
-    it('saves a 50% score as level 1', async () => {
+    it('saves a 50% score as level 2', async () => {
       const result = await savePositioningTestResultAction(5, 10);
 
-      expect(result?.palier_atteint).toBe(1);
+      expect(result?.palier_atteint).toBe(2);
       expect(result?.score).toBe(50);
       expect(result?.reponses_correctes).toBe(5);
     });

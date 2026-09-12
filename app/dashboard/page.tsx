@@ -48,7 +48,8 @@ export default async function DashboardPage() {
         const previousModule = modules[index - 1];
         const previousProgress = previousModule ? allProgress.find((p) => p.module_id === previousModule.id) : undefined;
         const isFirstModule = index === 0;
-        const isUnlocked = isFirstModule || previousProgress?.statut === 'completed';
+        const placementUnlock = (profile.niveau_actuel ?? 1) >= module.palier_test;
+        const isUnlocked = isFirstModule || placementUnlock || previousProgress?.statut === 'completed';
 
         return {
           ...module,
@@ -67,7 +68,6 @@ export default async function DashboardPage() {
     const profileForDashboard = {
       ...profile,
       niveau_actuel: currentLevel,
-      streak: profile.streak ?? 0,
     };
 
     const adaptiveRecommendation = await adaptiveEngine.recommendAdaptiveActions(user.id).catch(() => null);

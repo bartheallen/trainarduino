@@ -10,7 +10,6 @@ vi.mock('@/lib/db', () => {
     updateModuleProgress: vi.fn().mockResolvedValue(null),
     updateCurrentModule: vi.fn().mockResolvedValue(null),
     unlockNextModule: vi.fn().mockResolvedValue(null),
-    updateUserStreak: vi.fn().mockResolvedValue({ streak: 1 }),
   };
 });
 
@@ -47,7 +46,6 @@ describe('progressSubscriber', () => {
     const args = (db.updateModuleProgress as any).mock.calls[0];
     expect(args[2]).toBe('completed');
     expect((db.unlockNextModule as any).mock.calls.length).toBeGreaterThan(0);
-    expect((db.updateUserStreak as any).mock.calls.length).toBeGreaterThan(0);
   });
 
   it('reste in_progress si simulation non confirmée', async () => {

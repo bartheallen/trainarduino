@@ -73,6 +73,66 @@ const questions: Question[] = [
     ],
     correctAnswer: 0,
   },
+  {
+    id: 6,
+    text: 'Pourquoi faut-il utiliser digitalRead() plutôt que analogRead() pour un bouton câblé sur une entrée numérique ?',
+    difficulty: 2,
+    options: [
+      'Parce que digitalRead() renvoie un état HIGH ou LOW adapté à une entrée binaire',
+      'Parce que analogRead() ne fonctionne que dans setup()',
+      'Parce que digitalRead() configure automatiquement la résistance de pull-up',
+      'Parce que les boutons produisent toujours une tension analogique nulle',
+    ],
+    correctAnswer: 0,
+  },
+  {
+    id: 7,
+    text: 'Quelle approche permet de faire clignoter une LED sans bloquer la lecture d’un bouton ?',
+    difficulty: 3,
+    options: [
+      'Utiliser millis() pour comparer le temps écoulé sans appeler delay()',
+      'Appeler delay(60000) puis lire le bouton',
+      'Déplacer loop() dans setup()',
+      'Remplacer digitalRead() par pinMode()',
+    ],
+    correctAnswer: 0,
+  },
+  {
+    id: 8,
+    text: 'Que fait analogRead(A0) sur une Arduino Uno ?',
+    difficulty: 3,
+    options: [
+      'Il mesure une tension et renvoie généralement une valeur de 0 à 1023',
+      'Il renvoie uniquement HIGH ou LOW',
+      'Il configure A0 comme sortie numérique',
+      'Il mesure directement le courant en ampères',
+    ],
+    correctAnswer: 0,
+  },
+  {
+    id: 9,
+    text: 'Quelle séquence est correcte pour envoyer régulièrement la valeur d’un capteur sur le port série ?',
+    difficulty: 4,
+    options: [
+      'Serial.begin() dans setup(), puis Serial.println() dans loop()',
+      'Serial.println() avant toute initialisation, uniquement dans setup()',
+      'analogRead() remplace Serial.begin()',
+      'Serial.begin() doit être rappelé à chaque tour de loop()',
+    ],
+    correctAnswer: 0,
+  },
+  {
+    id: 10,
+    text: 'Quel est le principal risque d’utiliser une variable non volatile dans une routine d’interruption ?',
+    difficulty: 4,
+    options: [
+      'La valeur peut être optimisée ou lue de manière incohérente entre l’interruption et le code principal',
+      'La carte redémarre toujours après chaque interruption',
+      'La variable devient automatiquement une constante',
+      'L’interruption ne peut jamais être déclenchée',
+    ],
+    correctAnswer: 0,
+  },
 ];
 
 export default function PositioningTestPage() {
@@ -115,8 +175,9 @@ export default function PositioningTestPage() {
 
   const calculateLevel = () => {
     const percentage = (score / questions.length) * 100;
-    if (percentage >= 80) return 'advanced';
-    if (percentage >= 60) return 'intermediate';
+    if (percentage >= 90) return 'expert';
+    if (percentage >= 70) return 'advanced';
+    if (percentage >= 40) return 'intermediate';
     return 'beginner';
   };
 
@@ -145,6 +206,7 @@ export default function PositioningTestPage() {
       beginner: 'Débutant',
       intermediate: 'Intermédiaire',
       advanced: 'Avancé',
+      expert: 'Expert',
     }[level];
 
     return (

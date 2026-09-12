@@ -35,7 +35,6 @@ async function handleUserRegistered(event: EventEnvelope<any>) {
     privacy_settings: {},
     learning_preferences: {},
     notification_preferences: {},
-    streak: 0,
     achievements: [],
     modules_unlocked: [],
     statistics: {},
@@ -82,10 +81,6 @@ async function handleXpAwarded(event: EventEnvelope<any>) {
     return null;
   });
   if (!updated) return;
-
-  await db.updateUserStreak(userId, payload.awardedAt || event.timestamp).catch((err) => {
-    console.error('[ProfileSubscriber] updateUserStreak failed', err);
-  });
 
   const nextLevel = updated.niveau_actuel ?? prevLevel;
   if (nextLevel > prevLevel) {

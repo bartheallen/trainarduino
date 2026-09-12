@@ -1,4 +1,4 @@
-import { callMistralJson } from '@/lib/ai/mistral';
+import { callMistralJson, getMistralApiKey } from '@/lib/ai/gemini';
 
 export type PracticalAiCriteria = {
   pin_used?: boolean;
@@ -42,10 +42,10 @@ export async function analyzePracticalCodeWithAi(
   code: string,
   exercise: { titre?: string | null; enonce?: string | null; critere_correction?: string | null },
 ): Promise<PracticalAiAnalysis | null> {
-  const apiKey = process.env.MISTRAL_API_KEY;
+  const apiKey = getMistralApiKey();
   const debug = process.env.DEBUG_PRACTICAL_AI === 'true';
   if (!apiKey) {
-    if (debug) console.debug('[practical-ai] missing MISTRAL_API_KEY');
+    if (debug) console.debug('[practical-ai] missing GEMINI_API_KEY');
     return null;
   }
 
@@ -58,7 +58,7 @@ ${code}`;
 
   try {
     const { text } = await callMistralJson(prompt);
-    if (debug) console.debug('[practical-ai] Mistral response received', { length: text.length });
+    if (debug) console.debug('[practical-ai] Gemini response received', { length: text.length });
     const analysis = parseAnalysis(text);
     if (debug) console.debug('[practical-ai] parsed response', { analysis });
     return analysis;
