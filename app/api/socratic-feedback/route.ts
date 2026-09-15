@@ -18,10 +18,10 @@ function extractJsonString(text: string): string | null {
 
 export async function POST(req: Request) {
   if (!getMistralApiKey()) {
-    console.error('[socratic-feedback] GEMINI_API_KEY absente ou vide dans le runtime');
+    console.error('[socratic-feedback] aucune clé IA n’est configurée dans le runtime');
     return NextResponse.json(
-      { error: 'La configuration de l’IA est manquante. Impossible de vérifier la réponse pour le moment.' },
-      { status: 500 },
+      { error: 'La configuration de l’IA est manquante. Définissez MISTRAL_API_KEY ou GEMINI_API_KEY dans .env.local puis redémarrez le serveur.' },
+      { status: 503 },
     );
   }
 
