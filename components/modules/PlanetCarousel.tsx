@@ -34,9 +34,9 @@ const labels = {
 
 const palette = ['#67e8f9', '#60a5fa', '#34d399', '#818cf8'];
 const PLANET_SIZES = {
-  active: 220,
-  nearby: 150,
-  far: 118,
+  active: { desktop: 220, tablet: 200, mobile: 174, tiny: 152 },
+  nearby: { desktop: 150, tablet: 128, mobile: 104, tiny: 86 },
+  far: { desktop: 118, tablet: 102, mobile: 82, tiny: 70 },
 } as const;
 
 export function PlanetCarousel({ cards }: PlanetCarouselProps) {
@@ -69,8 +69,25 @@ export function PlanetCarousel({ cards }: PlanetCarouselProps) {
     return () => observer.disconnect();
   }, []);
 
-  const step = stageWidth > 0 ? (stageWidth * (stageWidth < 640 ? 0.34 : stageWidth < 1024 ? 0.28 : 0.24)) : 170;
+  const step = stageWidth > 0
+    ? (stageWidth <= 400 ? stageWidth * 0.22 : stageWidth <= 640 ? stageWidth * 0.26 : stageWidth <= 1024 ? stageWidth * 0.22 : stageWidth * 0.18)
+    : 170;
   const total = cards.length;
+  const maxVisibleOffset = stageWidth <= 400 ? 1 : stageWidth <= 640 ? 2 : stageWidth <= 1024 ? 2 : 3;
+
+  const getPlanetSize = (offset: number, isActive: boolean) => {
+    if (isActive) {
+      if (stageWidth <= 400) return PLANET_SIZES.active.tiny;
+      if (stageWidth <= 640) return PLANET_SIZES.active.mobile;
+      if (stageWidth <= 1024) return PLANET_SIZES.active.tablet;
+      return PLANET_SIZES.active.desktop;
+    }
+
+    if (stageWidth <= 400) return Math.max(PLANET_SIZES.far.tiny, PLANET_SIZES.nearby.tiny - Math.abs(offset) * 18);
+    if (stageWidth <= 640) return Math.max(PLANET_SIZES.far.mobile, PLANET_SIZES.nearby.mobile - Math.abs(offset) * 16);
+    if (stageWidth <= 1024) return Math.max(PLANET_SIZES.far.tablet, PLANET_SIZES.nearby.tablet - Math.abs(offset) * 18);
+    return Math.max(PLANET_SIZES.far.desktop, PLANET_SIZES.nearby.desktop - Math.abs(offset) * 20);
+  };
 
   const move = useCallback((delta: number) => {
     setActiveIndex((current) => {
@@ -156,7 +173,7 @@ export function PlanetCarousel({ cards }: PlanetCarouselProps) {
           if (event.key === 'Home') { event.preventDefault(); setActiveIndex(0); }
           if (event.key === 'End') { event.preventDefault(); setActiveIndex(cards.length - 1); }
         }}
-        className="group relative h-[clamp(26rem,64vh,30rem)] w-full min-w-0 overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950/70 outline-none sm:h-[clamp(29rem,62vh,34rem)] lg:h-[clamp(31rem,60vh,36rem)]"
+        className="group relative h-[clamp(22rem,52vh,26rem)] w-full min-w-0 overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950/70 px-2 py-4 outline-none sm:h-[clamp(25rem,56vh,31rem)] sm:px-4 lg:h-[clamp(30rem,62vh,38rem)] lg:px-6"
       >
         <div className="pointer-events-none absolute inset-x-0 top-1/2 h-0.5 -translate-y-1/2 bg-gradient-to-r from-transparent via-cyan-300/15 to-transparent" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(34,211,238,0.06),_transparent_42%)]" />
@@ -173,15 +190,15 @@ export function PlanetCarousel({ cards }: PlanetCarouselProps) {
         <div className="absolute inset-x-0 top-1/2 z-10 -translate-y-1/2">
           {cards.map((card, index) => {
             const offset = index - activeIndex;
-            if (Math.abs(offset) > 2) return null;
+            if (Math.abs(offset) > maxVisibleOffset) return null;
 
             const x = offset * step;
-            const y = offset * offset * 14;
+            const y = offset * offset * (stageWidth <= 400 ? 12 : stageWidth <= 640 ? 13 : 14);
             const scale = Math.max(0.7, 1 - 0.12 * Math.abs(offset));
-            const opacity = Math.max(0.35, 1 - 0.18 * Math.abs(offset));
+            const opacity = Math.max(0.35, 1 - 0.14 * Math.abs(offset));
             const zIndex = 10 - Math.abs(offset);
             const isActive = index === activeIndex;
-            const sizePx = isActive ? PLANET_SIZES.active : Math.max(PLANET_SIZES.far, PLANET_SIZES.nearby - Math.abs(offset) * 18);
+            const sizePx = getPlanetSize(offset, isActive);
 
             return (
               <motion.div
@@ -255,7 +272,7 @@ export function PlanetCarousel({ cards }: PlanetCarouselProps) {
             );
           })}
         </div>
-        {focused && <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full border border-cyan-300/20 bg-slate-950/70 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-cyan-200">Focus clavier</div>}
+        {focused && <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-cyan-300/20 bg-slate-950/70 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-cyan-200">Focus clavier</div>}
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-3">
