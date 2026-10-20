@@ -5,6 +5,8 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { defaultPublisher, makeEvent } from '@/lib/events';
+import { DEFAULT_LOCALE, type Locale } from '@/lib/i18n/config';
+import { getDictionary, type Dictionary } from '@/lib/i18n/dictionaries';
 import {
   signupSchema,
   signinSchema,
@@ -12,33 +14,76 @@ import {
   passwordSchema,
 } from '@/lib/validation/auth';
 
-function normalizeErrorMessage(message: string) {
+function normalizeErrorMessage(
+  error: { message: string; code?: string },
+  dict: Dictionary
+) {
+  const codeMessages: Record<string, string> = {
+    email_address_invalid: dict.auth.invalidEmail,
+    email_exists: dict.auth.emailAlreadyUsed,
+    invalid_credentials: dict.auth.invalidCredentials,
+    weak_password: dict.auth.passwordTooWeak,
+    email_not_confirmed: dict.auth.emailNotConfirmed,
+    same_password: dict.auth.passwordSameAsOld,
+    session_not_found: dict.auth.sessionMissing,
+    auth_session_missing: dict.auth.sessionMissing,
+    over_email_send_rate_limit: dict.auth.tooManyAttempts,
+    over_request_rate_limit: dict.auth.tooManyAttempts,
+  };
+
+  if (error.code && codeMessages[error.code]) {
+    if (
+      error.code === 'over_email_send_rate_limit' &&
+      error.message.includes('For security purposes, you can only request this after')
+    ) {
+      return dict.auth.securityRateLimit;
+    }
+    return codeMessages[error.code];
+  }
+
+  const { message } = error;
+  if (message.includes('Unable to validate email address: invalid format')) {
+    return dict.auth.invalidEmail;
+  }
+  if (message.includes('New password should be different from the old password')) {
+    return dict.auth.passwordSameAsOld;
+  }
+  if (message.includes('Auth session missing')) {
+    return dict.auth.sessionMissing;
+  }
+  if (message.includes('For security purposes, you can only request this after')) {
+    return dict.auth.securityRateLimit;
+  }
   if (message.includes('Email rate limit exceeded')) {
-    return 'Trop de tentatives. Veuillez réessayer plus tard.';
+    return dict.auth.tooManyAttempts;
   }
   if (message.includes('Invalid login credentials')) {
-    return 'Identifiants invalides. Veuillez vérifier votre email et votre mot de passe.';
+    return dict.auth.invalidCredentials;
   }
   if (message.includes('User already registered')) {
-    return 'Cette adresse email est déjà utilisée.';
+    return dict.auth.emailAlreadyUsed;
   }
   if (message.includes('Password should be at least')) {
-    return 'Le mot de passe est trop faible. Utilisez au moins 8 caractères.';
-  }
-  if (message.includes('Invalid login credentials')) {
-    return 'Identifiants invalides. Veuillez vérifier votre email et votre mot de passe.';
+    return dict.auth.passwordTooWeak;
   }
   if (message.includes('Email not confirmed')) {
-    return 'Veuillez confirmer votre adresse email avant de vous connecter.';
+    return dict.auth.emailNotConfirmed;
   }
-  if (message.includes('Invalid login credentials')) {
-    return 'Identifiants invalides. Veuillez vérifier votre email et votre mot de passe.';
-  }
-  return message;
+  console.error('Unhandled Supabase auth error:', { code: error.code, message });
+  return dict.auth.errorGeneric;
 }
 
-function buildValidationMessage(error: ZodError) {
-  return error.issues.map((issue) => issue.message).join(' ');
+function buildValidationMessage(error: ZodError, dict: Dictionary) {
+  const validationMessages: Record<string, string> = {
+    'Adresse email invalide.': dict.auth.invalidEmail,
+    'Le mot de passe doit contenir au moins 8 caractères.': dict.auth.passwordMinLength,
+    'Le mot de passe doit contenir une majuscule, une minuscule, un chiffre et un caractère spécial.': dict.auth.passwordComplexity,
+    'Le pseudo doit contenir au moins 3 caractères.': dict.auth.usernameMinLength,
+    'Le pseudo doit contenir au plus 20 caractères.': dict.auth.usernameMaxLength,
+    'Le pseudo ne peut contenir que des lettres, chiffres et underscores.': dict.auth.usernameCharacters,
+    'Le mot de passe est requis.': dict.auth.passwordRequired,
+  };
+  return error.issues.map((issue) => validationMessages[issue.message] ?? issue.message).join(' ');
 }
 
 function isRedirectError(err: unknown): boolean {
@@ -55,7 +100,8 @@ function isRedirectError(err: unknown): boolean {
   );
 }
 
-export async function signup(formData: FormData) {
+export async function signup(formData: FormData, locale: Locale = DEFAULT_LOCALE) {
+  const dict = getDictionary(locale);
   const email = String(formData.get('email') || '').trim();
   const password = String(formData.get('password') || '');
   const username = String(formData.get('username') || '').trim();
@@ -64,9 +110,9 @@ export async function signup(formData: FormData) {
     signupSchema.parse({ email, password, username });
   } catch (error) {
     if (error instanceof ZodError) {
-      return { error: buildValidationMessage(error) };
+      return { error: buildValidationMessage(error, dict) };
     }
-    return { error: 'Données de formulaire invalides.' };
+    return { error: dict.auth.invalidForm };
   }
 
   const supabase = await createServerSupabaseClient();
@@ -93,7 +139,6 @@ export async function signup(formData: FormData) {
     console.log('signup result', {
       email,
       username,
-      errorMessage: error?.message ?? null,
       errorCode: error?.code ?? null,
       errorStatus: error?.status ?? null,
       user: data?.user ?? null,
@@ -101,7 +146,8 @@ export async function signup(formData: FormData) {
     });
 
     if (error) {
-      return { error: normalizeErrorMessage(error.message) };
+      console.error('Supabase signup error:', { code: error.code, message: error.message });
+      return { error: normalizeErrorMessage(error, dict) };
     }
 
     if (!data.user) {
@@ -110,7 +156,7 @@ export async function signup(formData: FormData) {
         username,
         data,
       });
-      return { error: 'Impossible de créer le compte pour le moment.' };
+      return { error: dict.auth.createAccountError };
     }
 
     const event = makeEvent({
@@ -130,12 +176,12 @@ export async function signup(formData: FormData) {
     }
 
     console.error('signup error:', err);
-    const message = (err as { message?: string })?.message ?? String(err);
-    return { error: normalizeErrorMessage(message) };
+    return { error: dict.auth.errorGeneric };
   }
 }
 
-export async function signin(formData: FormData) {
+export async function signin(formData: FormData, locale: Locale = DEFAULT_LOCALE) {
+  const dict = getDictionary(locale);
   const email = String(formData.get('email') || '').trim();
   const password = String(formData.get('password') || '');
 
@@ -143,9 +189,9 @@ export async function signin(formData: FormData) {
     signinSchema.parse({ email, password });
   } catch (error) {
     if (error instanceof ZodError) {
-      return { error: buildValidationMessage(error) };
+      return { error: buildValidationMessage(error, dict) };
     }
-    return { error: 'Données de formulaire invalides.' };
+    return { error: dict.auth.invalidForm };
   }
 
   const supabase = await createServerSupabaseClient();
@@ -157,16 +203,17 @@ export async function signin(formData: FormData) {
     });
 
     if (error) {
-      return { error: normalizeErrorMessage(error.message) };
+      console.error('Supabase signin error:', { code: error.code, message: error.message });
+      return { error: normalizeErrorMessage(error, dict) };
     }
 
     if (!data.user) {
-      return { error: 'Impossible de vous connecter pour le moment.' };
+      return { error: dict.auth.signinError };
     }
 
     if (!data.user.email_confirmed_at) {
       await supabase.auth.signOut();
-      return { error: 'Veuillez vérifier votre adresse email avant de vous connecter.' };
+      return { error: dict.auth.verifyEmailError };
     }
 
     const { data: profile, error: profileError } = await supabase
@@ -176,7 +223,7 @@ export async function signin(formData: FormData) {
       .single();
 
     if (profileError) {
-      return { error: 'Votre profil n’a pas encore été initialisé.' };
+      return { error: dict.auth.profileNotInitialized };
     }
 
     revalidatePath('/');
@@ -187,19 +234,19 @@ export async function signin(formData: FormData) {
     }
 
     console.error('signin error:', err);
-    const message = (err as { message?: string })?.message ?? String(err);
-    return { error: normalizeErrorMessage(message) };
+    return { error: dict.auth.errorGeneric };
   }
 }
 
-export async function signout() {
+export async function signout(locale: Locale = DEFAULT_LOCALE) {
+  const dict = getDictionary(locale);
   const supabase = await createServerSupabaseClient();
 
   try {
     await supabase.auth.signOut();
   } catch (error) {
     console.error('signout error:', error);
-    return { error: 'Échec de la déconnexion.' };
+    return { error: dict.auth.signoutError };
   }
 
   revalidatePath('/');
@@ -376,14 +423,15 @@ export async function getCurrentUser(contextName?: string) {
   }
 }
 
-export async function resetPassword(email: string) {
+export async function resetPassword(email: string, locale: Locale = DEFAULT_LOCALE) {
+  const dict = getDictionary(locale);
   try {
     emailSchema.parse({ email });
   } catch (error) {
     if (error instanceof ZodError) {
-      return { error: buildValidationMessage(error) };
+      return { error: buildValidationMessage(error, dict) };
     }
-    return { error: 'Données de formulaire invalides.' };
+    return { error: dict.auth.invalidForm };
   }
 
   const supabase = await createServerSupabaseClient();
@@ -394,27 +442,30 @@ export async function resetPassword(email: string) {
   });
 
   if (error) {
-    return { error: normalizeErrorMessage(error.message) };
+    console.error('Supabase password reset error:', { code: error.code, message: error.message });
+    return { error: normalizeErrorMessage(error, dict) };
   }
 
   return { success: true };
 }
 
-export async function updatePassword(newPassword: string) {
+export async function updatePassword(newPassword: string, locale: Locale = DEFAULT_LOCALE) {
+  const dict = getDictionary(locale);
   try {
     passwordSchema.parse({ newPassword });
   } catch (error) {
     if (error instanceof ZodError) {
-      return { error: buildValidationMessage(error) };
+      return { error: buildValidationMessage(error, dict) };
     }
-    return { error: 'Données de formulaire invalides.' };
+    return { error: dict.auth.invalidForm };
   }
 
   const supabase = await createServerSupabaseClient();
   const { error } = await supabase.auth.updateUser({ password: newPassword });
 
   if (error) {
-    return { error: normalizeErrorMessage(error.message) };
+    console.error('Supabase password update error:', { code: error.code, message: error.message });
+    return { error: normalizeErrorMessage(error, dict) };
   }
 
   return { success: true };
@@ -426,7 +477,8 @@ export async function updatePassword(newPassword: string) {
  * Initiates the OAuth flow with Google provider.
  * User is redirected to Google login, then to /api/auth/callback.
  */
-export async function signInWithGoogle(mode: 'signin' | 'signup' = 'signin') {
+export async function signInWithGoogle(mode: 'signin' | 'signup' = 'signin', locale: Locale = DEFAULT_LOCALE) {
+  const dict = getDictionary(locale);
   const supabase = await createServerSupabaseClient();
 
   try {
@@ -439,22 +491,22 @@ export async function signInWithGoogle(mode: 'signin' | 'signup' = 'signin') {
     });
 
     if (error) {
-      return { error: normalizeErrorMessage(error.message) };
+      console.error('Supabase Google auth error:', { code: error.code, message: error.message });
+      return { error: normalizeErrorMessage(error, dict) };
     }
 
     if (data?.url) {
       redirect(data.url);
     }
 
-    return { error: 'Impossible de se connecter avec Google.' };
+    return { error: dict.auth.googleError };
   } catch (err: unknown) {
     if (isRedirectError(err)) {
       throw err;
     }
 
     console.error('signInWithGoogle error:', err);
-    const message = (err as { message?: string })?.message ?? String(err);
-    return { error: normalizeErrorMessage(message) };
+    return { error: dict.auth.errorGeneric };
   }
 }
 
@@ -467,6 +519,6 @@ export async function signInWithGoogle(mode: 'signin' | 'signup' = 'signin') {
  * Note: signInWithOAuth handles both signup and signin with Google.
  * If the user doesn't exist, Supabase creates them automatically.
  */
-export async function signUpWithGoogle() {
-  return signInWithGoogle('signup');
+export async function signUpWithGoogle(locale: Locale = DEFAULT_LOCALE) {
+  return signInWithGoogle('signup', locale);
 }

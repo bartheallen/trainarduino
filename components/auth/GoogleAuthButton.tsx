@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { signInWithGoogle, signUpWithGoogle } from '@/lib/auth';
+import { useDictionary, useLocale } from '@/components/i18n/LocaleProvider';
 
 interface GoogleAuthButtonProps {
   /** 'signin' or 'signup' - determines button text and action */
@@ -18,6 +19,8 @@ interface GoogleAuthButtonProps {
  * Responsive and mobile-friendly.
  */
 export function GoogleAuthButton({ mode, className = '' }: GoogleAuthButtonProps) {
+  const dict = useDictionary();
+  const { locale } = useLocale();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,8 +29,9 @@ export function GoogleAuthButton({ mode, className = '' }: GoogleAuthButtonProps
     setError(null);
 
     try {
-      const action = mode === 'signup' ? signUpWithGoogle : signInWithGoogle;
-      const result = await action();
+      const result = mode === 'signup'
+        ? await signUpWithGoogle(locale)
+        : await signInWithGoogle('signin', locale);
 
       // If we get here, there was an error (no redirect happened)
       if (result?.error) {
@@ -39,13 +43,13 @@ export function GoogleAuthButton({ mode, className = '' }: GoogleAuthButtonProps
       // Other errors should be shown to user
       if (!isRedirectError(err)) {
         console.error('Google auth error:', err);
-        setError('Une erreur est survenue. Veuillez réessayer.');
+        setError(dict.auth.retryError);
         setIsLoading(false);
       }
     }
   }
 
-  const buttonText = mode === 'signup' ? 'S\'inscrire avec Google' : 'Continuer avec Google';
+  const buttonText = mode === 'signup' ? dict.auth.googleSignup : dict.auth.googleSignin;
 
   return (
     <div className={className}>
@@ -87,7 +91,7 @@ export function GoogleAuthButton({ mode, className = '' }: GoogleAuthButtonProps
         </svg>
 
         <span className="text-sm sm:text-base">
-          {isLoading ? (mode === 'signup' ? 'Inscription...' : 'Connexion...') : buttonText}
+          {isLoading ? (mode === 'signup' ? dict.auth.googleSignupLoading : dict.auth.googleSigninLoading) : buttonText}
         </span>
       </button>
     </div>

@@ -43,6 +43,7 @@ export function EngineeringLabWorkspace({ module, lessons, exercises, socraticQu
   const [socraticCompleted, setSocraticCompleted] = useState(false);
   const [progressMessage, setProgressMessage] = useState<string | null>(null);
   const [lessonsRead, setLessonsRead] = useState(false);
+  const [showLessonLibrary, setShowLessonLibrary] = useState(false);
   const [validationState, setValidationState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [validationMessage, setValidationMessage] = useState<string>('Non testé');
   const [codeReviewResult, setCodeReviewResult] = useState<CodeReviewResult | null>(null);
@@ -56,7 +57,9 @@ export function EngineeringLabWorkspace({ module, lessons, exercises, socraticQu
   const exerciseEnonceLong = exerciseEnonce.length > 700;
   const simulationUrl = firstExercise?.wokwi_project_url ?? null;
   const router = useRouter();
-  const isModuleCompleted = moduleStatus === 'completed';
+  // The server refreshes after validation, but keep the next action available immediately
+  // so the UI never says "locked" after a successful practical submission.
+  const isModuleCompleted = moduleStatus === 'completed' || validationState === 'success';
 
   async function handleSocraticComplete() {
     if (!currentUserId || !module.id) {
@@ -181,11 +184,18 @@ export function EngineeringLabWorkspace({ module, lessons, exercises, socraticQu
 
       <PrimitiveCard tone="glass" className="min-w-0 p-4">
         <div className="mt-3 min-w-0">
-          {!lessonsRead ? (
+          {!lessonsRead || showLessonLibrary ? (
             <LessonReaderStep lessons={lessons} onComplete={() => setLessonsRead(true)} />
           ) : (
-            <SocraticTutorPanel questions={socraticQuestions} onComplete={handleSocraticComplete} />
+            <>
+              <div className="mb-3 flex items-center justify-between gap-3 rounded-xl border border-cyan-400/15 bg-cyan-400/5 p-3">
+                <p className="text-xs text-slate-300">Besoin de revoir une notion avant de répondre ?</p>
+                <button type="button" onClick={() => setShowLessonLibrary(true)} className="shrink-0 rounded-full border border-cyan-400/25 px-3 py-1.5 text-xs font-semibold text-cyan-100">Relire le cours</button>
+              </div>
+              <SocraticTutorPanel questions={socraticQuestions} onComplete={handleSocraticComplete} />
+            </>
           )}
+          {showLessonLibrary && lessonsRead ? <button type="button" onClick={() => setShowLessonLibrary(false)} className="mt-3 rounded-full border border-white/10 px-3 py-1.5 text-xs text-slate-300">Retour aux questions</button> : null}
         </div>
         {progressMessage && (
           <div className="mt-2 rounded-[1rem] border border-cyan-400/20 bg-cyan-400/10 px-2.5 py-1.5 text-xs text-cyan-100">

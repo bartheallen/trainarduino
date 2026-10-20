@@ -18,7 +18,9 @@ export function determinePositioningLevel(score: number, totalQuestions: number)
       : percentage >= 40
         ? 'intermediate'
         : 'beginner';
-  const palierAtteint = percentage >= 90 ? 4 : percentage >= 70 ? 3 : percentage >= 40 ? 2 : 1;
+  // A placement test gives a sensible starting point, not permission to skip the path.
+  // Six is deliberately the ceiling: later sensor modules are earned by practical work.
+  const palierAtteint = percentage >= 90 ? 6 : percentage >= 70 ? 4 : percentage >= 40 ? 2 : 1;
 
   return {
     score: percentage,

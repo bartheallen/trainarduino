@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes module-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes heroGlow {
+  from { transform: scale(0.85); opacity: 0.18; }
+  to { transform: scale(1.2); opacity: 0.5; }
+}
+
+@keyframes heroTrace {
+  from { transform: translateX(-8%); opacity: 0.15; }
+  to { transform: translateX(8%); opacity: 0.4; }
+}
+
 :root {
   color-scheme: dark;
   --bg: #07111b;
@@ -71,6 +86,103 @@ select:focus-visible {
   backdrop-filter: blur(18px);
 }
 
+.glass-panel-shell {
+  isolation: isolate;
+}
+
+.glass-panel-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 2.5rem;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01), rgba(50, 231, 255, 0.04));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.glass-section-shell {
+  position: relative;
+}
+
+.glass-section-shell > section,
+.glass-section-shell > div > section,
+.glass-section-shell section,
+.glass-section-shell footer {
+  background: rgba(9, 15, 22, 0.34) !important;
+  border: 1px solid rgba(148, 163, 184, 0.18) !important;
+  backdrop-filter: blur(22px) saturate(1.35) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(1.35) !important;
+  box-shadow: 0 28px 80px rgba(2, 6, 23, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+.glass-section-shell footer {
+  border-top: 1px solid rgba(148, 163, 184, 0.18) !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+}
+
+.glass-section-shell [class*='bg-slate-900/70'],
+.glass-section-shell [class*='bg-slate-900/80'],
+.glass-section-shell [class*='bg-slate-900/25'],
+.glass-section-shell [class*='bg-white/5'] {
+  background: rgba(9, 15, 22, 0.28) !important;
+  border-color: rgba(148, 163, 184, 0.18) !important;
+}
+
+.glass-section-shell [class*='bg-slate-950/70'],
+.glass-section-shell [class*='bg-slate-950/80'],
+.glass-section-shell [class*='bg-black/40'],
+.glass-section-shell [class*='bg-black/30'] {
+  background: rgba(2, 6, 23, 0.34) !important;
+}
+
+.glass-section-shell--light .landing-glass-card--large {
+  background: rgba(7, 18, 28, 0.38) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(3px) !important;
+  -webkit-backdrop-filter: blur(3px) !important;
+  box-shadow: none !important;
+}
+
+.glass-section-shell--light .landing-glass-card--small {
+  background: rgba(7, 18, 28, 0.45) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(2px) !important;
+  -webkit-backdrop-filter: blur(2px) !important;
+  box-shadow: none !important;
+}
+
+.glass-section-shell--light section:not(.landing-glass-card--large) {
+  background: transparent !important;
+  border: 0 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+.glass-section-shell--light .landing-glass-card > .pointer-events-none {
+  background: none !important;
+}
+
+.glass-section-shell--light footer.landing-glass-footer {
+  background: transparent !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+.glass-section-shell--light h2,
+.glass-section-shell--light h3,
+.glass-section-shell--light p {
+  text-shadow: 0 1px 12px rgba(2, 8, 15, 0.85);
+}
+
+.glass-section-shell--light .text-slate-400 {
+  color: #cbd5e1 !important;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -123,5 +235,21 @@ select:focus-visible {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+@keyframes skeleton-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.page-skeleton {
+  opacity: 0;
+  animation: skeleton-in 0.25s ease 0.15s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-skeleton {
+    animation-duration: 0s !important;
   }
 }

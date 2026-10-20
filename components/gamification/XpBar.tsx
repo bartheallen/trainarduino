@@ -2,24 +2,38 @@
 
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { useDictionary } from '@/components/i18n/LocaleProvider';
 
 interface XpBarProps {
   currentXp: number;
   currentThreshold: number;
   nextThreshold: number;
   currentLevel: number;
+  levelName?: string;
 }
 
 /**
  * Animated XP bar with a live count-up for the current level progress.
  */
-export function XpBar({ currentXp, currentThreshold, nextThreshold, currentLevel }: XpBarProps) {
+export function XpBar({ currentXp, currentThreshold, nextThreshold, currentLevel, levelName }: XpBarProps) {
+  const dict = useDictionary();
   const xpInLevel = Math.max(0, currentXp - currentThreshold);
   const xpRange = Math.max(1, nextThreshold - currentThreshold);
   const progress = xpRange > 0 ? (xpInLevel / xpRange) * 100 : 100;
   const motionValue = useMotionValue(0);
   const width = useTransform(motionValue, [0, 100], ['0%', '100%']);
   const [count, setCount] = useState(xpInLevel);
+  const translatedLevelName = levelName === 'Débutant'
+    ? dict.common.levelBeginner
+    : levelName === 'Apprenti'
+      ? dict.common.levelApprentice
+      : levelName === 'Intermédiaire'
+        ? dict.common.levelIntermediate
+        : levelName === 'Avancé'
+          ? dict.common.levelAdvanced
+          : levelName === 'Expert'
+            ? dict.common.levelExpert
+            : levelName;
 
   useEffect(() => {
     const controls = animate(motionValue, Math.min(100, progress), { duration: 0.8, ease: 'easeOut' });
@@ -34,12 +48,12 @@ export function XpBar({ currentXp, currentThreshold, nextThreshold, currentLevel
     <div className="min-w-0 rounded-[1.25rem] border border-white/10 bg-slate-900/80 p-4 shadow-[0_16px_40px_rgba(2,6,23,0.24)] backdrop-blur-xl sm:p-5">
       <div className="mb-3 flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
         <div className="min-w-0">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-cyan-300">XP actuel</p>
-          <p className="mt-1 text-2xl font-semibold text-white">Niveau {currentLevel}</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-cyan-300">{dict.dashboard.xpCurrent}</p>
+          <p className="mt-1 text-2xl font-semibold text-white">{translatedLevelName ?? `${dict.common.levelLabel} ${currentLevel}`}</p>
         </div>
         <div className="text-left sm:text-right">
           <p className="text-2xl font-semibold text-cyan-300">{count}</p>
-          <p className="text-sm text-slate-400">/ {xpRange} XP</p>
+          <p className="text-sm text-slate-400">{dict.dashboard.xpRange.replace('{range}', String(xpRange))}</p>
         </div>
       </div>
       <div className="relative h-3 overflow-hidden rounded-full border border-white/10 bg-slate-800/80">
@@ -49,7 +63,7 @@ export function XpBar({ currentXp, currentThreshold, nextThreshold, currentLevel
         />
       </div>
       <div className="mt-3 flex min-w-0 items-center justify-between gap-3 text-sm text-slate-400">
-        <span className="min-w-0 break-words">Progression de niveau</span>
+        <span className="min-w-0 break-words">{dict.dashboard.levelProgress}</span>
         <span className="shrink-0">{Math.min(100, Math.round(progress))}%</span>
       </div>
     </div>

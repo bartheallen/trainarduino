@@ -156,6 +156,8 @@ export async function validatePracticalTestAction(
     throw new Error(`Impossible d’enregistrer la soumission : ${error.message}`);
   }
 
+  const shouldEmitProgress = isApproved && (!existingSubmission.data || existingSubmission.data.statut !== 'approved');
+
   // XP is granted through the ProgressUpdated -> XpAwarded event flow.
   // This avoids duplicate rewards when the practical validation path also emits progress events.
   const practicalPayload: PracticalValidationPayload = {
@@ -165,11 +167,9 @@ export async function validatePracticalTestAction(
     score: validation.score,
     type: 'practical',
     status: statut,
-    xp: xpAwarded,
+    xp: shouldEmitProgress ? xpAwarded : 0,
     note,
   };
-
-  const shouldEmitProgress = isApproved && (!existingSubmission.data || existingSubmission.data.statut !== 'approved');
 
   if (shouldEmitProgress) {
     // Debug trigger log before publishing events that should invoke progressSubscriber
@@ -262,7 +262,7 @@ export async function validatePracticalTestAction(
   return {
     score: validation.score,
     verdict: validation.summary ?? 'Validation pratique exécutée',
-    xpAwarded,
+    xpAwarded: shouldEmitProgress ? xpAwarded : 0,
     statut,
     exerciseId,
     issues: validation.issues.map((issue) => issue.message),

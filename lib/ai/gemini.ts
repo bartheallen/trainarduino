@@ -4,11 +4,11 @@ const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
 export function getMistralApiKey() {
   const apiKey = (
-    process.env.GROQ_API_KEY
-    ?? process.env.MISTRAL_API_KEY
-    ?? process.env.GEMINI_API_KEY
+    process.env.GEMINI_API_KEY
     ?? process.env.GOOGLE_GENERATIVE_AI_API_KEY
     ?? process.env.GOOGLE_API_KEY
+    ?? process.env.GROQ_API_KEY
+    ?? process.env.MISTRAL_API_KEY
   )?.trim();
   return apiKey || null;
 }
@@ -76,12 +76,12 @@ export async function callMistralJson(
     throw new Error('Missing AI API key');
   }
 
-  const isGroq = Boolean(process.env.GROQ_API_KEY?.trim());
   const isGemini = Boolean(
     process.env.GEMINI_API_KEY
     ?? process.env.GOOGLE_GENERATIVE_AI_API_KEY
     ?? process.env.GOOGLE_API_KEY,
   );
+  const isGroq = !isGemini && Boolean(process.env.GROQ_API_KEY?.trim());
 
   if (isGroq) {
     return callGroqJson(prompt);

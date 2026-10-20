@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, type ReactElement } from 'react';
 import { PrimitiveCard } from '@/components/design/PrimitiveCard';
 import { CircuitChipIcon } from '@/components/ui/ElectronicsIcons';
 
-export function WokwiHelpPanel(): JSX.Element {
+export function WokwiHelpPanel(): ReactElement {
   const [open, setOpen] = useState(false);
 
   return (

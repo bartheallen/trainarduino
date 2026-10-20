@@ -7,19 +7,65 @@ import { PrimitiveBadge } from '@/components/design/PrimitiveBadge';
 import { PrimitiveCard } from '@/components/design/PrimitiveCard';
 import { PrimitiveProgress } from '@/components/design/PrimitiveProgress';
 import { XpBar } from '@/components/gamification/XpBar';
-import { ModulePath } from '@/components/dashboard/ModulePath';
+import { ModulePreview } from '@/components/dashboard/ModulePreview';
 import { Button } from '@/components/ui/Button';
 import { CircuitChipIcon, LedIndicator, OscilloscopeDivider, SignalWaveIcon } from '@/components/ui/ElectronicsIcons';
 import { submitRecommendationFeedbackAction } from '@/lib/recommendationServerActions';
-import { OnboardingTour } from '@/components/onboarding/OnboardingTour';
+import { OnboardingTour, ONBOARDING_STORAGE_KEY } from '@/components/onboarding/OnboardingTour';
+import { useDictionary } from '@/components/i18n/LocaleProvider';
+import Link from 'next/link';
 
 import type { AdaptiveRecommendation } from '@/lib/services/adaptiveEngineService';
+
+function format(str: string, vars: Record<string, string | number>) {
+  return str.replace(/\{(\w+)\}/g, (_, name: string) => String(vars[name] ?? ''));
+}
+
+function translateLevel(levelName: string, dict: ReturnType<typeof useDictionary>) {
+  const levels: Record<string, string> = {
+    Débutant: dict.common.levelBeginner,
+    Apprenti: dict.common.levelApprentice,
+    Intermédiaire: dict.common.levelIntermediate,
+    Avancé: dict.common.levelAdvanced,
+    Expert: dict.common.levelExpert,
+  };
+  return levels[levelName] ?? levelName;
+}
+
+function translateRecommendation(value: string, dict: ReturnType<typeof useDictionary>, kind: 'action' | 'content' | 'explanation') {
+  const translations = kind === 'action'
+    ? {
+        review: dict.dashboard.actionReview,
+        practice: dict.dashboard.actionPractice,
+        challenge: dict.dashboard.actionChallenge,
+        project: dict.dashboard.actionProject,
+        unlock: dict.dashboard.actionUnlock,
+        quiz: dict.dashboard.actionQuiz,
+      }
+    : kind === 'content'
+      ? {
+          exercise: dict.dashboard.contentExercise,
+          quiz: dict.dashboard.contentQuiz,
+          project: dict.dashboard.contentProject,
+          review: dict.dashboard.contentReview,
+        }
+      : {
+          'Le système utilise votre progression récente et votre profil pédagogique pour ajuster la prochaine étape.': dict.dashboard.recommendationDefaultExplanation,
+          'Vos résultats récents montrent des concepts faibles et une santé de connaissances à renforcer.': dict.dashboard.recommendationReviewExplanation,
+          'Vous êtes prêt pour un défi plus exigeant et transversal.': dict.dashboard.recommendationChallengeExplanation,
+          'Votre progression est solide, un mini-projet permet de synthétiser les notions.': dict.dashboard.recommendationProjectExplanation,
+          'Continuez avec des exercices ciblés pour consolider vos connaissances.': dict.dashboard.recommendationPracticeExplanation,
+        };
+  return translations[value as keyof typeof translations] ?? value;
+}
 
 interface DashboardExperienceProps {
   profile: {
     username: string;
     niveau_actuel: number;
     xp_total: number;
+    evolutionLevelName: string;
+    placementLevelName: string;
   };
   progressPercentage: number;
   completedCount: number;
@@ -47,19 +93,20 @@ export function DashboardExperience({
   moduleStatus,
   adaptiveRecommendation,
 }: DashboardExperienceProps) {
+  const dict = useDictionary();
   const shouldReduceMotion = useReducedMotion();
 
   const stats = [
-    { label: 'Modules', value: `${completedCount}/${totalModules}`, hint: 'terminés' },
-    { label: 'Niveau', value: `Lv ${profile.niveau_actuel}`, hint: 'actuel' },
-    { label: 'XP', value: `${profile.xp_total}`, hint: 'total' },
-    { label: 'Prochain', value: `${Math.max(0, nextThreshold - profile.xp_total)} XP`, hint: 'à gagner' },
+    { label: dict.dashboard.statModules, value: `${completedCount}/${totalModules}`, hint: dict.dashboard.completedHint },
+    { label: dict.dashboard.evolutionaryLevel, value: translateLevel(profile.evolutionLevelName, dict), hint: format(dict.dashboard.levelThreshold, { level: profile.niveau_actuel }) },
+    { label: dict.dashboard.xp, value: `${profile.xp_total}`, hint: dict.dashboard.totalHint },
+    { label: dict.dashboard.next, value: `${Math.max(0, nextThreshold - profile.xp_total)} XP`, hint: dict.dashboard.toEarn },
   ];
 
   const achievements = [
-    { title: 'Premier Blink', detail: 'Allumer une LED', earned: true },
-    { title: 'Circuit fluide', detail: 'Compléter 3 modules', earned: false },
-    { title: 'Signal stable', detail: 'Obtenir 80%+ sur un exercice', earned: false },
+    { title: dict.dashboard.achievementFirstBlink, detail: dict.dashboard.achievementFirstBlinkDetail, earned: true },
+    { title: dict.dashboard.achievementSmoothCircuit, detail: dict.dashboard.achievementSmoothCircuitDetail, earned: false },
+    { title: dict.dashboard.achievementStableSignal, detail: dict.dashboard.achievementStableSignalDetail, earned: false },
   ];
 
   const [feedbackText, setFeedbackText] = useState('');
@@ -70,9 +117,9 @@ export function DashboardExperience({
   const [showOnboarding, setShowOnboarding] = useState(false);
 
   const activityItems = [
-    { title: 'Mission lancée', body: 'La séquence de progression est prête à être suivie.', time: 'À l’instant' },
-    { title: 'Progression mise à jour', body: `${completedCount} module${completedCount > 1 ? 's' : ''} déjà validé${completedCount > 1 ? 's' : ''}.`, time: 'Aujourd’hui' },
-    { title: 'Récompense à portée', body: 'Un nouveau badge devient accessible à la prochaine étape.', time: 'À suivre' },
+    { title: dict.dashboard.missionLaunched, body: dict.dashboard.missionLaunchedBody, time: dict.dashboard.justNow },
+    { title: dict.dashboard.progressUpdated, body: format(completedCount === 1 ? dict.dashboard.activityProgressOne : dict.dashboard.activityProgressMany, { count: completedCount }), time: dict.dashboard.today },
+    { title: dict.dashboard.rewardWithinReach, body: dict.dashboard.rewardWithinReachBody, time: dict.dashboard.comingUp },
   ];
 
   const missionProgress = Math.min(100, Math.max(0, progressPercentage));
@@ -82,7 +129,7 @@ export function DashboardExperience({
       return;
     }
 
-    const seen = window.localStorage.getItem('trainarduino_onboarding_seen');
+    const seen = window.localStorage.getItem(ONBOARDING_STORAGE_KEY);
     if (!seen) {
       setShowOnboarding(true);
     }
@@ -91,7 +138,7 @@ export function DashboardExperience({
   async function handleSubmitFeedback(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!adaptiveRecommendation) {
-      setFeedbackError('Impossible d\'enregistrer le feedback sans recommandation.');
+      setFeedbackError(dict.dashboard.feedbackWithoutRecommendation);
       return;
     }
 
@@ -106,7 +153,7 @@ export function DashboardExperience({
       setRating(null);
     } catch (error) {
       console.error('Failed to submit recommendation feedback', error);
-      setFeedbackError('Impossible d’envoyer votre avis pour le moment.');
+      setFeedbackError(dict.dashboard.feedbackSendError);
     } finally {
       setFeedbackSaving(false);
     }
@@ -128,27 +175,28 @@ export function DashboardExperience({
                 <CircuitChipIcon className="h-6 w-6" />
               </div>
               <div className="min-w-0">
-                <PrimitiveBadge tone="accent">Mission Control</PrimitiveBadge>
+                <PrimitiveBadge tone="accent">{dict.dashboard.missionControl}</PrimitiveBadge>
                 <h1 className="mt-2 break-words text-2xl font-semibold tracking-[-0.03em] text-white sm:text-3xl">
-                  Bonjour, <span className="text-cyan-300">{profile.username}</span>
+                  {dict.dashboard.greeting} <span className="text-cyan-300">{profile.username}</span>
                 </h1>
               </div>
             </div>
 
             <p className="mt-4 max-w-2xl break-words text-base text-slate-300">
-              Votre parcours Arduino se déroule comme un circuit de précision : chaque module révèle une nouvelle étape, chaque progression éclaire le prochain challenge.
+              {dict.dashboard.journeyIntro}
             </p>
 
             <OscilloscopeDivider />
 
             <div className="flex flex-wrap items-center gap-3">
-              <Button variant="secondary">Paramètres</Button>
+              <Link href="/settings" className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-slate-100 transition hover:border-cyan-300/40 hover:bg-cyan-400/10">{dict.dashboard.settingsLink}</Link>
+              <Link href="/modules" className="rounded-full border border-cyan-400/25 bg-cyan-400/10 px-4 py-2 text-sm font-medium text-cyan-100 transition hover:border-cyan-300/50 hover:bg-cyan-400/15">{dict.dashboard.myModules}</Link>
               <button
                 type="button"
                 onClick={() => setShowOnboarding(true)}
                 className="rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3.5 py-2 text-sm font-medium text-cyan-100 transition hover:border-cyan-400/40 hover:bg-cyan-400/15"
               >
-                ? Aide
+                {dict.dashboard.help}
               </button>
             </div>
           </div>
@@ -156,32 +204,32 @@ export function DashboardExperience({
           <PrimitiveCard tone="glass" className="w-full min-w-0 max-w-md p-4">
             <div className="flex items-center justify-between gap-3">
               <div className="min-w-0">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">Mission active</p>
-                <h2 className="mt-2 break-words text-xl font-semibold text-white">Maîtriser la logique du circuit</h2>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">{dict.dashboard.activeMission}</p>
+                <h2 className="mt-2 break-words text-xl font-semibold text-white">{dict.dashboard.missionTitle}</h2>
               </div>
               <div className="flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-emerald-300">
                 <LedIndicator className="shrink-0" />
-                En cours
+                {dict.common.moduleInProgress}
               </div>
             </div>
             <div className="mt-4 space-y-4">
               <div className="rounded-[1.1rem] border border-white/10 bg-slate-950/70 p-4">
                 <div className="flex items-center justify-between text-sm text-slate-400">
-                  <span>Durée estimée</span>
-                  <span className="text-slate-200">20 min</span>
+                  <span>{dict.dashboard.estimatedDuration}</span>
+                  <span className="text-slate-200">{dict.dashboard.durationMinutes.replace('{minutes}', '20')}</span>
                 </div>
                 <div className="mt-3 flex items-center justify-between text-sm text-slate-400">
-                  <span>Difficulté</span>
-                  <span className="text-cyan-300">Intermédiaire</span>
+                  <span>{dict.dashboard.difficulty}</span>
+                  <span className="text-cyan-300">{dict.common.levelIntermediate}</span>
                 </div>
                 <div className="mt-3 flex items-center justify-between text-sm text-slate-400">
-                  <span>Récompense</span>
-                  <span className="text-emerald-300">+150 XP</span>
+                  <span>{dict.dashboard.reward}</span>
+                  <span className="text-emerald-300">{format(dict.dashboard.missionReward, { xp: 150 })}</span>
                 </div>
               </div>
               <div>
                 <div className="mb-2 flex items-center justify-between text-sm text-slate-300">
-                  <span>Progression</span>
+                  <span>{dict.dashboard.progress}</span>
                   <span>{missionProgress}%</span>
                 </div>
                 <PrimitiveProgress value={missionProgress} />
@@ -208,16 +256,16 @@ export function DashboardExperience({
       <section id="parcours-modules" className="scroll-mt-24 grid gap-5 xl:grid-cols-[1.2fr_0.8fr]">
         <PrimitiveCard tone="floating" className="overflow-hidden p-0">
           <div className="border-b border-white/10 p-5">
-            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-cyan-300">Parcours de progression</p>
-                <h2 className="mt-2 text-xl font-semibold text-white">Un chemin de modules à la fois lumineux et structuré</h2>
+                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-cyan-300">{dict.dashboard.progressPath}</p>
+                <h2 className="mt-2 text-xl font-semibold text-white">{dict.dashboard.yourPath}</h2>
               </div>
-              <PrimitiveBadge tone="success">Module courant</PrimitiveBadge>
+              <Link href="/modules" className="rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-1 text-xs font-semibold text-cyan-100">{dict.dashboard.allModules.replace('{count}', String(totalModules))}</Link>
             </div>
           </div>
           <div className="p-5">
-            <ModulePath modules={moduleStatus} />
+            <ModulePreview modules={moduleStatus} totalModules={totalModules} />
           </div>
         </PrimitiveCard>
 
@@ -225,21 +273,21 @@ export function DashboardExperience({
           <PrimitiveCard tone="glass" className="p-5">
             <div className="flex items-center gap-2">
               <SignalWaveIcon className="h-4 w-4 text-cyan-300" />
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-cyan-300">Récompense à venir</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-cyan-300">{dict.dashboard.upcomingReward}</p>
             </div>
-            <h3 className="mt-4 text-xl font-semibold text-white">Badge de précision</h3>
+            <h3 className="mt-4 text-xl font-semibold text-white">{dict.dashboard.precisionBadge}</h3>
             <p className="mt-3 text-sm leading-6 text-slate-400">
-              Les modules complétés allument progressivement les récompenses. Chaque avancée rend cette expérience plus élégante et plus motivante.
+              {dict.dashboard.completedModulesReward}
             </p>
             <div className="mt-5 rounded-[1.1rem] border border-cyan-400/20 bg-cyan-400/10 p-4 text-sm text-cyan-200">
-              Prochaine récompense : <span className="font-semibold text-white">Signal stable</span>
+              {dict.dashboard.nextReward} <span className="font-semibold text-white">{dict.dashboard.achievementStableSignal}</span>
             </div>
           </PrimitiveCard>
 
           <PrimitiveCard tone="raised" className="p-5">
             <div className="flex items-center gap-2">
               <CircuitChipIcon className="h-4 w-4 text-cyan-300" />
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-cyan-300">Badges</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-cyan-300">{dict.dashboard.badges}</p>
             </div>
             <div className="mt-4 space-y-3">
               {achievements.map((achievement) => (
@@ -263,10 +311,11 @@ export function DashboardExperience({
           <PrimitiveCard tone="glass" className="min-w-0 p-4 sm:p-6">
             <div className="flex min-w-0 flex-wrap items-center gap-2">
               <SignalWaveIcon className="h-4 w-4 text-cyan-300" />
-              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">XP central</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">{dict.dashboard.xpCentral}</p>
             </div>
             <div className="mt-6">
-              <XpBar currentXp={profile.xp_total} currentThreshold={currentThreshold} nextThreshold={nextThreshold} currentLevel={profile.niveau_actuel} />
+              <XpBar currentXp={profile.xp_total} currentThreshold={currentThreshold} nextThreshold={nextThreshold} currentLevel={profile.niveau_actuel} levelName={profile.evolutionLevelName} />
+              <p className="mt-3 text-sm text-slate-400">{format(dict.dashboard.startingLevelSentence, { level: translateLevel(profile.placementLevelName, dict) })}</p>
             </div>
           </PrimitiveCard>
 
@@ -274,35 +323,35 @@ export function DashboardExperience({
           <PrimitiveCard tone="glass" className="min-w-0 p-4 sm:p-6">
             <div className="flex min-w-0 flex-wrap items-center gap-2">
                 <SignalWaveIcon className="h-4 w-4 text-cyan-300" />
-                <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">Suggestion adaptative</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">{dict.dashboard.adaptiveSuggestion}</p>
               </div>
-              <h3 className="mt-4 break-words text-2xl font-semibold text-white">{adaptiveRecommendation.suggestedModuleTitle ?? 'Recommandation personnalisée'}</h3>
-              <p className="mt-3 break-words text-sm leading-6 text-slate-400">{adaptiveRecommendation.explanation}</p>
+              <h3 className="mt-4 break-words text-2xl font-semibold text-white">{adaptiveRecommendation.suggestedModuleTitle ?? dict.dashboard.personalizedRecommendation}</h3>
+              <p className="mt-3 break-words text-sm leading-6 text-slate-400">{translateRecommendation(adaptiveRecommendation.explanation, dict, 'explanation')}</p>
               <div className="mt-6 rounded-[1.1rem] border border-cyan-400/20 bg-slate-950/70 p-4 text-sm text-slate-300">
-                <p className="font-semibold text-white">Type</p>
-                <p className="mt-1">{adaptiveRecommendation.recommendedContentType}</p>
-                <p className="mt-3 font-semibold text-white">Action recommandée</p>
-                <p className="mt-1">{adaptiveRecommendation.recommendedAction}</p>
+                <p className="font-semibold text-white">{dict.dashboard.recommendationType}</p>
+                <p className="mt-1">{translateRecommendation(adaptiveRecommendation.recommendedContentType, dict, 'content')}</p>
+                <p className="mt-3 font-semibold text-white">{dict.dashboard.recommendedAction}</p>
+                <p className="mt-1">{translateRecommendation(adaptiveRecommendation.recommendedAction, dict, 'action')}</p>
               </div>
 
               <form onSubmit={handleSubmitFeedback} className="mt-6 space-y-4 rounded-[1.1rem] border border-slate-800 bg-slate-950/80 p-4 text-sm text-slate-300">
-                <p className="font-semibold text-white">Votre avis</p>
-                <p className="text-slate-500">Aidez-nous à améliorer votre prochaine recommandation.</p>
+                <p className="font-semibold text-white">{dict.dashboard.feedbackTitle}</p>
+                <p className="text-slate-500">{dict.dashboard.feedbackPrompt}</p>
 
                 <div className="grid min-w-0 gap-2 sm:grid-cols-[auto_1fr] sm:items-center">
-                  <label htmlFor="feedback" className="text-slate-300">Commentaire</label>
+                  <label htmlFor="feedback" className="text-slate-300">{dict.dashboard.comment}</label>
                   <textarea
                     id="feedback"
                     value={feedbackText}
                     onChange={(event) => setFeedbackText(event.target.value)}
                     rows={3}
                     className="w-full rounded-2xl border border-white/10 bg-slate-900/90 px-3 py-2 text-sm text-slate-100 outline-none focus:border-cyan-300 focus:ring-2 focus:ring-cyan-300/20"
-                    placeholder="Ce qui vous a aidé ou ce qui pourrait être mieux"
+                    placeholder={dict.dashboard.feedbackPlaceholder}
                   />
                 </div>
 
                 <div className="grid min-w-0 gap-2 sm:grid-cols-[auto_1fr] sm:items-center">
-                  <span className="text-slate-300">Note</span>
+                  <span className="text-slate-300">{dict.dashboard.rating}</span>
                   <div className="flex flex-wrap items-center gap-2">
                     {[1, 2, 3, 4, 5].map((value) => (
                       <button
@@ -318,10 +367,10 @@ export function DashboardExperience({
                 </div>
 
                 {feedbackError && <p className="text-sm text-rose-300">{feedbackError}</p>}
-                {feedbackSaved && <p className="text-sm text-emerald-300">Merci ! Votre avis a bien été enregistré.</p>}
+                {feedbackSaved && <p className="text-sm text-emerald-300">{dict.dashboard.feedbackThanks}</p>}
 
                 <Button type="submit" variant="secondary" className="w-full" disabled={feedbackSaving}>
-                  {feedbackSaving ? 'Envoi...' : 'Envoyer mon avis'}
+                  {feedbackSaving ? dict.dashboard.sending : dict.dashboard.sendFeedback}
                 </Button>
               </form>
             </PrimitiveCard>
@@ -331,7 +380,7 @@ export function DashboardExperience({
         <PrimitiveCard tone="raised" className="min-w-0 p-4 sm:p-6">
           <div className="flex min-w-0 flex-wrap items-center gap-2">
             <CircuitChipIcon className="h-4 w-4 text-cyan-300" />
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">Activité récente</p>
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">{dict.dashboard.recentActivity}</p>
           </div>
           <div className="mt-5 space-y-4">
             {activityItems.map((item, index) => (

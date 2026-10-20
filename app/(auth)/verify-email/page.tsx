@@ -5,8 +5,10 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { PrimitiveCard } from '@/components/design/PrimitiveCard';
 import { CircuitChipIcon } from '@/components/ui/ElectronicsIcons';
+import { useDictionary } from '@/components/i18n/LocaleProvider';
 
 export default function VerifyEmailPage() {
+  const dict = useDictionary();
   const router = useRouter();
   const [isChecking, setIsChecking] = useState(true);
   const [hasSession, setHasSession] = useState(false);
@@ -51,24 +53,24 @@ export default function VerifyEmailPage() {
           </div>
           <div className="min-w-0">
             <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-cyan-300">
-              {isChecking ? 'Vérification' : hasSession ? 'Confirmation' : 'Vérification'}
+              {isChecking ? dict.auth.checking : hasSession ? dict.auth.confirmation : dict.auth.checking}
             </p>
             <h1 className="mt-1 break-words text-xl font-semibold text-white sm:text-2xl">
               {isChecking
-                ? 'Vérification en cours...'
+                ? dict.auth.checkingTitle
                 : hasSession
-                ? 'Email confirmé ! 🎉'
-                : 'Vérifiez votre boîte mail'}
+                ? dict.auth.confirmedTitle
+                : dict.auth.verifyMailboxTitle}
             </h1>
           </div>
         </div>
 
         <p className="mt-6 text-sm leading-7 text-slate-300">
           {isChecking
-            ? 'Nous vérifions votre session...'
+            ? dict.auth.checkingDescription
             : hasSession
-            ? 'Votre email a été confirmé avec succès. Redirection vers votre tableau de bord...'
-            : 'Un email de confirmation a été envoyé à votre adresse. Ouvrez-le et cliquez sur le lien pour valider votre compte, puis revenez ici pour vous connecter.'}
+            ? dict.auth.confirmedDescription
+            : dict.auth.waitingDescription}
         </p>
       </PrimitiveCard>
     </div>

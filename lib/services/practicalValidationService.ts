@@ -73,9 +73,6 @@ function extractPinNumbers(code: string): { pins: number[]; namedUsed: boolean }
       const mapped = mapping.get(name);
       if (typeof mapped === 'number') {
         pinsSet.add(mapped);
-      } else {
-        // Identifier present but not resolvable locally — treat as used
-        namedUsed = true;
       }
     }
   }

@@ -1,9 +1,11 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
 import { getCourseContent } from '@/lib/repositories/learningRepository';
 import { createModulePageErrorState } from '@/lib/modulePageState';
 import { EngineeringLabWorkspace } from '@/components/lab/EngineeringLabWorkspace';
-import { getModuleProgress } from '@/lib/db';
+import { getModuleProgress, getModules, getUserProgress, getPositioningTestResult } from '@/lib/db';
+import { getModuleAccessState } from '@/lib/services/moduleAccessService';
 
 export default async function ModulePage({
   params,
@@ -45,6 +47,34 @@ export default async function ModulePage({
         </div>
       </div>
     );
+  }
+
+  const [modules, allProgress, placement] = await Promise.all([
+    getModules(),
+    user?.id ? getUserProgress(user.id) : Promise.resolve([]),
+    user?.id ? getPositioningTestResult(user.id) : Promise.resolve(null),
+  ]);
+  const requestedModule = modules.find((module) => module.id === moduleId);
+  const requestedIndex = requestedModule ? modules.findIndex((module) => module.id === moduleId) : -1;
+  const accessState = requestedModule && requestedIndex >= 0
+    ? getModuleAccessState(requestedModule, requestedIndex, modules, allProgress, placement)
+    : 'locked';
+
+  if (accessState === 'locked') {
+    return (
+      <div className="min-h-screen min-w-0 bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.12),_transparent_30%),linear-gradient(135deg,_#071016_0%,_#0d1b23_100%)] px-4 py-8 text-slate-100">
+        <div className="mx-auto flex max-w-3xl flex-col gap-3 rounded-[1.6rem] border border-amber-400/20 bg-slate-900/80 p-5 shadow-2xl shadow-cyan-950/30">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-300">Module verrouillé</p>
+          <h1 className="text-xl font-semibold text-white">Continuez votre parcours pratique</h1>
+          <p className="text-sm leading-6 text-slate-300">Ce module s’ouvre après la validation du module précédent. Le test initial ne peut ouvrir que les six premiers modules.</p>
+          <Link href="/modules" className="w-fit rounded-full border border-cyan-400/25 bg-cyan-400/10 px-4 py-2 text-sm text-cyan-100">Retour aux modules</Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (requestedModule?.is_capstone) {
+    redirect(`/challenges/${requestedModule.id}`);
   }
 
   let content;

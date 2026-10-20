@@ -16,6 +16,7 @@ export interface Profile {
   module_actuel_id: string | null;
   timezone?: string | null;
   preferred_language?: string | null;
+  theme_preference?: string | null;
   achievements?: string[] | null;
   created_at: string;
   updated_at: string;

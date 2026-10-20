@@ -23,7 +23,16 @@ yarn-debug.log*
 yarn-error.log*
 
 # Local env files
-.env*.local
+.env
+.env.*
+.env.local
+.env.*.local
+!.env.example
+
+# Logs and build artifacts
+*.log
+*.tsbuildinfo
+next-env.d.ts
 
 # E2E artifacts
 /tests/e2e/.sessions/

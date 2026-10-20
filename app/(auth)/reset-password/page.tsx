@@ -4,8 +4,11 @@ import { useState, type FormEvent } from 'react';
 import { motion } from 'framer-motion';
 import { updatePassword } from '@/lib/auth';
 import { CircuitChipIcon, LedIndicator, OscilloscopeDivider } from '@/components/ui/ElectronicsIcons';
+import { useDictionary, useLocale } from '@/components/i18n/LocaleProvider';
 
 export default function ResetPasswordPage() {
+  const dict = useDictionary();
+  const { locale } = useLocale();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -19,7 +22,7 @@ export default function ResetPasswordPage() {
     const formData = new FormData(event.currentTarget);
     const password = String(formData.get('password') || '');
 
-    const result = await updatePassword(password);
+    const result = await updatePassword(password, locale);
     if (result?.error) {
       setError(result.error);
     } else {
@@ -42,11 +45,11 @@ export default function ResetPasswordPage() {
               <CircuitChipIcon className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-cyan-300">Réinitialisation</p>
-              <h1 className="mt-1 text-2xl font-semibold text-white">Définissez un nouveau mot de passe</h1>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-cyan-300">{dict.auth.resetEyebrow}</p>
+              <h1 className="mt-1 text-2xl font-semibold text-white">{dict.auth.resetTitle}</h1>
             </div>
           </div>
-          <p className="text-sm text-slate-400">Entrez votre nouveau mot de passe pour finaliser la réinitialisation.</p>
+          <p className="text-sm text-slate-400">{dict.auth.resetDescription}</p>
           <OscilloscopeDivider />
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -57,21 +60,21 @@ export default function ResetPasswordPage() {
             )}
             {success && (
               <div className="rounded-[1rem] border border-emerald-400/20 bg-emerald-400/10 p-3 text-sm text-emerald-100">
-                <p>Votre mot de passe a été mis à jour. Vous pouvez vous connecter.</p>
+                <p>{dict.auth.passwordUpdated}</p>
               </div>
             )}
 
             <div>
               <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-300">
                 <LedIndicator className="shrink-0" />
-                Nouveau mot de passe
+                {dict.auth.newPassword}
               </label>
               <input
                 type="password"
                 name="password"
                 required
                 className="w-full rounded-[1rem] border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-white outline-none transition duration-300 focus:border-cyan-400/30 focus:ring-2 focus:ring-cyan-400/20"
-                placeholder="Entrez un nouveau mot de passe"
+                placeholder={dict.auth.newPasswordPlaceholder}
               />
             </div>
 
@@ -82,7 +85,7 @@ export default function ResetPasswordPage() {
               disabled={isLoading}
               className="w-full rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 px-4 py-3 text-sm font-semibold text-slate-950 transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {isLoading ? 'Mise à jour…' : 'Mettre à jour le mot de passe'}
+              {isLoading ? dict.auth.updating : dict.auth.updatePassword}
             </motion.button>
           </form>
         </div>

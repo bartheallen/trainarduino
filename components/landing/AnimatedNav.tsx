@@ -1,6 +1,12 @@
+'use client';
+
 import Link from 'next/link';
+import { LanguageSwitcher } from '@/components/i18n/LanguageSwitcher';
+import { useDictionary } from '@/components/i18n/LocaleProvider';
 
 export function AnimatedNav() {
+  const dict = useDictionary();
+
   return (
     <nav className="sticky top-3 z-30 mx-auto mb-8 w-full max-w-[1100px] rounded-full border border-white/15 bg-slate-950/95 px-3 py-3 shadow-[0_12px_40px_rgba(0,0,0,0.34),0_0_0_1px_rgba(255,255,255,0.04)] sm:px-4">
       <div className="flex items-center justify-between gap-2 sm:gap-3">
@@ -14,13 +20,15 @@ export function AnimatedNav() {
           </div>
         </Link>
         <div className="hidden items-center gap-2 md:flex">
-          <Link href="/login" className="rounded-full px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/10 hover:text-white">Connexion</Link>
-          <Link href="/signup" className="rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow-[0_12px_36px_rgba(50,231,255,0.18)]">Commencer</Link>
+          <LanguageSwitcher />
+          <Link href="/login" className="rounded-full px-4 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/10 hover:text-white">{dict.nav.login}</Link>
+          <Link href="/signup" className="rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 px-4 py-2 text-sm font-semibold text-slate-950 shadow-[0_12px_36px_rgba(50,231,255,0.18)]">{dict.nav.start}</Link>
         </div>
         <div className="md:hidden">
           {/* Mobile menu placeholder: compact actions */}
           <div className="flex items-center gap-2">
-            <Link href="/signup" className="rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 px-3 py-2 text-xs font-semibold text-slate-950">Commencer</Link>
+            <LanguageSwitcher />
+            <Link href="/signup" className="rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 px-3 py-2 text-xs font-semibold text-slate-950">{dict.nav.start}</Link>
           </div>
         </div>
       </div>

@@ -1,12 +1,16 @@
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from '@/lib/auth';
-import { getUserProfile, getUserProgress, getModules, getLevelThresholds, ensureFirstModuleProgress } from '@/lib/db';
+import { getUserProfile, getUserProgress, getModules, getLevelThresholds, ensureFirstModuleProgress, getPositioningTestResult } from '@/lib/db';
 import { DashboardExperience } from '@/components/dashboard/DashboardExperience';
 import { Card } from '@/components/ui/Card';
 import * as adaptiveEngine from '@/lib/services/adaptiveEngineService';
 import { getUserModuleProgressSummary } from '@/lib/services/learningProgressService';
+import { getModuleAccessState } from '@/lib/services/moduleAccessService';
+import { getEvolutionLevelName, getPlacementLevelName } from '@/lib/services/levelService';
+import { getServerDictionary } from '@/lib/i18n/server';
 
 export default async function DashboardPage() {
+  const dict = await getServerDictionary();
   const user = await getCurrentUser('dashboard');
   if (!user) {
     redirect('/login');
@@ -16,12 +20,12 @@ export default async function DashboardPage() {
     const profile = await getUserProfile(user.id);
     const modules = await getModules();
     await ensureFirstModuleProgress(user.id, modules);
-    const allProgress = await getUserProgress(user.id);
+    const [allProgress, placement] = await Promise.all([
+      getUserProgress(user.id),
+      getPositioningTestResult(user.id),
+    ]);
 
     const { completedCount, progressPercentage } = await getUserModuleProgressSummary(user.id, modules.length);
-
-    const completedModuleIds = new Set(allProgress.filter((p) => p.statut === 'completed').map((p) => p.module_id));
-    const inProgressModuleIds = new Set(allProgress.filter((p) => p.statut === 'in_progress').map((p) => p.module_id));
 
     const moduleStatus = modules
       .map((module, index) => {
@@ -45,20 +49,15 @@ export default async function DashboardPage() {
           };
         }
 
-        const previousModule = modules[index - 1];
-        const previousProgress = previousModule ? allProgress.find((p) => p.module_id === previousModule.id) : undefined;
-        const isFirstModule = index === 0;
-        const placementUnlock = (profile.niveau_actuel ?? 1) >= module.palier_test;
-        const isUnlocked = isFirstModule || placementUnlock || previousProgress?.statut === 'completed';
+        const accessState = getModuleAccessState(module, index, modules, allProgress, placement);
 
         return {
           ...module,
-          status: isUnlocked ? (isFirstModule ? 'in_progress' : 'available') : 'locked',
+          status: accessState,
           score: userProgress?.score || 0,
           completed_exercises: userProgress?.exercices_completes || 0,
         };
-      })
-      .filter((module) => completedModuleIds.has(module.id) || inProgressModuleIds.has(module.id) || module.status === 'available');
+      });
 
     if (profile.niveau_actuel == null) {
       redirect('/positioning-test');
@@ -68,6 +67,8 @@ export default async function DashboardPage() {
     const profileForDashboard = {
       ...profile,
       niveau_actuel: currentLevel,
+      evolutionLevelName: getEvolutionLevelName(currentLevel),
+      placementLevelName: getPlacementLevelName(placement?.score),
     };
 
     const adaptiveRecommendation = await adaptiveEngine.recommendAdaptiveActions(user.id).catch(() => null);
@@ -91,8 +92,8 @@ export default async function DashboardPage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-pcb-dark px-4">
         <Card className="max-w-lg border-red-500/20 bg-red-500/10 text-red-200">
-          <h2 className="text-2xl font-semibold">Le tableau de bord n’a pas pu se charger</h2>
-          <p className="mt-3 text-sm text-red-200/80">Actualisez la page ou vérifiez votre connexion.</p>
+          <h2 className="text-2xl font-semibold">{dict.dashboard.loadErrorTitle}</h2>
+          <p className="mt-3 text-sm text-red-200/80">{dict.dashboard.loadErrorDescription}</p>
         </Card>
       </div>
     );

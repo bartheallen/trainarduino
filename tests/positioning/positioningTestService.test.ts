@@ -34,7 +34,7 @@ describe('positioning test service', () => {
     it('returns advanced at 80%', () => {
       const result = determinePositioningLevel(8, 10);
       expect(result.levelName).toBe('advanced');
-      expect(result.palierAtteint).toBe(3);
+      expect(result.palierAtteint).toBe(4);
       expect(result.score).toBe(80);
     });
 
@@ -59,20 +59,20 @@ describe('positioning test service', () => {
       (mockUpdateLevel as Mock).mockClear();
     });
 
-    it('saves a 100% score as level 4 and persists percentage', async () => {
+    it('saves a 100% score at the module 6 ceiling and persists percentage', async () => {
       const result = await savePositioningTestResultAction(10, 10);
 
-      expect(result?.palier_atteint).toBe(4);
+      expect(result?.palier_atteint).toBe(6);
       expect(result?.score).toBe(100);
       expect(result?.reponses_correctes).toBe(10);
-      expect(mockUpsert).toHaveBeenLastCalledWith('user-1', 4, 100, 10, 10);
-      expect(mockUpdateLevel).toHaveBeenCalledWith('user-1', 4);
+      expect(mockUpsert).toHaveBeenLastCalledWith('user-1', 6, 100, 10, 10);
+      expect(mockUpdateLevel).toHaveBeenCalledWith('user-1', 6);
     });
 
-    it('saves a 70% score as level 3', async () => {
+    it('saves a 70% score as level 4', async () => {
       const result = await savePositioningTestResultAction(7, 10);
 
-      expect(result?.palier_atteint).toBe(3);
+      expect(result?.palier_atteint).toBe(4);
       expect(result?.score).toBe(70);
       expect(result?.reponses_correctes).toBe(7);
     });

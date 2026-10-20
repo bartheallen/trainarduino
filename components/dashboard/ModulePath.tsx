@@ -5,6 +5,7 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useMemo, useState } from 'react';
 import { ModuleNode } from './ModuleNode';
 import { PrimitiveCard } from '@/components/design/PrimitiveCard';
+import { useDictionary } from '@/components/i18n/LocaleProvider';
 
 interface ModulePathProps {
   modules: Array<{
@@ -13,11 +14,13 @@ interface ModulePathProps {
     description: string | null;
     ordre: number;
     palier_test: number;
+    is_capstone?: boolean;
     status: string;
   }>;
 }
 
 export function ModulePath({ modules }: ModulePathProps) {
+  const dict = useDictionary();
   const [selectedModule, setSelectedModule] = useState<number | null>(null);
   const shouldReduceMotion = useReducedMotion();
 
@@ -52,14 +55,14 @@ export function ModulePath({ modules }: ModulePathProps) {
                 onClick={() => setSelectedModule(module.id)}
               />
               <div className="min-w-0 flex-1 overflow-hidden">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400 sm:text-xs">Module {module.ordre}</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400 sm:text-xs">{dict.dashboard.moduleLabel.replace('{order}', String(module.ordre))}</p>
                 <p className="mt-1 break-words text-sm font-semibold text-white sm:text-base">{module.titre}</p>
                 {module.state === 'locked' && (
-                  <p className="mt-1 break-words text-sm leading-6 text-slate-400">🔒 À débloquer</p>
+                  <p className="mt-1 break-words text-sm leading-6 text-slate-400">{dict.dashboard.unlock}</p>
                 )}
                 {module.state !== 'locked' && (
-                  <Link href={`/modules/${module.id}`} className="mt-3 inline-flex max-w-full items-center rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1.5 text-sm font-medium text-cyan-100 transition hover:border-cyan-400/40 hover:bg-cyan-400/20">
-                    {module.state === 'completed' ? 'Revoir le cours' : 'Ouvrir le cours'}
+                  <Link href={module.is_capstone ? `/challenges/${module.id}` : `/modules/${module.id}`} className="mt-3 inline-flex max-w-full items-center rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1.5 text-sm font-medium text-cyan-100 transition hover:border-cyan-400/40 hover:bg-cyan-400/20">
+                    {module.is_capstone ? dict.dashboard.openChallenge : module.state === 'completed' ? dict.dashboard.reviewCourse : dict.dashboard.openCourse}
                   </Link>
                 )}
               </div>
@@ -81,24 +84,24 @@ export function ModulePath({ modules }: ModulePathProps) {
               <PrimitiveCard tone="floating" className="w-full max-w-xl p-5">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">Module détaillé</p>
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">{dict.dashboard.detailedModule}</p>
                     <h3 className="mt-2 text-xl font-semibold text-white">{modules.find((item) => item.id === selectedModule)?.titre}</h3>
                   </div>
                   <button className="rounded-full border border-white/10 bg-slate-950/70 px-3 py-1 text-sm text-slate-300 transition hover:bg-white/10" onClick={() => setSelectedModule(null)}>
-                    Fermer
+                    {dict.dashboard.close}
                   </button>
                 </div>
                 <p className="mt-4 text-sm leading-6 text-slate-400">
-                  Ce module est accessible depuis votre parcours actuel. Vous pouvez le reprendre quand vous êtes prêt.
+                  {dict.dashboard.accessibleModule}
                 </p>
                 <div className="mt-5 grid gap-2 md:grid-cols-2">
                   <div className="rounded-[1.1rem] border border-white/10 bg-slate-950/70 p-3">
-                    <p className="text-xs font-semibold text-white">Compétences</p>
-                    <p className="mt-2 text-xs text-slate-400">Logique de branchement, signal et contrôle.</p>
+                    <p className="text-xs font-semibold text-white">{dict.dashboard.skills}</p>
+                    <p className="mt-2 text-xs text-slate-400">{dict.dashboard.skillsDescription}</p>
                   </div>
                   <div className="rounded-[1.1rem] border border-white/10 bg-slate-950/70 p-3">
-                    <p className="text-xs font-semibold text-white">Exercices</p>
-                    <p className="mt-2 text-sm text-slate-400">1 mini projet · 3 exercices guidés</p>
+                    <p className="text-xs font-semibold text-white">{dict.dashboard.exercises}</p>
+                    <p className="mt-2 text-sm text-slate-400">{dict.dashboard.guidedExercises}</p>
                   </div>
                 </div>
               </PrimitiveCard>

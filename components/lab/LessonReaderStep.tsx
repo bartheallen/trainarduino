@@ -18,9 +18,27 @@ interface LessonReaderStepProps {
 function renderLessonContent(content: string) {
   const lines = content.split('\n');
   const elements: Array<ReactElement> = [];
+  let inCodeBlock = false;
+  let codeLines: string[] = [];
 
   lines.forEach((line, index) => {
     const trimmed = line.trim();
+
+    if (trimmed.startsWith('```')) {
+      if (inCodeBlock) {
+        elements.push(<pre key={`code-${index}`} className="my-3 overflow-x-auto rounded-xl border border-cyan-400/15 bg-slate-950 p-3 text-xs leading-6 text-cyan-100"><code>{codeLines.join('\n')}</code></pre>);
+        codeLines = [];
+        inCodeBlock = false;
+      } else {
+        inCodeBlock = true;
+      }
+      return;
+    }
+
+    if (inCodeBlock) {
+      codeLines.push(line);
+      return;
+    }
 
     if (!trimmed) {
       elements.push(<div key={`empty-${index}`} className="h-2" />);
@@ -44,6 +62,10 @@ function renderLessonContent(content: string) {
 
     elements.push(<p key={`p-${index}`} className="leading-7 text-slate-300">{trimmed}</p>);
   });
+
+  if (codeLines.length > 0) {
+    elements.push(<pre key="code-final" className="my-3 overflow-x-auto rounded-xl border border-cyan-400/15 bg-slate-950 p-3 text-xs leading-6 text-cyan-100"><code>{codeLines.join('\n')}</code></pre>);
+  }
 
   return elements;
 }
