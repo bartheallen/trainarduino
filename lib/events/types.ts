@@ -64,7 +64,6 @@ export const KnownEventNames = [
   'RecommendationsUpdated',
   'MemoryUpdated',
   'KnowledgeUpdated',
-  'KnowledgePredictedToDecay',
   'ReviewScheduled',
   'ProgressUpdated',
   'XpAwarded',

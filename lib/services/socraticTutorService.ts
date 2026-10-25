@@ -26,7 +26,7 @@ export interface SocraticLearningPlan {
 
 function levelFromContext(context: SocraticTutorContext, pedagogical?: PedagogicalReport) {
   if (pedagogical?.knowledgeLevel) return pedagogical.knowledgeLevel;
-  if (typeof context.learningProfile?.confidence_score === 'number') {
+  if (context.learningProfile?.confidence_score !== undefined) {
     const score = context.learningProfile.confidence_score;
     return score >= 80 ? 'advanced' : score >= 50 ? 'intermediate' : 'beginner';
   }
@@ -169,7 +169,7 @@ export async function generateLearningPlan(report: PedagogicalReport, context: S
   const reviewItems = report.reviewSchedule.map((item) => `${item.concept} (${item.urgency})`);
   const challenges: string[] = [];
 
-  const confidenceAdvice = typeof context.learningProfile?.confidence_score === 'number'
+  const confidenceAdvice = context.learningProfile?.confidence_score !== undefined
     ? context.learningProfile.confidence_score >= 80
       ? 'Ta confiance est bonne, tu peux avancer vers des défis plus techniques.'
       : 'Concentre-toi sur des révisions ciblées avant de passer au suivant.'

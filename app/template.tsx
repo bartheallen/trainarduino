@@ -1,24 +1,22 @@
 'use client';
 
-import { useState } from 'react';
-import { usePathname } from 'next/navigation';
 import { motion, useReducedMotion } from 'framer-motion';
+import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
 
-const authRoutes = new Set([
-  '/forgot-password',
+const authPaths = new Set([
   '/login',
-  '/reset-password',
   '/signup',
+  '/forgot-password',
+  '/reset-password',
   '/verify-email',
 ]);
 
 export default function Template({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const prefersReducedMotion = useReducedMotion();
-  const [animationComplete, setAnimationComplete] = useState(false);
+  const reduceMotion = useReducedMotion();
 
-  if (prefersReducedMotion || authRoutes.has(pathname)) {
+  if (reduceMotion || authPaths.has(pathname)) {
     return <>{children}</>;
   }
 
@@ -27,10 +25,7 @@ export default function Template({ children }: { children: ReactNode }) {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-      onAnimationComplete={() => setAnimationComplete(true)}
-      transformTemplate={(_, generatedTransform) =>
-        animationComplete ? 'none' : generatedTransform
-      }
+      transitionEnd={{ transform: 'none' }}
     >
       {children}
     </motion.div>

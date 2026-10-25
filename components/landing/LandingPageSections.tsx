@@ -5,49 +5,46 @@ import { PrimitiveCard } from '@/components/design/PrimitiveCard';
 import { PrimitiveBadge } from '@/components/design/PrimitiveBadge';
 import { PrimitiveProgress } from '@/components/design/PrimitiveProgress';
 import { CircuitChipIcon, LedIndicator, SignalWaveIcon } from '@/components/ui/ElectronicsIcons';
-import { useDictionary } from '@/components/i18n/LocaleProvider';
+
+const trustItems = [
+  { title: 'Parcours guidé', body: 'Une progression précise du premier clignotement jusqu’aux systèmes avancés.', icon: CircuitChipIcon },
+  { title: 'Simulation en direct', body: 'Prototypez dans le même espace où vous apprenez.', icon: SignalWaveIcon },
+  { title: 'Mentor IA', body: 'Recevez des retours utiles, clairs et immédiats.', icon: LedIndicator },
+];
+
+const features = [
+  {
+    title: 'De la curiosité à l’électronique',
+    body: 'Chaque leçon est pensée comme une expérience maîtrisée : calme, concentrée et gratifiante.',
+    metric: '94 % de complétion',
+  },
+  {
+    title: 'Apprentissage construit avec précision',
+    body: 'La progression est visible, bien cadrée et intentionnelle, sans bruit ni distraction.',
+    metric: '12 modules',
+  },
+  {
+    title: 'Un environnement qui travaille avec vous',
+    body: 'La plateforme s’adapte à votre travail pour garder une expérience fluide et élégante.',
+    metric: 'Retour 24/7',
+  },
+];
+
+const stats = [
+  { value: '120+', label: 'Exercices' },
+  { value: '8,9/10', label: 'Score de clarté' },
+  { value: '94%', label: 'Achèvement' },
+];
 
 export function LandingPageSections() {
-  const dict = useDictionary();
-
-  const trustItems = [
-    { title: dict.home.guidedPath, body: dict.home.guidedPathBody, icon: CircuitChipIcon },
-    { title: dict.home.liveSimulation, body: dict.home.liveSimulationBody, icon: SignalWaveIcon },
-    { title: dict.home.mentorAi, body: dict.home.mentorAiBody, icon: LedIndicator },
-  ];
-
-  const features = [
-    {
-      title: dict.home.curiosityToElectronics,
-      body: dict.home.curiosityToElectronicsBody,
-      metric: '94% de complétion',
-    },
-    {
-      title: dict.home.precisionLearning,
-      body: dict.home.precisionLearningBody,
-      metric: '12 modules',
-    },
-    {
-      title: dict.home.workEnvironment,
-      body: dict.home.workEnvironmentBody,
-      metric: 'Retour 24/7',
-    },
-  ];
-
-  const stats = [
-    { value: '120+', label: dict.home.exercises },
-    { value: '8,9/10', label: dict.home.clarityScore },
-    { value: '94%', label: dict.home.completion },
-  ];
-
   return (
     <div className="relative z-10 w-full space-y-8 px-2 pb-20 sm:px-6 lg:px-8">
       <motion.section initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ duration: 0.5 }} className="mx-auto w-full max-w-7xl">
         <div className="grid w-full gap-6 lg:grid-cols-[0.95fr_1.05fr]">
         <PrimitiveCard tone="glass" className="landing-glass-card landing-glass-card--large min-w-0 p-6 sm:p-8">
-          <PrimitiveBadge tone="accent">{dict.home.engineeringLanguage}</PrimitiveBadge>
-          <h2 className="mt-5 break-words text-2xl font-semibold text-white sm:text-4xl">{dict.home.precisionInteractions}</h2>
-          <p className="mt-4 max-w-2xl break-words text-base text-slate-300 sm:text-lg">{dict.home.precisionInteractionsBody}</p>
+          <PrimitiveBadge tone="accent">Langage de l’ingénierie</PrimitiveBadge>
+          <h2 className="mt-5 break-words text-2xl font-semibold text-white sm:text-4xl">Chaque interaction est pensée avec précision.</h2>
+          <p className="mt-4 max-w-2xl break-words text-base text-slate-300 sm:text-lg">TrainArduino transforme l’électronique complexe en une expérience calme, guidée et visiblement progressives.</p>
         </PrimitiveCard>
         <div className="grid w-full gap-4 sm:grid-cols-3">
           {stats.map((stat, index) => (
@@ -65,9 +62,9 @@ export function LandingPageSections() {
       <motion.section initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.5 }} className="landing-glass-card landing-glass-card--large mx-auto w-full max-w-7xl rounded-[2rem] border border-white/10 bg-slate-900/70 p-6 shadow-premium backdrop-blur-xl sm:p-8">
         <div className="grid w-full gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
           <div className="min-w-0">
-            <PrimitiveBadge tone="success">{dict.home.confidenceLevel}</PrimitiveBadge>
-            <h2 className="mt-4 break-words text-2xl font-semibold text-white sm:text-4xl">{dict.home.premiumPath}</h2>
-            <p className="mt-4 break-words text-base text-slate-300 sm:text-lg">{dict.home.premiumPathBody}</p>
+            <PrimitiveBadge tone="success">Niveau de confiance</PrimitiveBadge>
+            <h2 className="mt-4 break-words text-2xl font-semibold text-white sm:text-4xl">Un parcours premium pensé pour la concentration.</h2>
+            <p className="mt-4 break-words text-base text-slate-300 sm:text-lg">Conçu comme une expérience cohérente : apprentissage, simulation et retours restent clairs du premier clic au dernier jalon.</p>
           </div>
           <div className="w-full space-y-4">
             {trustItems.map((item, index) => (
@@ -101,20 +98,20 @@ export function LandingPageSections() {
                 </div>
                 <div className="landing-glass-card landing-glass-card--small min-w-0 rounded-[1.5rem] border border-white/10 bg-slate-950/70 p-4 sm:p-6">
                   <div className="flex items-center justify-between gap-3 text-sm text-slate-300">
-                    <span className="break-words">{dict.home.learningSignal}</span>
-                    <span className="shrink-0 text-cyan-300">{dict.home.active}</span>
+                    <span className="break-words">Signal d’apprentissage</span>
+                    <span className="shrink-0 text-cyan-300">Actif</span>
                   </div>
                   <div className="mt-4 space-y-4">
                     <div>
                       <div className="mb-2 flex items-center justify-between text-sm text-slate-300">
-                        <span>{dict.home.flowClarity}</span>
+                        <span>Clarté du flux</span>
                         <span>82%</span>
                       </div>
                       <PrimitiveProgress value={82} animated={false} />
                     </div>
                     <div>
                       <div className="mb-2 flex items-center justify-between text-sm text-slate-300">
-                        <span>{dict.home.signalStability}</span>
+                        <span>Stabilité du signal</span>
                         <span>91%</span>
                       </div>
                       <PrimitiveProgress value={91} animated={false} />
@@ -128,11 +125,11 @@ export function LandingPageSections() {
       </section>
 
       <motion.footer initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.45 }} className="landing-glass-footer mx-auto flex w-full max-w-7xl flex-col gap-4 border-t border-white/10 px-2 py-8 text-sm text-slate-300 sm:flex-row sm:items-center sm:justify-between">
-        <p className="break-words">{dict.home.footer}</p>
+        <p className="break-words">TrainArduino — un apprentissage conçu pour les créateurs de demain.</p>
         <div className="flex flex-wrap items-center gap-3">
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">{dict.home.designedForClarity}</span>
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">{dict.home.premiumMotion}</span>
-          <span className="rounded-full border border-cyan-400/20 bg-cyan-500/10 px-3 py-1 text-cyan-200">{dict.home.model3D}</span>
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Conçu pour la clarté</span>
+          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1">Mouvement premium</span>
+          <span className="rounded-full border border-cyan-400/20 bg-cyan-500/10 px-3 py-1 text-cyan-200">Modèle 3D : Arduino Uno © kakaeka — CC Attribution</span>
         </div>
       </motion.footer>
     </div>

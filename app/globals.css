@@ -237,19 +237,3 @@ select:focus-visible {
     scroll-behavior: auto !important;
   }
 }
-
-@keyframes skeleton-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.page-skeleton {
-  opacity: 0;
-  animation: skeleton-in 0.25s ease 0.15s both;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .page-skeleton {
-    animation-duration: 0s !important;
-  }
-}

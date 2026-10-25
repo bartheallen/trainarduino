@@ -14,7 +14,7 @@ describe('EventBootstrap', () => {
       import('@/lib/events/types'),
     ]);
 
-    await initializeEventSystem();
+    initializeEventSystem();
     for (const name of KnownEventNames) {
       const registration = defaultEventRegistry.get(name);
       expect(registration).not.toBeNull();
@@ -26,8 +26,8 @@ describe('EventBootstrap', () => {
     Object.assign(process.env, env);
     const [{ initializeEventSystem }] = await Promise.all([import('@/lib/events/bootstrap')]);
 
-    const first = await initializeEventSystem();
-    const second = await initializeEventSystem();
+    const first = initializeEventSystem();
+    const second = initializeEventSystem();
     expect(first.bus).toBe(second.bus);
     expect(first.registry).toBe(second.registry);
   }, 60000);

@@ -2,10 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { useDictionary } from '@/components/i18n/LocaleProvider';
 
 export function ScrollHint() {
-  const dict = useDictionary();
   const [visible, setVisible] = useState(true);
   const reduceMotion = useReducedMotion();
 
@@ -28,7 +26,7 @@ export function ScrollHint() {
       }
       className="pointer-events-none absolute bottom-5 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 text-xs text-slate-300"
     >
-      <span>{dict.home.exploreScroll}</span>
+      <span>Scrolle pour explorer</span>
       <span className="h-7 w-px bg-gradient-to-b from-cyan-200/80 to-transparent" />
     </motion.div>
   );

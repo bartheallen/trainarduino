@@ -24,6 +24,7 @@ ALTER TABLE profiles
   ADD COLUMN IF NOT EXISTS privacy_settings JSONB DEFAULT '{}'::jsonb,
   ADD COLUMN IF NOT EXISTS learning_preferences JSONB DEFAULT '{}'::jsonb,
   ADD COLUMN IF NOT EXISTS notification_preferences JSONB DEFAULT '{}'::jsonb,
+  ADD COLUMN IF NOT EXISTS streak INTEGER DEFAULT 0,
   ADD COLUMN IF NOT EXISTS achievements JSONB DEFAULT '[]'::jsonb,
   ADD COLUMN IF NOT EXISTS modules_unlocked JSONB DEFAULT '[]'::jsonb,
   ADD COLUMN IF NOT EXISTS statistics JSONB DEFAULT '{}'::jsonb,
@@ -63,6 +64,7 @@ BEGIN
     xp_total,
     niveau_actuel,
     module_actuel_id,
+    streak,
     achievements,
     modules_unlocked,
     statistics,
@@ -70,22 +72,8 @@ BEGIN
   )
   VALUES (
     NEW.id,
-    COALESCE(
-      NULLIF(NEW.raw_user_meta_data->>'preferred_username', ''),
-      NULLIF(NEW.raw_user_meta_data->>'username', ''),
-      NULLIF(NEW.raw_user_meta_data->>'display_name', ''),
-      NULLIF(NEW.raw_user_meta_data->>'full_name', ''),
-      NULLIF(NEW.raw_user_meta_data->>'name', ''),
-      NULLIF(NEW.email, ''),
-      CONCAT('user_', SUBSTRING(NEW.id::text, 1, 8))
-    ),
-    COALESCE(
-      NULLIF(NEW.raw_user_meta_data->>'display_name', ''),
-      NULLIF(NEW.raw_user_meta_data->>'full_name', ''),
-      NULLIF(NEW.raw_user_meta_data->>'name', ''),
-      NULLIF(NEW.raw_user_meta_data->>'username', ''),
-      NULLIF(NEW.email, '')
-    ),
+    COALESCE(NEW.raw_user_meta_data->>'username', NEW.email),
+    COALESCE(NEW.raw_user_meta_data->>'display_name', NULL),
     COALESCE(NEW.raw_user_meta_data->>'avatar_url', NULL),
     NULL,
     COALESCE(NEW.raw_user_meta_data->>'country', NULL),
@@ -99,6 +87,7 @@ BEGIN
     0,
     NULL,
     NULL,
+    0,
     '[]'::jsonb,
     (CASE WHEN (SELECT id FROM modules ORDER BY ordre LIMIT 1) IS NOT NULL
       THEN jsonb_build_array((SELECT id FROM modules ORDER BY ordre LIMIT 1))
