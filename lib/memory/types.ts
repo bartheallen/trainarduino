@@ -56,6 +56,18 @@ export type MemoryEvent = {
   created_at?: string;
 };
 
+export type LearningMemoryRecordRow = {
+  id: string;
+  user_id: string;
+  exercise_id?: number | null;
+  submission_id?: number | null;
+  record_type: string;
+  content: string;
+  tags: string[];
+  metadata: Record<string, any>;
+  created_at: string;
+};
+
 export type DashboardProjection = {
   id?: string;
   user_id: string;

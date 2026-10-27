@@ -10,6 +10,26 @@ const ArduinoScene = dynamic(
   { ssr: false },
 );
 
+const OPAQUE_LAYOUT_PREFIXES = [
+  '/login',
+  '/signup',
+  '/forgot-password',
+  '/reset-password',
+  '/verify-email',
+  '/positioning-test',
+  '/dashboard',
+  '/modules',
+  '/dashboard-group',
+  '/settings',
+  '/challenges',
+];
+
+function hasOpaqueLayout(pathname: string) {
+  return OPAQUE_LAYOUT_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+  );
+}
+
 export function RouteBackground() {
   const pathname = usePathname();
 
@@ -42,6 +62,10 @@ export function RouteBackground() {
         />
       </>
     );
+  }
+
+  if (hasOpaqueLayout(pathname)) {
+    return null;
   }
 
   return (

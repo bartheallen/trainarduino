@@ -1,5 +1,14 @@
 import { createServerSupabaseClient } from '@/lib/supabase';
-import type { ConversationMessageRecord } from '@/lib/memory/types';
+
+type ConversationMessageRecord = {
+  id: string;
+  user_id: string;
+  role: 'user' | 'assistant' | 'system';
+  topic?: string | null;
+  message: string;
+  metadata: Record<string, any>;
+  created_at: string;
+};
 
 export async function recordConversationMessage(
   userId: string,

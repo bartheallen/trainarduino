@@ -2,6 +2,7 @@
 
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import type { Lesson, Module } from '@/lib/types';
+import { unlockNextModule, updateModuleProgress, updateCurrentModule, getModuleProgressMetrics, getModuleLessonProgressMetrics } from '@/lib/db';
 
 export interface LessonProgressSnapshot {
   lessonId: number;
@@ -43,6 +44,18 @@ export async function saveLessonProgressAction(
   if (error) {
     throw new Error(`Failed to save lesson progress: ${error.message}`);
   }
+
+  const lessonMetrics = await getModuleLessonProgressMetrics(userId, moduleId);
+  const progressMetrics = await getModuleProgressMetrics(userId, moduleId);
+  const status = lessonMetrics.allLessonsCompleted ? 'completed' : 'in_progress';
+  const score = lessonMetrics.allLessonsCompleted ? 100 : lessonMetrics.completionPercent;
+
+  await updateModuleProgress(userId, moduleId, status, score, progressMetrics.completedExercises);
+  await updateCurrentModule(userId, moduleId);
+
+  if (status === 'completed') {
+    await unlockNextModule(userId).catch(() => null);
+  }
 }
 
 export async function getLessonProgress(userId: string, moduleId: number) {
@@ -59,6 +72,81 @@ export async function getLessonProgress(userId: string, moduleId: number) {
   }
 
   return (data ?? []) as LessonProgressSnapshot[];
+}
+
+export interface SocraticCompletionResult {
+  success: boolean;
+  lessonId?: number;
+  error?: string;
+}
+
+export async function markSocraticCompletionAction(userId: string, moduleId: number): Promise<SocraticCompletionResult | null> {
+  const supabase = await createServerSupabaseClient();
+
+  const { data: firstLesson, error: lessonError } = await supabase
+    .from('lessons')
+    .select('id')
+    .eq('module_id', moduleId)
+    .order('ordre', { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (lessonError) {
+    throw new Error(`Failed to resolve a lesson for module ${moduleId}: ${lessonError.message}`);
+  }
+
+  if (!firstLesson?.id) {
+    return null;
+  }
+
+  const { error } = await supabase.from('lesson_progress').upsert(
+    {
+      user_id: userId,
+      module_id: moduleId,
+      lesson_id: firstLesson.id,
+      progress_percent: 100,
+      completed: true,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: 'user_id,module_id,lesson_id' }
+  );
+
+  if (error) {
+    console.error(`[learning-progress] Failed to save module progress for user ${userId}, module ${moduleId}:`, error);
+    return { success: false, error: error.message };
+  }
+
+  const lessonMetrics = await getModuleLessonProgressMetrics(userId, moduleId);
+  const progressMetrics = await getModuleProgressMetrics(userId, moduleId);
+  const status = lessonMetrics.allLessonsCompleted ? 'completed' : 'in_progress';
+  const score = lessonMetrics.allLessonsCompleted ? 100 : lessonMetrics.completionPercent;
+
+  await updateModuleProgress(userId, moduleId, status, score, progressMetrics.completedExercises);
+  await updateCurrentModule(userId, moduleId);
+
+  if (status === 'completed') {
+    await unlockNextModule(userId).catch(() => null);
+  }
+
+  return { success: true, lessonId: firstLesson.id };
+}
+
+export async function getUserModuleProgressSummary(userId: string, totalModules: number) {
+  const supabase = await createServerSupabaseClient();
+
+  const { data: progressData, error: progressError } = await supabase
+    .from('progress')
+    .select('module_id, statut')
+    .eq('user_id', userId);
+
+  if (progressError) {
+    throw new Error(`Failed to load module progress summary: ${progressError.message}`);
+  }
+
+  const completedCount = (progressData ?? []).filter((entry) => entry.statut === 'completed').length;
+  const progressPercentage = totalModules > 0 ? Math.round((completedCount / totalModules) * 100) : 0;
+
+  return { completedCount, progressPercentage };
 }
 
 export async function getModuleLearningSummary(userId: string, moduleId: number): Promise<ModuleLearningSummary> {

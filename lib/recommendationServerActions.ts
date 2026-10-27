@@ -19,3 +19,13 @@ export async function listRecommendationsAction() {
   if (!user) return [];
   return recRepo.listRecommendationsForUser(user.id);
 }
+
+export async function submitRecommendationFeedbackAction(userId: string, feedbackText: string, rating: number | null) {
+  // Minimal stub for feedback submission until the full feature is implemented.
+  console.info('[recommendationServerActions] submitRecommendationFeedbackAction called', {
+    userId,
+    feedbackText,
+    rating,
+  });
+  return { success: true };
+}
