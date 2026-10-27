@@ -32,7 +32,13 @@ const labels = {
   lockedMessage: 'Validez le module précédent pour ouvrir ce dossier.',
 };
 
-const palette = ['#67e8f9', '#60a5fa', '#34d399', '#818cf8'];
+const STATE_PALETTE = {
+  completed: { light: '#6ee7b7', base: '#059669', glow: 'rgba(16,185,129,0.36)', border: 'rgba(110,231,183,0.7)' },
+  in_progress: { light: '#a5f3fc', base: '#0891b2', glow: 'rgba(34,211,238,0.55)', border: 'rgba(103,232,249,0.85)' },
+  available: { light: '#c4b5fd', base: '#4f46e5', glow: 'rgba(129,140,248,0.3)', border: 'rgba(165,180,252,0.6)' },
+  locked: { light: '#64748b', base: '#263449', glow: 'rgba(71,85,105,0.12)', border: 'rgba(100,116,139,0.35)' },
+} as const;
+
 const PLANET_SIZES = {
   active: { desktop: 220, tablet: 200, mobile: 174, tiny: 152 },
   nearby: { desktop: 150, tablet: 128, mobile: 104, tiny: 86 },
@@ -48,7 +54,7 @@ export function PlanetCarousel({ cards }: PlanetCarouselProps) {
     const availableIndex = cards.findIndex((card) => card.state === 'available');
     return inProgressIndex >= 0 ? inProgressIndex : availableIndex >= 0 ? availableIndex : 0;
   });
-  const [stageWidth, setStageWidth] = useState(0);
+  const [stageSize, setStageSize] = useState({ width: 0, height: 0 });
   const [focused, setFocused] = useState(false);
 
   useEffect(() => {
@@ -61,7 +67,9 @@ export function PlanetCarousel({ cards }: PlanetCarouselProps) {
     const element = stageRef.current;
     if (!element) return;
 
-    const updateSize = () => setStageWidth(element.clientWidth);
+    const updateSize = () => {
+      setStageSize({ width: element.clientWidth, height: element.clientHeight });
+    };
     updateSize();
 
     const observer = new ResizeObserver(updateSize);
@@ -69,23 +77,29 @@ export function PlanetCarousel({ cards }: PlanetCarouselProps) {
     return () => observer.disconnect();
   }, []);
 
-  const step = stageWidth > 0
-    ? (stageWidth <= 400 ? stageWidth * 0.22 : stageWidth <= 640 ? stageWidth * 0.26 : stageWidth <= 1024 ? stageWidth * 0.22 : stageWidth * 0.18)
-    : 170;
   const total = cards.length;
-  const maxVisibleOffset = stageWidth <= 400 ? 1 : stageWidth <= 640 ? 2 : stageWidth <= 1024 ? 2 : 3;
+  const maxVisibleOffset = stageSize.width <= 480 ? 1 : 2;
+  const stepX = stageSize.width <= 400
+    ? stageSize.width * 0.38
+    : stageSize.width <= 640
+      ? stageSize.width * 0.34
+      : stageSize.width <= 1024
+        ? stageSize.width * 0.25
+        : Math.min(stageSize.width * 0.2, 230);
+  const stepY = stageSize.height * 0.09;
+  const curvature = stageSize.height * 0.025;
 
   const getPlanetSize = (offset: number, isActive: boolean) => {
     if (isActive) {
-      if (stageWidth <= 400) return PLANET_SIZES.active.tiny;
-      if (stageWidth <= 640) return PLANET_SIZES.active.mobile;
-      if (stageWidth <= 1024) return PLANET_SIZES.active.tablet;
+      if (stageSize.width <= 400) return PLANET_SIZES.active.tiny;
+      if (stageSize.width <= 640) return PLANET_SIZES.active.mobile;
+      if (stageSize.width <= 1024) return PLANET_SIZES.active.tablet;
       return PLANET_SIZES.active.desktop;
     }
 
-    if (stageWidth <= 400) return Math.max(PLANET_SIZES.far.tiny, PLANET_SIZES.nearby.tiny - Math.abs(offset) * 18);
-    if (stageWidth <= 640) return Math.max(PLANET_SIZES.far.mobile, PLANET_SIZES.nearby.mobile - Math.abs(offset) * 16);
-    if (stageWidth <= 1024) return Math.max(PLANET_SIZES.far.tablet, PLANET_SIZES.nearby.tablet - Math.abs(offset) * 18);
+    if (stageSize.width <= 400) return Math.max(PLANET_SIZES.far.tiny, PLANET_SIZES.nearby.tiny - Math.abs(offset) * 18);
+    if (stageSize.width <= 640) return Math.max(PLANET_SIZES.far.mobile, PLANET_SIZES.nearby.mobile - Math.abs(offset) * 16);
+    if (stageSize.width <= 1024) return Math.max(PLANET_SIZES.far.tablet, PLANET_SIZES.nearby.tablet - Math.abs(offset) * 18);
     return Math.max(PLANET_SIZES.far.desktop, PLANET_SIZES.nearby.desktop - Math.abs(offset) * 20);
   };
 
@@ -99,6 +113,42 @@ export function PlanetCarousel({ cards }: PlanetCarouselProps) {
   const activeCard = cards[activeIndex] ?? cards[0];
   const hasPrevious = activeIndex > 0;
   const hasNext = activeIndex < cards.length - 1;
+  const centerX = stageSize.width / 2;
+  const centerY = stageSize.height / 2;
+  const visiblePlanets = cards
+    .map((card, index) => {
+      const offset = index - activeIndex;
+      const isActive = index === activeIndex;
+      const sizePx = getPlanetSize(offset, isActive);
+      const planetCenterX = centerX + offset * stepX;
+      const planetCenterY = centerY + offset * stepY + offset * offset * curvature;
+
+      return {
+        card,
+        index,
+        offset,
+        isActive,
+        sizePx,
+        centerX: planetCenterX,
+        centerY: planetCenterY,
+        x: planetCenterX - sizePx / 2,
+        y: planetCenterY - sizePx / 2,
+      };
+    })
+    .filter(({ offset }) => Math.abs(offset) <= maxVisibleOffset);
+  const orbitPath = visiblePlanets.length > 0
+    ? `M ${visiblePlanets[0].centerX} ${visiblePlanets[0].centerY}${visiblePlanets.slice(1).map((planet, index) => {
+      const previous = visiblePlanets[index];
+      const beforePrevious = visiblePlanets[index - 1] ?? previous;
+      const next = visiblePlanets[index + 2] ?? planet;
+      const control1X = previous.centerX + (planet.centerX - beforePrevious.centerX) / 6;
+      const control1Y = previous.centerY + (planet.centerY - beforePrevious.centerY) / 6;
+      const control2X = planet.centerX - (next.centerX - previous.centerX) / 6;
+      const control2Y = planet.centerY - (next.centerY - previous.centerY) / 6;
+
+      return ` C ${control1X} ${control1Y}, ${control2X} ${control2Y}, ${planet.centerX} ${planet.centerY}`;
+    }).join('')}`
+    : '';
 
   useEffect(() => {
     if (!stageRef.current || shouldReduceMotion) return;
@@ -177,102 +227,116 @@ export function PlanetCarousel({ cards }: PlanetCarouselProps) {
       >
         <div className="pointer-events-none absolute inset-x-0 top-1/2 h-0.5 -translate-y-1/2 bg-gradient-to-r from-transparent via-cyan-300/15 to-transparent" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(34,211,238,0.06),_transparent_42%)]" />
-        <svg className="pointer-events-none absolute inset-0 h-full w-full animate-[spin_60s_linear_infinite]" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          <ellipse cx="50" cy="50" rx="30" ry="15" fill="none" stroke="rgba(103,232,249,0.13)" strokeWidth="0.12" />
-          <ellipse cx="50" cy="50" rx="40" ry="22" fill="none" stroke="rgba(103,232,249,0.1)" strokeWidth="0.12" transform="rotate(12 50 50)" />
-        </svg>
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(2,6,23,0.96)_0%,rgba(2,6,23,0.48)_12%,rgba(2,6,23,0)_25%,rgba(2,6,23,0)_75%,rgba(2,6,23,0.48)_88%,rgba(2,6,23,0.96)_100%)]" />
-        <div className="absolute inset-x-0 bottom-4 h-px bg-gradient-to-r from-transparent via-cyan-300/20 to-transparent" />
-        <div className="absolute left-[14%] top-[18%] h-1.5 w-1.5 rounded-full bg-cyan-200/80 shadow-[0_0_10px_rgba(103,232,249,0.7)]" />
-        <div className="absolute right-[16%] top-[25%] h-1 w-1 rounded-full bg-slate-300/80" />
-        <div className="absolute left-[38%] bottom-[18%] h-1.5 w-1.5 rounded-full bg-cyan-200/60" />
+        {stageSize.width > 0 && stageSize.height > 0 && (
+          <>
+            <svg
+              className="pointer-events-none absolute inset-0 h-full w-full"
+              viewBox={`0 0 ${stageSize.width} ${stageSize.height}`}
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <path d={orbitPath} fill="none" stroke="rgba(103,232,249,0.2)" strokeWidth="1" strokeDasharray="3 7" strokeLinecap="round" />
+            </svg>
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(2,6,23,0.96)_0%,rgba(2,6,23,0.48)_12%,rgba(2,6,23,0)_25%,rgba(2,6,23,0)_75%,rgba(2,6,23,0.48)_88%,rgba(2,6,23,0.96)_100%)]" />
+            <div className="absolute inset-x-0 bottom-4 h-px bg-gradient-to-r from-transparent via-cyan-300/20 to-transparent" />
+            <div className="absolute left-[14%] top-[18%] h-1.5 w-1.5 rounded-full bg-cyan-200/80 shadow-[0_0_10px_rgba(103,232,249,0.7)]" />
+            <div className="absolute right-[16%] top-[25%] h-1 w-1 rounded-full bg-slate-300/80" />
+            <div className="absolute left-[38%] bottom-[18%] h-1.5 w-1.5 rounded-full bg-cyan-200/60" />
 
-        <div className="absolute inset-x-0 top-1/2 z-10 -translate-y-1/2">
-          {cards.map((card, index) => {
-            const offset = index - activeIndex;
-            if (Math.abs(offset) > maxVisibleOffset) return null;
+            <div className="absolute inset-0 z-10">
+              {visiblePlanets.map(({ card, index, offset, isActive, sizePx, x, y }) => {
+                const scale = Math.max(0.76, 1 - 0.11 * Math.abs(offset));
+                const opacity = Math.max(0.42, 1 - 0.2 * Math.abs(offset));
+                const zIndex = 10 - Math.abs(offset);
+                const stateColors = STATE_PALETTE[card.state];
 
-            const x = offset * step;
-            const y = offset * offset * (stageWidth <= 400 ? 12 : stageWidth <= 640 ? 13 : 14);
-            const scale = Math.max(0.7, 1 - 0.12 * Math.abs(offset));
-            const opacity = Math.max(0.35, 1 - 0.14 * Math.abs(offset));
-            const zIndex = 10 - Math.abs(offset);
-            const isActive = index === activeIndex;
-            const sizePx = getPlanetSize(offset, isActive);
-
-            return (
-              <motion.div
-                key={card.id}
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.1}
-                onDragEnd={(_, info) => {
-                  if (Math.abs(info.offset.x) > 60) move(info.offset.x > 0 ? -1 : 1);
-                }}
-                animate={{ x, y, scale, opacity, zIndex }}
-                transition={{ type: 'spring', stiffness: 120, damping: 20, mass: 0.9 }}
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-                style={{ transformOrigin: 'center center' }}
-              >
-                <button
-                  type="button"
-                  aria-label={`Module ${card.ordre} : ${card.titre}, ${labels[card.state]}`}
-                  aria-current={isActive ? 'true' : undefined}
-                  onClick={() => setActiveIndex(index)}
-                  className={`group relative flex items-center justify-center rounded-full border text-white outline-none ring-offset-0 transition focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 ${
-                    isActive ? 'cursor-default' : 'cursor-pointer'
-                  }`}
-                  style={{
-                    width: `${sizePx}px`,
-                    height: `${sizePx}px`,
-                  }}
-                >
-                  <span
-                    className="absolute inset-0 rounded-full"
-                    style={{
-                      background: `radial-gradient(circle at 30% 28%, rgba(255,255,255,0.35), rgba(255,255,255,0.08) 18%, ${palette[(card.ordre - 1) % palette.length]} 28%, rgba(15,23,42,0.95) 72%)`,
-                      boxShadow: isActive ? `0 0 32px ${palette[(card.ordre - 1) % palette.length]}66` : 'none',
+                return (
+                  <motion.div
+                    key={card.id}
+                    initial={false}
+                    drag="x"
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.1}
+                    onDragEnd={(_, info) => {
+                      if (Math.abs(info.offset.x) > 60) move(info.offset.x > 0 ? -1 : 1);
                     }}
-                  />
-                  {card.state === 'completed' && (
-                    <span className="absolute inset-0 rounded-full shadow-[inset_0_0_18px_rgba(52,211,153,0.7)]" />
-                  )}
-                  {card.state === 'in_progress' && (
-                    <span className="absolute inset-[-10px] rounded-full border-[3px] border-dashed border-cyan-300/80 animate-[spin_10s_linear_infinite]" />
-                  )}
-                  {card.state === 'available' && (
-                    <span className="absolute inset-[-6px] rounded-full border border-cyan-300/60" />
-                  )}
-                  {card.state === 'locked' && (
-                    <span className="absolute inset-0 rounded-full bg-slate-800/90" />
-                  )}
-                  {card.state === 'locked' && (
-                    <span className="absolute inset-3 rounded-full border border-white/10 bg-slate-950/40" />
-                  )}
-                  {card.isCapstone && (
+                    animate={{ x, y, scale, opacity, zIndex }}
+                    transition={{ type: 'spring', stiffness: 125, damping: 22, mass: 0.8 }}
+                    className="absolute left-0 top-0"
+                    style={{
+                      transformOrigin: 'center center',
+                      filter: offset === 0 ? 'none' : `blur(${Math.min(Math.abs(offset) * 0.35, 0.7)}px)`,
+                    }}
+                  >
+                  <button
+                    type="button"
+                    aria-label={`Module ${card.ordre} : ${card.titre}, ${labels[card.state]}`}
+                    aria-current={isActive ? 'true' : undefined}
+                    onClick={() => setActiveIndex(index)}
+                    className={`group relative flex items-center justify-center rounded-full border-2 text-white outline-none ring-offset-0 transition focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 ${
+                      isActive ? 'cursor-default' : 'cursor-pointer'
+                    }`}
+                    style={{
+                      width: `${sizePx}px`,
+                      height: `${sizePx}px`,
+                      borderColor: stateColors.border,
+                    }}
+                  >
                     <span
-                      className="absolute -inset-1 rounded-full border border-cyan-300/40"
-                      style={{ transform: 'rotate(-20deg) scaleX(1.2)', borderRadius: '999px' }}
+                      className="absolute inset-0 rounded-full"
+                      style={{
+                        background: `radial-gradient(circle at 28% 24%, rgba(255,255,255,0.48), rgba(255,255,255,0.12) 22%, transparent 38%), radial-gradient(circle at 76% 78%, rgba(2,6,23,0.38), transparent 58%), linear-gradient(140deg, ${stateColors.light}, ${stateColors.base} 68%)`,
+                        boxShadow: isActive || card.state === 'in_progress' ? `0 0 34px ${stateColors.glow}` : 'none',
+                      }}
                     />
-                  )}
-                  {(card.state === 'completed' || card.state === 'in_progress') && (
-                    <span className="absolute inset-0 flex items-center justify-center text-2xl text-emerald-200">✓</span>
-                  )}
-                  {card.state === 'available' && (
-                    <span className="absolute inset-0 flex items-center justify-center text-2xl text-cyan-200">↗</span>
-                  )}
-                  {card.state === 'locked' && (
-                    <span className="absolute inset-0 flex items-center justify-center text-2xl text-slate-400 sm:text-3xl" style={{ transform: `scale(${isActive ? 1.1 : 0.9})` }}>🔒</span>
-                  )}
-                  <span className="relative z-10 text-2xl font-semibold text-white">
-                    {card.ordre}
-                  </span>
-                </button>
-              </motion.div>
-            );
-          })}
-        </div>
-        {focused && <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full border border-cyan-300/20 bg-slate-950/70 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-cyan-200">Focus clavier</div>}
+                    {card.state === 'completed' && (
+                      <span className="absolute inset-0 rounded-full shadow-[inset_0_0_18px_rgba(52,211,153,0.7)]" />
+                    )}
+                    {(card.state === 'in_progress' || isActive) && (
+                      <span className="absolute inset-[-10px] rounded-full border-[3px] border-dashed border-cyan-300/80 animate-[spin_10s_linear_infinite]" />
+                    )}
+                    {card.state === 'available' && (
+                      <span className="absolute inset-[-6px] rounded-full border border-cyan-300/60" />
+                    )}
+                    {card.state === 'locked' && (
+                      <span className="absolute inset-0 rounded-full bg-slate-800/90" />
+                    )}
+                    {card.state === 'locked' && (
+                      <span className="absolute inset-3 rounded-full border border-white/10 bg-slate-950/40" />
+                    )}
+                    {card.isCapstone && (
+                      <span
+                        className="absolute -inset-1 rounded-full border border-cyan-300/40"
+                        style={{ transform: 'rotate(-20deg) scaleX(1.2)', borderRadius: '999px' }}
+                      />
+                    )}
+                    {(card.state === 'completed' || card.state === 'in_progress') && (
+                      <span className="absolute right-1 top-1 z-20 flex h-5 w-5 items-center justify-center rounded-full border border-emerald-100/40 bg-emerald-950/80 text-xs font-bold text-emerald-200 sm:right-3 sm:top-3 sm:h-6 sm:w-6">✓</span>
+                    )}
+                    {card.state === 'available' && (
+                      <span className="absolute right-1 top-1 z-20 flex h-5 w-5 items-center justify-center rounded-full border border-indigo-100/40 bg-indigo-950/80 text-xs font-bold text-indigo-100 sm:right-3 sm:top-3 sm:h-6 sm:w-6">↗</span>
+                    )}
+                    {card.state === 'locked' && (
+                      <span className="absolute right-1 top-1 z-20 flex h-5 w-5 items-center justify-center rounded-full border border-slate-400/40 bg-slate-950/90 text-[10px] text-slate-300 sm:right-3 sm:top-3 sm:h-6 sm:w-6 sm:text-xs">🔒</span>
+                    )}
+                    <span className="relative z-10 text-2xl font-semibold leading-none text-white drop-shadow-[0_1px_3px_rgba(2,6,23,0.8)]">
+                      {card.ordre}
+                    </span>
+                  </button>
+                </motion.div>
+              );
+            })}
+            </div>
+            {focused && (
+              <div
+                className="pointer-events-none absolute z-20 -translate-x-1/2 rounded-full border border-cyan-300/30 bg-slate-950/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-200"
+                style={{ left: `${centerX}px`, top: `${centerY + getPlanetSize(0, true) / 2 + 18}px` }}
+              >
+                FOCUS
+              </div>
+            )}
+          </>
+        )}
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-3">
